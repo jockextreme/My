@@ -3,349 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zetsu API Explorer</title>
+    <title>Zetsu API Video Browser</title>
     <style>
+        /* Base Styles */
         :root {
-            --primary: #2A2F4F;
-            --secondary: #917FB3;
-            --accent: #E5BEEC;
-            --background: #FDE2F3;
-            --text: #2A2F4F;
-            --success: #50C878;
-            --warning: #FFD700;
-            --error: #FF6B6B;
-            --radius: 12px;
-            --shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --primary: #E5BEEC;
-                --secondary: #917FB3;
-                --background: #2A2F4F;
-                --text: #FDE2F3;
-            }
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #ecf0f1;
         }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
             line-height: 1.6;
-            background: var(--background);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 2rem;
         }
 
-        .age-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius);
+        /* Header Styles */
+        .header {
             text-align: center;
-            max-width: 400px;
-        }
-
-        .modal-actions {
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .modal-actions button {
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: calc(var(--radius) / 2);
-            cursor: pointer;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 4rem 0;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            margin: -2rem -2rem 2rem;
+            padding: 2rem 0;
+            background: var(--primary-color);
             color: white;
-            border-radius: 0 0 var(--radius) var(--radius);
-            box-shadow: var(--shadow);
+            margin: -20px -20px 20px;
         }
 
+        /* Search Section */
         .search-container {
             max-width: 800px;
-            margin: 2rem auto;
-        }
-
-        .search-box {
+            margin: 0 auto 30px;
             display: flex;
-            gap: 1rem;
-            background: rgba(255,255,255,0.1);
-            padding: 1rem;
-            border-radius: var(--radius);
+            gap: 10px;
         }
 
         #searchInput {
             flex: 1;
-            padding: 1rem;
-            border: none;
-            border-radius: calc(var(--radius) / 2);
-            background: rgba(255,255,255,0.9);
-            font-size: 1rem;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
         }
 
-        .search-button {
-            padding: 1rem 2rem;
-            background: var(--secondary);
+        button {
+            padding: 12px 25px;
+            background-color: var(--secondary-color);
             color: white;
             border: none;
-            border-radius: calc(var(--radius) / 2);
+            border-radius: 25px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        /* Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem 0;
+            gap: 25px;
+            padding: 20px;
         }
 
         .video-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: var(--radius);
+            background: white;
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
 
-        .video-thumbnail {
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
+            border-bottom: 3px solid var(--secondary-color);
         }
 
-        .video-content {
-            padding: 1.5rem;
+        .video-info {
+            padding: 15px;
         }
 
         .video-title {
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-size: 0.95rem;
         }
 
+        .video-duration {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+        }
+
+        .uploader {
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        /* Loading State */
         .loader {
             display: none;
             text-align: center;
-            padding: 2rem;
+            padding: 20px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
         }
 
-        .loader-spinner {
-            width: 3rem;
-            height: 3rem;
-            border: 4px solid var(--secondary);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        /* Error Message */
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            padding: 20px;
+            display: none;
         }
 
-        .error-toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--error);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            animation: slideIn 0.3s ease-out;
+        /* Footer & Credits */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .notes {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .search-container {
+                flex-direction: column;
             }
-
-            .video-grid {
-                grid-template-columns: 1fr;
+            
+            #searchInput {
+                width: auto;
             }
         }
     </style>
 </head>
 <body>
-    <div id="ageModal" class="age-modal">
-        <div class="modal-content">
-            <h2>Age Verification Required</h2>
-            <p>You must be at least 18 years old to access this content</p>
-            <div class="modal-actions">
-                <button onclick="verifyAge(true)">Confirm</button>
-                <button onclick="verifyAge(false)">Exit</button>
-            </div>
-        </div>
+    <div class="header">
+        <h1>Zetsu API Video Browser</h1>
+        <p>Explore adult content through the Zetsu API</p>
     </div>
 
-    <header class="hero">
-        <h1>Zetsu API Explorer</h1>
-        <p>Secure Adult Content Browser</p>
-    </header>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search videos..." aria-label="Search videos">
+        <button onclick="searchVideos()">Search</button>
+    </div>
 
-    <main>
-        <div class="search-container">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search content..." 
-                       aria-label="Search content">
-                <button class="search-button" onclick="searchVideos()">Search</button>
-            </div>
-        </div>
+    <div class="loader" id="loader">Loading videos...</div>
+    <div class="error-message" id="errorMessage"></div>
+    <div class="video-grid" id="videoContainer"></div>
 
-        <div class="loader" id="loader">
-            <div class="loader-spinner"></div>
-        </div>
+    <div class="notes">
+        <h2>Features & Notes</h2>
+        <ul>
+            <li>Responsive grid layout with hover effects</li>
+            <li>Automatic home page content loading</li>
+            <li>Search functionality with error handling</li>
+            <li>Loading states and visual feedback</li>
+            <li>Mobile-friendly design</li>
+            <li>Direct links to video sources</li>
+            <li>API request rate limiting awareness</li>
+        </ul>
 
-        <div class="video-grid" id="videoContainer"></div>
-    </main>
+        <h2>Important Notes</h2>
+        <ul>
+            <li>This is a demo interface for educational purposes</li>
+            <li>Content is provided by third-party API</li>
+            <li>API key must be kept confidential</li>
+            <li>Not intended for production use</li>
+            <li>May contain explicit content - use discretion</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <h3>Credits & Attribution</h3>
+        <p>API Provider: <a href="https://api.zetsu.xyz" target="_blank">Zetsu.xyz</a></p>
+        <p>Original API Author: Deku</p>
+        <p>Interface Design: [Your Name]</p>
+        <p>Developed for GitHub Pages deployment</p>
+    </div>
 
     <script>
         const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-        const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMyYTJmNGYiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjIyIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Obw0KVGh1bWJuYWlsPC90ZXh0Pjwvc3ZnPg==';
+        const PLACEHOLDER_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
 
-        let currentPage = 1;
-        let isLoading = false;
-        let currentSearchQuery = '';
-        const videoContainer = document.getElementById('videoContainer');
+        // UI Elements
         const loader = document.getElementById('loader');
-
-        // Age verification
-        if (!localStorage.getItem('ageVerified')) {
-            document.getElementById('ageModal').style.display = 'flex';
-        }
-
-        function verifyAge(confirmed) {
-            if (confirmed) {
-                localStorage.setItem('ageVerified', 'true');
-                document.getElementById('ageModal').style.display = 'none';
-            } else {
-                window.location.href = 'https://www.google.com';
-            }
-        }
+        const errorMessage = document.getElementById('errorMessage');
 
         // Initial load
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('ageVerified') === 'true') {
-                fetchVideos('home');
-            }
-        });
+        window.onload = function() {
+            showLoader();
+            fetchVideos('home').finally(hideLoader);
+        };
 
         async function fetchVideos(type, query = '') {
             try {
                 showLoader();
-                isLoading = true;
+                clearError();
 
-                const endpoint = type === 'home' 
-                    ? `home?apikey=${API_KEY}&page=${currentPage}`
-                    : `search/${encodeURIComponent(query)}?apikey=${API_KEY}&page=${currentPage}`;
+                const url = type === 'home' 
+                    ? `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`
+                    : `https://api.zetsu.xyz/prn/search/${encodeURIComponent(query)}?apikey=${API_KEY}`;
 
-                const response = await fetch(`https://api.zetsu.xyz/prn/${endpoint}`);
+                const response = await fetch(url);
                 
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
                 const data = await response.json();
-                renderVideos(data);
+                displayVideos(data);
             } catch (error) {
-                showErrorToast(error.message);
+                showError(`Failed to load videos: ${error.message}`);
+                console.error('API Error:', error);
             } finally {
                 hideLoader();
-                isLoading = false;
             }
         }
 
-        function renderVideos(data) {
-            const videos = Object.values(data).filter(item => item.video && !isNaN(item));
-            
-            if (videos.length === 0) {
-                showErrorToast('No results found');
-                return;
-            }
+        function displayVideos(data) {
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = '';
 
-            videoContainer.innerHTML += videos.map(video => `
-                <div class="video-card">
-                    <a href="${video.video}" target="_blank" rel="noopener noreferrer">
-                        <img class="video-thumbnail" 
-                             src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
-                             alt="${video.title || 'Content thumbnail'}"
+            Object.values(data).forEach((video, index) => {
+                if (!video.video || isNaN(index)) return;
+
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <a href="${video.video}" target="_blank" rel="noopener">
+                        <img src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
+                             alt="${video.title || 'Untitled video'} thumbnail"
                              loading="lazy">
                     </a>
-                    <div class="video-content">
-                        <h3 class="video-title">${video.title || 'Untitled Content'}</h3>
-                        <div class="video-meta">
-                            <span>${video.duration || 'N/A'}</span>
-                            ${video.uploaderName ? `
-                                <a href="${video.uploaderProfile}" 
-                                   class="uploader-link"
-                                   target="_blank"
-                                   rel="noopener">
+                    <div class="video-info">
+                        <div class="video-title">${video.title || 'Untitled video'}</div>
+                        ${video.duration ? `<div class="video-duration">${video.duration}</div>` : ''}
+                        ${video.uploaderName ? `
+                            <div class="uploader">
+                                <a href="${video.uploaderProfile}" target="_blank" rel="noopener">
                                     ${video.uploaderName}
                                 </a>
-                            ` : ''}
-                        </div>
+                            </div>
+                        ` : ''}
                     </div>
-                </div>
-            `).join('');
+                `;
+                container.appendChild(card);
+            });
         }
 
         function searchVideos() {
             const query = document.getElementById('searchInput').value.trim();
-            if (!query) return showErrorToast('Please enter a search term');
+            if (!query) return showError('Please enter a search term');
             
-            currentPage = 1;
-            currentSearchQuery = query;
-            videoContainer.innerHTML = '';
+            showLoader();
             fetchVideos('search', query);
         }
 
-        window.addEventListener('scroll', () => {
-            if (shouldLoadMore()) {
-                currentPage++;
-                fetchVideos(currentSearchQuery ? 'search' : 'home', currentSearchQuery);
-            }
-        });
-
-        function shouldLoadMore() {
-            return (
-                window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-                !isLoading &&
-                currentPage < 5
-            );
-        }
-
+        /* Helper Functions */
         function showLoader() {
             loader.style.display = 'block';
         }
@@ -354,15 +286,16 @@
             loader.style.display = 'none';
         }
 
-        function showErrorToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'error-toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => toast.remove(), 5000);
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
         }
 
+        function clearError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Handle Enter key
         document.getElementById('searchInput').addEventListener('keypress', e => {
             if (e.key === 'Enter') searchVideos();
         });
