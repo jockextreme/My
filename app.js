@@ -1,111 +1,87 @@
-// app.js
-$(document).ready(function() {
-    const API_ENDPOINT = 'http://localhost:3000/api';
-    let currentUser = null;
-
-    // Authentication
-    $('#loginBtn').click(() => showAuthModal('login'));
-    $('#signupBtn').click(() => showAuthModal('signup'));
-
-    // Search functionality
-    $('#searchBtn').click(performSearch);
-    $('#searchInput').keypress(e => e.key === 'Enter' && performSearch());
-
-    // Modal handling
-    $('.modal .delete, .modal-background').click(closeModal);
-
-    // Comment system
-    $('#submitComment').click(submitComment);
-});
-
+// Updated performSearch function
 async function performSearch() {
-    const query = $('#searchInput').val();
+    const query = $('#searchInput').val().trim();
     const category = $('#filterCategory').val();
     
+    if (!query) {
+        showError('Please enter a search query');
+        return;
+    }
+
     showLoading();
     try {
         const response = await $.ajax({
             url: `${API_ENDPOINT}/search`,
             method: 'POST',
-            data: { query, category }
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                query: query,
+                category: category 
+            })
         });
+
+        if (!response.results || response.results.length === 0) {
+            showError('No results found');
+            return;
+        }
+
         renderContent(response.results);
     } catch (error) {
-        showError('Search failed');
+        showError(`Search failed: ${error.statusText || 'Server error'}`);
     } finally {
         hideLoading();
     }
 }
 
-function renderContent(items) {
-    const feed = $('#contentFeed').empty();
-    items.forEach(item => {
-        const card = `
-            <div class="column is-3">
-                <div class="card content-card" data-id="${item.id}">
-                    <div class="card-image">
-                        <figure class="image is-16by9">
-                            <img src="${item.thumbnail}">
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <p class="title is-6">${item.title}</p>
-                        <p class="subtitle is-7">${item.duration}</p>
-                        <div class="stars">${renderStars(item.rating)}</div>
-                    </div>
-                </div>
-            </div>
-        `;
-        feed.append(card);
-    });
-    $('.content-card').click(showDetails);
-}
-
-async function showDetails() {
+// Updated video rendering
+function showDetails() {
     const contentId = $(this).data('id');
     showLoading();
-    try {
-        const [details, comments] = await Promise.all([
-            $.get(`${API_ENDPOINT}/content/${contentId}`),
-            $.get(`${API_ENDPOINT}/comments/${contentId}`)
-        ]);
-        
+    
+    $.when(
+        $.get(`${API_ENDPOINT}/content/${contentId}`),
+        $.get(`${API_ENDPOINT}/comments/${contentId}`)
+    ).then(([details, comments]) => {
         $('#modalTitle').text(details.title);
         $('#modalContent').html(`
-            <div class="video-player">
-                <video controls src="${details.videoUrl}"></video>
+            <div class="video-container">
+                <video controls autoplay>
+                    <source src="${details.videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
-            <div class="content mt-3">
-                <p>${details.description}</p>
-                <div class="tags">${details.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+            <div class="content mt-4">
+                <p class="subtitle is-6">${details.description}</p>
+                <div class="tags">${details.tags.map(t => 
+                    `<span class="tag is-primary">${t}</span>`
+                ).join('')}</div>
             </div>
         `);
         
         renderComments(comments);
         $('#commentsSection').show();
         $('#detailModal').addClass('is-active');
-    } catch (error) {
-        showError('Failed to load details');
-    } finally {
+    }).fail((error) => {
+        showError(`Failed to load content: ${error.statusText}`);
+    }).always(() => {
         hideLoading();
-    }
-}
-
-function renderComments(comments) {
-    const list = $('#commentsList').empty();
-    comments.forEach(comment => {
-        list.append(`
-            <div class="comment">
-                <strong>${comment.user}</strong>
-                <p>${comment.text}</p>
-                <small>${new Date(comment.timestamp).toLocaleString()}</small>
-            </div>
-        `);
     });
 }
 
-// Utility functions
-function showLoading() { $('.loading-overlay').show(); }
-function hideLoading() { $('.loading-overlay').hide(); }
-function showError(msg) { /* Error display logic */ }
-function renderStars(rating) { /* Star rating display */ }
+// Enhanced error handling
+function showError(message) {
+    $('#errorContainer')
+        .text(message)
+        .removeClass('is-hidden')
+        .delay(5000)
+        .fadeOut(() => $(this).addClass('is-hidden'));
+}
+
+// Loading indicators
+function showLoading() {
+    $('.loading-overlay').css('display', 'flex');
+}
+
+function hideLoading() {
+    $('.loading-overlay').hide();
+}
