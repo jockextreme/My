@@ -1,152 +1,96 @@
+<!-- FILE STRUCTURE -->
+<!--
+- index.html
+- styles.css
+- app.js
+- server.js
+- package.json
+- README.md
+-->
+
 <!DOCTYPE html>
+<!-- index.html -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAV3D - Decentralized Adult Content Platform</title>
-    <!-- Web3 Dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.4/dist/web3.min.js"></script>
-    <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
-    <!-- AI & Blockchain CSS -->
-    <style>
-        :root {
-            --primary: #6366f1;
-            --neon: #10b981;
-        }
-
-        .nft-gate {
-            border: 2px solid var(--neon);
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-
-        .soulbound-badge {
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            color: white;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-        }
-
-        .dao-voting {
-            border-left: 4px solid var(--primary);
-            padding-left: 1rem;
-        }
-
-        .ai-recommendation {
-            background: #1e293b;
-            padding: 1rem;
-            border-radius: 0.5rem;
-        }
-    </style>
+    <title>JAVHD 2.0 - Dynamic Adult Content Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Web3 Wallet Connector -->
-    <div id="walletSection" class="nft-gate">
-        <button onclick="connectWallet()">Connect Web3 Wallet</button>
-        <div id="walletInfo"></div>
-    </div>
+    <nav class="navbar is-primary">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                    <strong>JAVHD 2.0</strong>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-light" id="loginBtn">Log in</a>
+                            <a class="button is-info" id="signupBtn">Sign up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Decentralized Content Feed -->
-    <div class="ai-recommendation">
-        <h2>AI-Curated Content (Powered by The Graph Protocol)</h2>
-        <div id="contentFeed"></div>
-    </div>
+    <section class="section">
+        <div class="container">
+            <div class="box">
+                <div class="field has-addons">
+                    <div class="control is-expanded">
+                        <input class="input" type="text" id="searchInput" placeholder="Search content...">
+                    </div>
+                    <div class="control">
+                        <button class="button is-info" id="searchBtn">Search</button>
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <div class="select">
+                            <select id="filterCategory">
+                                <option>All Categories</option>
+                                <option>Popular</option>
+                                <option>New Releases</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- DAO Governance Section -->
-    <div class="dao-voting">
-        <h3>Community Governance</h3>
-        <div id="proposals"></div>
-        <button onclick="createProposal()">New Proposal</button>
-    </div>
+            <div id="contentFeed" class="columns is-multiline"></div>
+            
+            <div class="modal" id="detailModal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title" id="modalTitle"></p>
+                        <button class="delete" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body" id="modalContent"></section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success" id="favoriteBtn">Add to Favorites</button>
+                    </footer>
+                </div>
+            </div>
 
-    <!-- NFT Access Gate -->
-    <div class="nft-gate">
-        <h3>Premium Content (Requires Access NFT)</h3>
-        <button onclick="mintAccessPass()">Mint Access Pass (0.1 ETH)</button>
-    </div>
+            <div id="commentsSection" class="box mt-5" style="display: none;">
+                <h2 class="title is-5">User Comments</h2>
+                <div id="commentsList"></div>
+                <div class="field mt-3">
+                    <textarea class="textarea" placeholder="Add a comment..." id="commentInput"></textarea>
+                    <button class="button is-info mt-2" id="submitComment">Post Comment</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Zero-Knowledge Age Verification -->
-    <div id="zkpVerification">
-        <h4>Private Age Verification</h4>
-        <button onclick="zkpVerify()">Confirm Age Anonymously</button>
-    </div>
-
-<script>
-// Web3 Configuration
-const CONTRACT_ADDRESS = '0x...'; // Your smart contract address
-const IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
-
-// Initialize Web3
-let web3;
-async function initWeb3() {
-    const provider = await detectEthereumProvider();
-    web3 = new Web3(provider);
-}
-
-// Soulbound Token Verification
-async function verifySBT() {
-    const accounts = await web3.eth.getAccounts();
-    const sbtContract = new web3.eth.Contract(SBT_ABI, SBT_ADDRESS);
-    const balance = await sbtContract.methods.balanceOf(accounts[0]).call();
-    return balance > 0;
-}
-
-// AI-Powered Recommendations
-async function loadRecommendations() {
-    const model = await tf.loadGraphModel('https://your-ai-model.ipfs.dweb.link/model.json');
-    const embeddings = await getContentEmbeddings();
-    const predictions = model.predict(embeddings);
-    renderRecommendations(predictions);
-}
-
-// Decentralized Storage (IPFS/Arweave)
-async function storeMetadata(metadata) {
-    const cid = await ipfs.add(JSON.stringify(metadata));
-    return `${IPFS_GATEWAY}${cid.path}`;
-}
-
-// ZK Age Verification
-async function zkpVerify() {
-    const snarkjs = window.snarkjs;
-    const { proof, publicSignals } = await snarkjs.groth16.fullProve(
-        { age: 21 }, 
-        'ageVerification.wasm',
-        'circuit_final.zkey'
-    );
-    // Submit proof to verifier contract
-}
-
-// DAO Interactions
-async function createProposal() {
-    const daoContract = new web3.eth.Contract(DAO_ABI, DAO_ADDRESS);
-    await daoContract.methods.createProposal(
-        "New Content Policy", 
-        Math.floor(Date.now() / 1000) + 604800 // 1 week voting
-    ).send({ from: accounts[0] });
-}
-
-// NFT Access Control
-async function mintAccessPass() {
-    const nftContract = new web3.eth.Contract(NFT_ABI, NFT_ADDRESS);
-    await nftContract.methods.mint().send({
-        from: accounts[0],
-        value: web3.utils.toWei('0.1', 'ether')
-    });
-}
-
-// Initialization
-window.addEventListener('load', async () => {
-    await initWeb3();
-    await loadRecommendations();
-    checkVerificationStatus();
-});
-</script>
-
-<!-- TensorFlow.js for AI Recommendations -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
-<!-- Zero-Knowledge Proof Library -->
-<script src="https://cdn.jsdelivr.net/npm/snarkjs@0.6.11/dist/snarkjs.min.js"></script>
-<!-- IPFS Integration -->
-<script src="https://cdn.jsdelivr.net/npm/ipfs-core@0.17.0/dist/index.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
