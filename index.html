@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zetsu API Videos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #searchInput {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .video-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .video-duration {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .uploader {
+            color: #007bff;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search videos...">
+        <button onclick="searchVideos()">Search</button>
+    </div>
+    <div class="video-grid" id="videoContainer"></div>
+
+    <script>
+        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
+        
+        // Load initial videos
+        window.onload = function() {
+            fetchVideos('home');
+        };
+
+        async function fetchVideos(type, query = '') {
+            let url;
+            if (type === 'home') {
+                url = `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`;
+            } else {
+                const encodedQuery = encodeURIComponent(query);
+                url = `https://api.zetsu.xyz/prn/search/${encodedQuery}?apikey=${API_KEY}`;
+            }
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                displayVideos(data);
+            } catch (error) {
+                console.error('Error fetching videos:', error);
+            }
+        }
+
+        function displayVideos(data) {
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = '';
+
+            for (let key in data) {
+                if (!isNaN(key) && data[key].video) {
+                    const video = data[key];
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <a href="${video.video}" target="_blank">
+                            <img src="${video.thumbnail || 'placeholder.jpg'}" alt="${video.title}">
+                        </a>
+                        <div class="video-info">
+                            <div class="video-title">${video.title}</div>
+                            <div class="video-duration">${video.duration}</div>
+                            ${video.uploaderName ? `<div class="uploader">${video.uploaderName}</div>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            }
+        }
+
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                fetchVideos('search', query);
+            }
+        }
+
+        // Handle Enter key in search input
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchVideos();
+            }
+        });
+    </script>
+</body>
+</html>
