@@ -3,302 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zetsu API Video Browser</title>
+    <title>Zetsu Video Hub</title>
+    <meta name="description" content="Comprehensive interface for Zetsu API video content">
     <style>
-        /* Base Styles */
+        /* Core Styles */
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --background-color: #ecf0f1;
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --background: #f8f9fa;
+            --text: #2c3e50;
+            --card-bg: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #3498db;
+            --secondary: #e67e22;
+            --background: #2c3e50;
+            --text: #ecf0f1;
+            --card-bg: #34495e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--background-color);
+            background: var(--background);
+            color: var(--text);
             line-height: 1.6;
+            transition: var(--transition);
         }
 
-        /* Header Styles */
+        /* Header */
         .header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 1rem;
             text-align: center;
-            padding: 2rem 0;
-            background: var(--primary-color);
-            color: white;
-            margin: -20px -20px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Search Section */
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto 30px;
+        .nav {
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        #searchInput {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 25px;
-            font-size: 16px;
+        .controls {
+            display: flex;
+            gap: 1rem;
         }
 
-        button {
-            padding: 12px 25px;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-            transform: translateY(-1px);
+        /* Main Content */
+        .main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
         /* Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            padding: 20px;
+            gap: 1.5rem;
+            padding: 1rem 0;
         }
 
         .video-card {
-            background: white;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            transition: var(--transition);
         }
 
         .video-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .video-card img {
+        .video-thumbnail {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-bottom: 3px solid var(--secondary-color);
+            border-bottom: 3px solid var(--secondary);
         }
 
         .video-info {
-            padding: 15px;
+            padding: 1rem;
         }
 
         .video-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--primary-color);
-            font-size: 0.95rem;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
         }
 
-        .video-duration {
-            color: #7f8c8d;
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
             font-size: 0.85rem;
-        }
-
-        .uploader {
-            color: var(--secondary-color);
-            font-size: 0.85rem;
-            margin-top: 8px;
-        }
-
-        /* Loading State */
-        .loader {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2rem;
-            color: var(--primary-color);
-        }
-
-        /* Error Message */
-        .error-message {
-            color: #e74c3c;
-            text-align: center;
-            padding: 20px;
-            display: none;
-        }
-
-        /* Footer & Credits */
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
             color: #7f8c8d;
-            font-size: 0.9rem;
         }
 
-        .notes {
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
             max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
+            margin: 2rem auto;
+            padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
         }
 
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .search-container {
-                flex-direction: column;
-            }
-            
-            #searchInput {
-                width: auto;
-            }
+        /* Utilities */
+        .button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .button-primary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Zetsu API Video Browser</h1>
-        <p>Explore adult content through the Zetsu API</p>
+    <!-- Age Verification -->
+    <div id="ageGate" class="modal" style="display: block;">
+        <div class="modal-content">
+            <h2>Age Verification</h2>
+            <p>You must be 18+ to access this content</p>
+            <button onclick="verifyAge(true)" class="button-primary">I am 18+</button>
+            <button onclick="verifyAge(false)">Exit</button>
+        </div>
     </div>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search videos..." aria-label="Search videos">
-        <button onclick="searchVideos()">Search</button>
-    </div>
+    <!-- Main Interface -->
+    <div id="mainInterface" style="display: none;">
+        <header class="header">
+            <nav class="nav">
+                <h1>Zetsu Video Hub</h1>
+                <div class="controls">
+                    <button onclick="toggleTheme()" class="button">Toggle Theme</button>
+                    <button onclick="showFavorites()" class="button">Favorites</button>
+                </div>
+            </nav>
+        </header>
 
-    <div class="loader" id="loader">Loading videos...</div>
-    <div class="error-message" id="errorMessage"></div>
-    <div class="video-grid" id="videoContainer"></div>
+        <main class="main">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search videos...">
+                <button onclick="searchVideos()" class="button-primary">Search</button>
+            </div>
+            
+            <div class="video-grid" id="videoContainer"></div>
+            <div id="loading" class="loader" style="display: none;"></div>
+        </main>
 
-    <div class="notes">
-        <h2>Features & Notes</h2>
-        <ul>
-            <li>Responsive grid layout with hover effects</li>
-            <li>Automatic home page content loading</li>
-            <li>Search functionality with error handling</li>
-            <li>Loading states and visual feedback</li>
-            <li>Mobile-friendly design</li>
-            <li>Direct links to video sources</li>
-            <li>API request rate limiting awareness</li>
-        </ul>
-
-        <h2>Important Notes</h2>
-        <ul>
-            <li>This is a demo interface for educational purposes</li>
-            <li>Content is provided by third-party API</li>
-            <li>API key must be kept confidential</li>
-            <li>Not intended for production use</li>
-            <li>May contain explicit content - use discretion</li>
-        </ul>
-    </div>
-
-    <div class="footer">
-        <h3>Credits & Attribution</h3>
-        <p>API Provider: <a href="https://api.zetsu.xyz" target="_blank">Zetsu.xyz</a></p>
-        <p>Original API Author: Deku</p>
-        <p>Interface Design: [Your Name]</p>
-        <p>Developed for GitHub Pages deployment</p>
+        <!-- Video Modal -->
+        <div id="videoModal" class="modal">
+            <div class="modal-content">
+                <h2 id="modalTitle"></h2>
+                <img id="modalThumbnail" class="video-thumbnail">
+                <div class="video-meta">
+                    <span id="modalDuration"></span>
+                    <span id="modalUploader"></span>
+                </div>
+                <button onclick="closeModal()" class="button">Close</button>
+                <button onclick="shareVideo()" class="button-primary">Share</button>
+                <button onclick="toggleFavorite()" class="button">Add to Favorites</button>
+            </div>
+        </div>
     </div>
 
     <script>
         const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-        const PLACEHOLDER_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
-
-        // UI Elements
-        const loader = document.getElementById('loader');
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Initial load
-        window.onload = function() {
-            showLoader();
-            fetchVideos('home').finally(hideLoader);
+        const STATE = {
+            currentVideo: null,
+            favorites: new Set(),
+            theme: 'light'
         };
 
-        async function fetchVideos(type, query = '') {
-            try {
-                showLoader();
-                clearError();
+        // Initialize application
+        function init() {
+            loadFavorites();
+            loadTheme();
+            window.onload = () => fetchVideos('home');
+        }
 
+        // Video fetching
+        async function fetchVideos(type, query = '') {
+            showLoader();
+            try {
                 const url = type === 'home' 
                     ? `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`
                     : `https://api.zetsu.xyz/prn/search/${encodeURIComponent(query)}?apikey=${API_KEY}`;
-
+                
                 const response = await fetch(url);
-                
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
                 const data = await response.json();
-                displayVideos(data);
+                renderVideos(data);
+                addHistoryState(type, query);
             } catch (error) {
-                showError(`Failed to load videos: ${error.message}`);
-                console.error('API Error:', error);
+                showError(error.message);
             } finally {
                 hideLoader();
             }
         }
 
-        function displayVideos(data) {
+        // Video rendering
+        function renderVideos(data) {
             const container = document.getElementById('videoContainer');
             container.innerHTML = '';
-
-            Object.values(data).forEach((video, index) => {
-                if (!video.video || isNaN(index)) return;
-
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <a href="${video.video}" target="_blank" rel="noopener">
-                        <img src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
-                             alt="${video.title || 'Untitled video'} thumbnail"
-                             loading="lazy">
-                    </a>
-                    <div class="video-info">
-                        <div class="video-title">${video.title || 'Untitled video'}</div>
-                        ${video.duration ? `<div class="video-duration">${video.duration}</div>` : ''}
-                        ${video.uploaderName ? `
-                            <div class="uploader">
-                                <a href="${video.uploaderProfile}" target="_blank" rel="noopener">
-                                    ${video.uploaderName}
-                                </a>
+            
+            Object.entries(data).forEach(([key, video]) => {
+                if (!isNaN(key)) {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <img src="${video.thumbnail}" class="video-thumbnail">
+                        <div class="video-info">
+                            <h3 class="video-title">${video.title}</h3>
+                            <div class="video-meta">
+                                <span>${video.duration}</span>
+                                <span>${video.uploaderName}</span>
                             </div>
-                        ` : ''}
-                    </div>
-                `;
-                container.appendChild(card);
+                        </div>
+                    `;
+                    card.onclick = () => showVideoDetail(video);
+                    container.appendChild(card);
+                }
             });
         }
 
-        function searchVideos() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return showError('Please enter a search term');
+        // Favorites system
+        function toggleFavorite() {
+            const video = STATE.currentVideo;
+            STATE.favorites.has(video.video) 
+                ? STATE.favorites.delete(video.video) 
+                : STATE.favorites.add(video.video);
             
-            showLoader();
-            fetchVideos('search', query);
+            localStorage.setItem('favorites', JSON.stringify([...STATE.favorites]));
         }
 
-        /* Helper Functions */
-        function showLoader() {
-            loader.style.display = 'block';
+        // Theme management
+        function toggleTheme() {
+            STATE.theme = STATE.theme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', STATE.theme);
+            localStorage.setItem('theme', STATE.theme);
         }
 
-        function hideLoader() {
-            loader.style.display = 'none';
+        // History management
+        function addHistoryState(type, query) {
+            const state = { type, query };
+            const title = query ? `Search: ${query}` : 'Home';
+            const url = query ? `/?search=${query}` : '/';
+            
+            history.pushState(state, title, url);
         }
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
+        // Modal controls
+        function showVideoDetail(video) {
+            STATE.currentVideo = video;
+            document.getElementById('modalTitle').textContent = video.title;
+            document.getElementById('modalThumbnail').src = video.thumbnail;
+            document.getElementById('modalDuration').textContent = video.duration;
+            document.getElementById('modalUploader').textContent = video.uploaderName;
+            document.getElementById('videoModal').style.display = 'block';
         }
 
-        function clearError() {
-            errorMessage.style.display = 'none';
+        // Utility functions
+        function verifyAge(confirmed) {
+            document.getElementById('ageGate').style.display = 'none';
+            document.getElementById('mainInterface').style.display = confirmed ? 'block' : 'none';
+            if (!confirmed) window.location.href = 'https://google.com';
         }
 
-        // Handle Enter key
-        document.getElementById('searchInput').addEventListener('keypress', e => {
-            if (e.key === 'Enter') searchVideos();
-        });
+        function loadFavorites() {
+            STATE.favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
+        }
+
+        function loadTheme() {
+            STATE.theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', STATE.theme);
+        }
+
+        function shareVideo() {
+            navigator.share({
+                title: STATE.currentVideo.title,
+                url: STATE.currentVideo.video
+            });
+        }
+
+        // Event listeners
+        window.onpopstate = (event) => {
+            if (event.state) {
+                fetchVideos(event.state.type, event.state.query);
+            }
+        };
+
+        document.getElementById('searchInput').addEventListener('input', 
+            debounce(searchVideos, 500));
+
+        // Initialization
+        init();
     </script>
 </body>
 </html>
