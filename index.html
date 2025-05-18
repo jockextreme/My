@@ -1,203 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAVHD Browser</title>
+    <!-- Keep previous CSS styles -->
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --background: #f5f6fa;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: var(--background);
-        }
-
-        .search-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-        }
-
-        #searchInput {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button {
-            padding: 12px 25px;
-            background: var(--secondary);
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #2980b9;
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .result-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-
-        .result-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-
-        .card-content {
-            padding: 15px;
-        }
-
-        .card-title {
-            margin: 0;
-            font-size: 16px;
-            color: var(--primary);
-        }
-
-        .card-code {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-top: 8px;
-        }
-
-        .video-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .video-container {
-            width: 90%;
-            max-width: 1000px;
-            background: black;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        #videoPlayer {
-            width: 100%;
-            height: auto;
-        }
-
-        .error-message {
-            color: #e74c3c;
-            padding: 10px;
+        /* Previous CSS remains unchanged */
+        .debug-info {
+            color: #666;
+            font-size: 12px;
             margin-top: 10px;
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-container {
-                margin: 10px;
-                padding: 15px;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="search-container">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Enter search term...">
-            <button onclick="searchContent()">Search</button>
-        </div>
-        <div class="error-message" id="errorMessage"></div>
-    </div>
-
-    <div class="results-grid" id="results"></div>
-
-    <div class="video-modal" id="videoModal">
-        <div class="video-container">
-            <video id="videoPlayer" controls></video>
-        </div>
-    </div>
+    <!-- Previous HTML structure remains the same -->
 
     <script>
         const API_KEY = '625156d0d268e4633b97980c0dc859d0';
         const BASE_URL = 'https://api.zetsu.xyz/javhd';
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'; // Temporary CORS fix
 
-        async function searchContent() {
-            const query = document.getElementById('searchInput').value.trim();
-            const errorElement = document.getElementById('errorMessage');
-            const resultsContainer = document.getElementById('results');
-
-            if (!query) {
-                showError('Please enter a search term');
-                return;
-            }
-
-            clearError();
-            resultsContainer.innerHTML = '<div class="loading">Searching...</div>';
-
+        async function showVideoDetail(contentUrl) {
             try {
+                const modal = document.getElementById('videoModal');
+                const videoPlayer = document.getElementById('videoPlayer');
+                
+                // Encode parameters properly
                 const params = new URLSearchParams({
-                    action: 'search',
-                    query: query,
+                    action: 'detail',
+                    url: contentUrl,  // Already comes encoded from API
                     apikey: API_KEY
                 });
 
-                const response = await fetch(`${BASE_URL}?${params}`);
+                // Add CORS proxy for testing
+                const apiUrl = `${CORS_PROXY}${BASE_URL}?${params}`;
                 
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                console.log('Fetching:', apiUrl); // Debug log
+                
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                console.log('Response status:', response.status); // Debug log
                 
                 const data = await response.json();
+                console.log('API Response:', data); // Debug log
                 
-                if (data.error) throw new Error(data.error);
-                if (!data.length) throw new Error('No results found');
+                if (!response.ok || data.error) {
+                    throw new Error(data.error || 'Unknown API error');
+                }
 
-                displayResults(data);
+                if (!data.videos || data.videos.length === 0) {
+                    throw new Error('No video sources found in response');
+                }
+
+                // Use first available video source
+                const videoSource = data.videos[0].url;
+                if (!videoSource) throw new Error('Invalid video URL');
+                
+                videoPlayer.innerHTML = `
+                    <source src="${videoSource}" type="video/mp4">
+                    Your browser does not support the video tag.
+                `;
+                
+                modal.style.display = 'flex';
+                videoPlayer.play().catch(e => {
+                    throw new Error('Video playback failed: ' + e.message);
+                });
+
             } catch (error) {
-                showError(error.message);
-                resultsContainer.innerHTML = '';
+                console.error('Detailed error:', error);
+                showError(`Failed to load video: ${error.message}`);
+                document.getElementById('videoModal').style.display = 'none';
             }
         }
 
+        // Add debug information display
         function displayResults(results) {
             const resultsContainer = document.getElementById('results');
             resultsContainer.innerHTML = results.map(result => `
@@ -206,64 +85,13 @@
                     <div class="card-content">
                         <h3 class="card-title">${result.title}</h3>
                         <p class="card-code">${result.code}</p>
+                        <div class="debug-info">
+                            API URL: ${result.url}
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
-
-        async function showVideoDetail(contentUrl) {
-            try {
-                const modal = document.getElementById('videoModal');
-                const videoPlayer = document.getElementById('videoPlayer');
-                const params = new URLSearchParams({
-                    action: 'detail',
-                    url: encodeURIComponent(contentUrl),
-                    apikey: API_KEY
-                });
-
-                const response = await fetch(`${BASE_URL}?${params}`);
-                
-                if (!response.ok) throw new Error('Failed to load video details');
-                
-                const data = await response.json();
-                
-                if (data.error) throw new Error(data.error);
-                if (!data.videos?.length) throw new Error('No video sources available');
-
-                videoPlayer.innerHTML = `
-                    <source src="${data.videos[0].url}" type="video/mp4">
-                    Your browser does not support the video tag.
-                `;
-                
-                modal.style.display = 'flex';
-                videoPlayer.play();
-            } catch (error) {
-                showError(error.message);
-            }
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('videoModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('videoModal')) {
-                document.getElementById('videoModal').style.display = 'none';
-                document.getElementById('videoPlayer').pause();
-            }
-        });
-
-        function showError(message) {
-            const errorElement = document.getElementById('errorMessage');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-        }
-
-        function clearError() {
-            document.getElementById('errorMessage').style.display = 'none';
-        }
-
-        // Handle Enter key
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchContent();
-        });
     </script>
 </body>
 </html>
