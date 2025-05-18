@@ -3,272 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zetsu Video Explorer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Zetsu API Video Browser</title>
     <style>
+        /* Base Styles */
         :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --background: #f8f9fa;
-            --text: #2c3e50;
-            --card-bg: #ffffff;
-        }
-
-        /* Dark Theme */
-        .dark-theme {
-            --primary: #3498db;
-            --background: #2c3e50;
-            --text: #ecf0f1;
-            --card-bg: #34495e;
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #ecf0f1;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: var(--background);
-            color: var(--text);
-            transition: all 0.3s ease;
+            background-color: var(--background-color);
+            line-height: 1.6;
         }
 
-        /* Header with Theme Toggle */
+        /* Header Styles */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: var(--primary);
+            text-align: center;
+            padding: 2rem 0;
+            background: var(--primary-color);
             color: white;
             margin: -20px -20px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        /* Search Container */
+        /* Search Section */
         .search-container {
             max-width: 800px;
-            margin: 2rem auto;
-            position: relative;
+            margin: 0 auto 30px;
+            display: flex;
+            gap: 10px;
         }
 
         #searchInput {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid var(--primary);
-            border-radius: 30px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
         }
 
-        #searchInput:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(46, 134, 222, 0.3);
+        button {
+            padding: 12px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
-        /* Video Grid Animation */
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        /* Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
             padding: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.5s ease forwards;
         }
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Video Card Enhancements */
         .video-card {
-            background: var(--card-bg);
-            border-radius: 15px;
+            background: white;
+            border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            position: relative;
+            transition: transform 0.2s;
         }
 
         .video-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
-
-        .video-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(transparent 60%, rgba(0,0,0,0.7));
-            z-index: 1;
         }
 
         .video-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            border-bottom: 3px solid var(--secondary-color);
         }
 
-        .video-card:hover img {
-            transform: scale(1.05);
-        }
-
-        /* Video Info Overlay */
         .video-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
             padding: 15px;
-            color: white;
-            z-index: 2;
         }
 
-        /* Loading Spinner */
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+
+        .video-duration {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+        }
+
+        .uploader {
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        /* Loading State */
         .loader {
             display: none;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--primary);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+        /* Error Message */
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            padding: 20px;
             display: none;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
         }
 
-        .back-to-top:hover {
-            transform: translateY(-3px);
-            background: var(--secondary);
+        /* Footer & Credits */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
 
-        /* Modal Enhancements */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            animation: modalFade 0.3s ease;
+        .notes {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        @keyframes modalFade {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .search-container {
+                flex-direction: column;
+            }
+            
+            #searchInput {
+                width: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>🎥 Zetsu Video Explorer</h1>
-        <button class="theme-toggle" onclick="toggleTheme()">
-            <i class="fas fa-moon"></i>
-        </button>
-    </header>
-
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="🔍 Search videos...">
+    <div class="header">
+        <h1>Zetsu API Video Browser</h1>
+        <p>Explore adult content through the Zetsu API</p>
     </div>
 
-    <div class="loader" id="loader"></div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search videos..." aria-label="Search videos">
+        <button onclick="searchVideos()">Search</button>
+    </div>
+
+    <div class="loader" id="loader">Loading videos...</div>
+    <div class="error-message" id="errorMessage"></div>
     <div class="video-grid" id="videoContainer"></div>
-    <div class="back-to-top" id="backToTop">↑</div>
+
+    <div class="notes">
+        <h2>Features & Notes</h2>
+        <ul>
+            <li>Responsive grid layout with hover effects</li>
+            <li>Automatic home page content loading</li>
+            <li>Search functionality with error handling</li>
+            <li>Loading states and visual feedback</li>
+            <li>Mobile-friendly design</li>
+            <li>Direct links to video sources</li>
+            <li>API request rate limiting awareness</li>
+        </ul>
+
+        <h2>Important Notes</h2>
+        <ul>
+            <li>This is a demo interface for educational purposes</li>
+            <li>Content is provided by third-party API</li>
+            <li>API key must be kept confidential</li>
+            <li>Not intended for production use</li>
+            <li>May contain explicit content - use discretion</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <h3>Credits & Attribution</h3>
+        <p>API Provider: <a href="https://api.zetsu.xyz" target="_blank">Zetsu.xyz</a></p>
+        <p>Original API Author: Deku</p>
+        <p>Interface Design: [Your Name]</p>
+        <p>Developed for GitHub Pages deployment</p>
+    </div>
 
     <script>
-        // Theme Management
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            const themeToggle = document.querySelector('.theme-toggle');
-            themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? 
-                '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-        }
+        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
+        const PLACEHOLDER_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
 
-        // Scroll Events
-        window.onscroll = function() {
-            const backToTop = document.getElementById('backToTop');
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                backToTop.style.display = 'flex';
-            } else {
-                backToTop.style.display = 'none';
-            }
+        // UI Elements
+        const loader = document.getElementById('loader');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Initial load
+        window.onload = function() {
+            showLoader();
+            fetchVideos('home').finally(hideLoader);
         };
 
-        document.getElementById('backToTop').addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        async function fetchVideos(type, query = '') {
+            try {
+                showLoader();
+                clearError();
 
-        // Video Click Handler
-        function handleVideoClick(videoData) {
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <h3>${videoData.title}</h3>
-                    <p>Duration: ${videoData.duration}</p>
-                    <p>Uploader: ${videoData.uploaderName}</p>
-                    <a href="${videoData.video}" target="_blank">Watch Video</a>
-                    <button onclick="this.parentElement.parentElement.remove()">Close</button>
-                </div>
-            `;
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.remove();
-            });
-            document.body.appendChild(modal);
+                const url = type === 'home' 
+                    ? `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`
+                    : `https://api.zetsu.xyz/prn/search/${encodeURIComponent(query)}?apikey=${API_KEY}`;
+
+                const response = await fetch(url);
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const data = await response.json();
+                displayVideos(data);
+            } catch (error) {
+                showError(`Failed to load videos: ${error.message}`);
+                console.error('API Error:', error);
+            } finally {
+                hideLoader();
+            }
         }
 
-        // Enhanced Search with Debounce
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                if (e.target.value.trim()) {
-                    fetchVideos('search', e.target.value.trim());
-                }
-            }, 500);
-        });
-
-        // Modified Display Videos with Click Events
         function displayVideos(data) {
             const container = document.getElementById('videoContainer');
             container.innerHTML = '';
@@ -279,40 +248,56 @@
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 card.innerHTML = `
-                    <img src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
-                         alt="${video.title}" 
-                         loading="lazy">
+                    <a href="${video.video}" target="_blank" rel="noopener">
+                        <img src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
+                             alt="${video.title || 'Untitled video'} thumbnail"
+                             loading="lazy">
+                    </a>
                     <div class="video-info">
-                        <div class="video-title">${video.title}</div>
-                        <div class="video-duration">${video.duration}</div>
+                        <div class="video-title">${video.title || 'Untitled video'}</div>
+                        ${video.duration ? `<div class="video-duration">${video.duration}</div>` : ''}
+                        ${video.uploaderName ? `
+                            <div class="uploader">
+                                <a href="${video.uploaderProfile}" target="_blank" rel="noopener">
+                                    ${video.uploaderName}
+                                </a>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
-                
-                card.addEventListener('click', () => handleVideoClick(video));
                 container.appendChild(card);
             });
-
-            // Animate cards sequentially
-            gsap.from('.video-card', {
-                duration: 0.5,
-                opacity: 0,
-                y: 50,
-                stagger: 0.1,
-                ease: "power2.out"
-            });
         }
 
-        // Initialize theme
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-            document.querySelector('.theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return showError('Please enter a search term');
+            
+            showLoader();
+            fetchVideos('search', query);
         }
 
-        // Add keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === '/') {
-                document.getElementById('searchInput').focus();
-            }
+        /* Helper Functions */
+        function showLoader() {
+            loader.style.display = 'block';
+        }
+
+        function hideLoader() {
+            loader.style.display = 'none';
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function clearError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Handle Enter key
+        document.getElementById('searchInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') searchVideos();
         });
     </script>
 </body>
