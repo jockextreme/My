@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Instant JAV Browser</title>
+    <title>JAVHD Browser</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
-        .video-container { margin: 20px 0; }
-        video { width: 100%; max-width: 800px; height: auto; }
         .search-box { margin-bottom: 20px; }
-        .result-item { padding: 10px; border-bottom: 1px solid #ccc; cursor: pointer; }
+        .results { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .card { border: 1px solid #ddd; border-radius: 5px; padding: 10px; cursor: pointer; }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .video-container { margin-top: 20px; }
+        video { width: 100%; max-width: 800px; }
     </style>
 </head>
 <body>
@@ -16,59 +18,68 @@
         <button onclick="search()">Search</button>
     </div>
     
-    <div id="results"></div>
+    <div id="results" class="results"></div>
     
-    <div id="videoContainer" class="video-container" style="display: none;">
-        <video id="videoPlayer" controls>
-            <source id="videoSource" type="video/mp4">
-        </video>
-        <h3 id="videoTitle"></h3>
+    <div class="video-container">
+        <video id="videoPlayer" controls></video>
     </div>
 
     <script>
-        // Mock data - Replace with real API calls
-        const mockData = [
-            {
-                id: 1,
-                title: "Sample Video 1",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
-            {
-                id: 2,
-                title: "Sample Video 2",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-            }
-        ];
+        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
+        const BASE_URL = 'https://api.zetsu.xyz/javhd';
 
-        function search() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const results = mockData.filter(item => 
-                item.title.toLowerCase().includes(query)
-            );
-            
-            displayResults(results);
+        async function search() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            try {
+                const response = await fetch(
+                    `${BASE_URL}?action=search&query=${encodeURIComponent(query)}&apikey=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error('API Error');
+                const data = await response.json();
+                
+                displayResults(data);
+            } catch (error) {
+                alert('Search failed: ' + error.message);
+            }
         }
 
         function displayResults(items) {
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = items.map(item => `
-                <div class="result-item" onclick="playVideo('${item.videoUrl}', '${item.title}')">
-                    ${item.title}
+                <div class="card" onclick="showDetail('${item.url}')">
+                    <img src="${item.thumb}" alt="${item.title}">
+                    <h3>${item.title}</h3>
+                    <p>${item.code}</p>
                 </div>
             `).join('');
         }
 
-        function playVideo(url, title) {
-            document.getElementById('videoContainer').style.display = 'block';
-            document.getElementById('videoSource').src = url;
-            document.getElementById('videoTitle').textContent = title;
+        async function showDetail(url) {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}?action=detail&url=${encodeURIComponent(url)}&apikey=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error('Detail Error');
+                const detail = await response.json();
+                
+                playVideo(detail.videos[0].url);
+            } catch (error) {
+                alert('Failed to load details: ' + error.message);
+            }
+        }
+
+        function playVideo(videoUrl) {
             const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.innerHTML = `
+                <source src="${videoUrl}" type="video/mp4">
+            `;
             videoPlayer.load();
             videoPlayer.play();
         }
-
-        // Initial load
-        displayResults(mockData);
     </script>
 </body>
 </html>
