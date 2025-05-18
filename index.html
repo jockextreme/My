@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAVHD Browser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .search-box {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .result-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .detail-view {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        .thumbnail {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-box">
+        <h1>JAVHD Browser</h1>
+        <input type="text" id="searchInput" placeholder="Enter search query...">
+        <button onclick="searchVideos()">Search</button>
+    </div>
+
+    <div class="results" id="resultsContainer"></div>
+    <div class="detail-view" id="detailContainer" style="display: none;"></div>
+
+    <script>
+        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
+
+        async function searchVideos() {
+            const query = document.getElementById('searchInput').value;
+            const apiUrl = `https://api.zetsu.xyz/javhd?action=search&query=${encodeURIComponent(query)}&apikey=${API_KEY}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error fetching results');
+            }
+        }
+
+        async function showDetails(url) {
+            const apiUrl = `https://api.zetsu.xyz/javhd?action=detail&url=${encodeURIComponent(url)}&apikey=${API_KEY}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                displayDetails(data);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error fetching details');
+            }
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            // Assuming results is an array of video items
+            results.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'result-item';
+                itemElement.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <img src="${item.thumbnail}" class="thumbnail" alt="Thumbnail">
+                    <button onclick="showDetails('${item.url}')">View Details</button>
+                `;
+                container.appendChild(itemElement);
+            });
+        }
+
+        function displayDetails(details) {
+            const container = document.getElementById('detailContainer');
+            container.style.display = 'block';
+            
+            // Customize this based on the actual API response structure
+            container.innerHTML = `
+                <h2>${details.title}</h2>
+                <p>${details.description}</p>
+                <p>Actors: ${details.actors.join(', ')}</p>
+                <p>Release Date: ${details.release_date}</p>
+                <!-- Add more details as needed -->
+            `;
+        }
+    </script>
+</body>
+      </html>
