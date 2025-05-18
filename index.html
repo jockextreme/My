@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAVHD Browser - Modern Interface</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <title>JAVHD Browser</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #ec4899;
-            --secondary-color: #f472b6;
-            --dark-bg: #1a1a1a;
+            --primary: #ec4899;
+            --secondary: #f472b6;
+            --dark: #1a1a1a;
             --card-bg: #2d2d2d;
-            --text-light: #f3f4f6;
+            --text: #f3f4f6;
         }
 
         * {
@@ -25,8 +23,8 @@
         }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
+            background: var(--dark);
+            color: var(--text);
             min-height: 100vh;
         }
 
@@ -38,31 +36,30 @@
 
         .header {
             text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 3rem 0;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 2rem;
         }
 
-        .search-container {
-            position: relative;
+        .search-box {
             max-width: 600px;
             margin: 0 auto;
+            position: relative;
         }
 
-        .search-input {
+        #searchInput {
             width: 100%;
             padding: 1rem 2rem;
             border: none;
             border-radius: 30px;
             background: rgba(255,255,255,0.1);
-            color: var(--text-light);
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
         }
 
-        .search-input:focus {
+        #searchInput:focus {
             outline: none;
             background: rgba(255,255,255,0.2);
             box-shadow: 0 0 15px rgba(236,72,153,0.3);
@@ -75,94 +72,57 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--text-light);
-            font-size: 1.2rem;
+            color: var(--text);
             cursor: pointer;
         }
 
-        .results-grid {
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
-        .video-card {
+        .card {
             background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
             cursor: pointer;
-            position: relative;
         }
 
-        .video-card:hover {
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        .thumbnail-container {
-            position: relative;
-            overflow: hidden;
-            height: 350px;
         }
 
         .thumbnail {
             width: 100%;
-            height: 100%;
+            height: 350px;
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
 
-        .video-card:hover .thumbnail {
-            transform: scale(1.05);
-        }
-
-        .play-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3rem;
-            color: rgba(255,255,255,0.9);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .video-card:hover .play-overlay {
-            opacity: 1;
-        }
-
-        .video-info {
+        .card-content {
             padding: 1.5rem;
         }
 
-        .video-title {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: #a1a1aa;
-        }
-
-        /* Loading Animation */
-        .loader {
+        .error {
+            background: #ffebee;
+            color: #b71c1c;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
             display: none;
-            width: 50px;
-            height: 50px;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
             border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
             animation: spin 1s linear infinite;
             margin: 2rem auto;
+            display: none;
         }
 
         @keyframes spin {
@@ -170,7 +130,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Detail View */
         .detail-view {
             background: var(--card-bg);
             border-radius: 15px;
@@ -178,66 +137,14 @@
             margin-top: 2rem;
             display: none;
         }
-
-        .detail-header {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .detail-thumbnail {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        .detail-info {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .detail-title {
-            font-size: 2rem;
-            color: var(--primary-color);
-        }
-
-        .detail-description {
-            line-height: 1.6;
-            color: #d1d5db;
-        }
-
-        .tag-list {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            background: rgba(236,72,153,0.2);
-            color: var(--primary-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-
-        @media (max-width: 768px) {
-            .detail-header {
-                grid-template-columns: 1fr;
-            }
-            
-            .container {
-                padding: 1rem;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="container">
             <h1>JAVHD Browser</h1>
-            <div class="search-container">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search videos...">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search videos...">
                 <button class="search-btn" onclick="searchVideos()">
                     <i class="fas fa-search"></i>
                 </button>
@@ -247,54 +154,72 @@
 
     <div class="container">
         <div class="loader" id="loader"></div>
-        <div class="results-grid" id="resultsContainer"></div>
-        <div class="detail-view" id="detailContainer"></div>
+        <div class="error" id="error"></div>
+        <div class="grid" id="results"></div>
+        <div class="detail-view" id="detail"></div>
     </div>
 
     <script>
-        // JavaScript from previous example remains the same
-        // Add these modifications for loading animation
+        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
+        
         async function searchVideos() {
-            const loader = document.getElementById('loader');
-            loader.style.display = 'block';
-            
+            const query = document.getElementById('searchInput').value;
+            if (!query) return showError('Please enter a search query');
+
+            showLoader();
+            clearError();
+
             try {
-                // ... existing search code ...
+                const url = `https://api.zetsu.xyz/javhd?action=search&query=${encodeURIComponent(query)}&apikey=${API_KEY}`;
+                const response = await fetchWithTimeout(url);
+                
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+                
+                displayResults(data);
+            } catch (error) {
+                showError(error.message);
             } finally {
-                loader.style.display = 'none';
+                hideLoader();
             }
         }
 
         async function showDetails(url) {
-            const loader = document.getElementById('loader');
-            loader.style.display = 'block';
-            
+            showLoader();
+            clearError();
+
             try {
-                // ... existing detail code ...
+                const response = await fetchWithTimeout(
+                    `https://api.zetsu.xyz/javhd?action=detail&url=${encodeURIComponent(url)}&apikey=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+                
+                displayDetails(data);
+            } catch (error) {
+                showError(error.message);
             } finally {
-                loader.style.display = 'none';
+                hideLoader();
             }
         }
 
-        // Update displayResults and displayDetails to use new HTML structure
         function displayResults(results) {
-            const container = document.getElementById('resultsContainer');
+            const container = document.getElementById('results');
             container.innerHTML = '';
-
+            
             results.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'video-card';
+                card.className = 'card';
                 card.innerHTML = `
-                    <div class="thumbnail-container">
-                        <img src="${item.thumbnail}" class="thumbnail" alt="Thumbnail">
-                        <div class="play-overlay"><i class="fas fa-play"></i></div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">${item.title}</h3>
-                        <div class="video-meta">
-                            <span>${item.duration}</span>
-                            <span>${item.views} views</span>
-                        </div>
+                    <img src="${item.thumbnail}" class="thumbnail" alt="${item.title}">
+                    <div class="card-content">
+                        <h3>${item.title}</h3>
+                        <p>${item.duration} • ${item.views} views</p>
                     </div>
                 `;
                 card.addEventListener('click', () => showDetails(item.url));
@@ -303,27 +228,57 @@
         }
 
         function displayDetails(details) {
-            const container = document.getElementById('detailContainer');
+            const container = document.getElementById('detail');
             container.style.display = 'block';
             container.innerHTML = `
-                <div class="detail-header">
-                    <img src="${details.thumbnail}" class="detail-thumbnail" alt="Thumbnail">
-                    <div class="detail-info">
-                        <h1 class="detail-title">${details.title}</h1>
-                        <div class="tag-list">
-                            ${details.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                        <p class="detail-description">${details.description}</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-clock"></i> ${details.duration}</span>
-                            <span><i class="fas fa-calendar-alt"></i> ${details.date}</span>
-                            <span><i class="fas fa-eye"></i> ${details.views} views</span>
-                        </div>
-                    </div>
+                <h2>${details.title}</h2>
+                <p>${details.description}</p>
+                <div class="meta">
+                    <p>Actors: ${details.actors.join(', ')}</p>
+                    <p>Released: ${details.date}</p>
                 </div>
-                <!-- Add more detail sections as needed -->
             `;
         }
+
+        // Helper functions
+        async function fetchWithTimeout(url, timeout = 8000) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
+            try {
+                return await fetch(url, {
+                    signal: controller.signal,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } finally {
+                clearTimeout(timeoutId);
+            }
+        }
+
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function clearError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Initial load
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchVideos();
+        });
     </script>
 </body>
 </html>
