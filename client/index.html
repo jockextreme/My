@@ -1,0 +1,119 @@
+<!-- ====================== -->
+<!-- CLIENT (index.html) -->
+<!-- ====================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Video Browser</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f8f9fa;
+            --primary-color: #007bff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d2d;
+            --primary-color: #00a8ff;
+        }
+
+        /* ... (keep previous styles) ... */
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search videos...">
+            <div class="filters">
+                <!-- ... (keep previous filter buttons) ... -->
+            </div>
+        </div>
+        <button class="theme-toggle">🌓</button>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <div class="video-grid" id="videoContainer"></div>
+
+    <script>
+        const API_ENDPOINT = '/api'; // Points to our proxy server
+        
+        let currentPage = 1;
+        let isLoading = false;
+        let currentTheme = localStorage.getItem('theme') || 'light';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setTheme(currentTheme);
+            loadVideos();
+            setupIntersectionObserver();
+        });
+
+        async function loadVideos(query = '') {
+            if (isLoading) return;
+            
+            isLoading = true;
+            showLoading();
+            
+            try {
+                const endpoint = query ? 
+                    `/search/${encodeURIComponent(query)}` : 
+                    '/home';
+                
+                const response = await fetch(
+                    `${API_ENDPOINT}${endpoint}?page=${currentPage}`
+                );
+                
+                if (!response.ok) throw new Error('Network error');
+                
+                const data = await response.json();
+                displayVideos(data);
+                currentPage++;
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                isLoading = false;
+                hideLoading();
+            }
+        }
+
+        // ... (keep previous display functions) ...
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    loadVideos();
+                }
+            }, { threshold: 1.0 });
+
+            observer.observe(document.querySelector('.footer'));
+        }
+
+        // Security enhancements
+        function sanitizeHTML(str) {
+            return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function validateURL(url) {
+            try {
+                new URL(url);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
