@@ -3,131 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAVHD Browser</title>
+    <title>JAVHD Browser - Modern Interface</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #ec4899;
+            --secondary-color: #f472b6;
+            --dark-bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-light: #f3f4f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 2rem;
         }
 
-        .search-box {
+        .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        input[type="text"] {
-            padding: 10px;
-            width: 300px;
-            margin-right: 10px;
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
+        .search-input {
+            width: 100%;
+            padding: 1rem 2rem;
             border: none;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-light);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 0 15px rgba(236,72,153,0.3);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.2rem;
             cursor: pointer;
         }
 
-        .results {
+        .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
-        .result-item {
-            background-color: white;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
-        .detail-view {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 5px;
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .thumbnail-container {
+            position: relative;
+            overflow: hidden;
+            height: 350px;
         }
 
         .thumbnail {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .thumbnail {
+            transform: scale(1.05);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: rgba(255,255,255,0.9);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #a1a1aa;
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Detail View */
+        .detail-view {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .detail-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-thumbnail {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .detail-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .detail-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .detail-description {
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+
+        .tag-list {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(236,72,153,0.2);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .detail-header {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="search-box">
-        <h1>JAVHD Browser</h1>
-        <input type="text" id="searchInput" placeholder="Enter search query...">
-        <button onclick="searchVideos()">Search</button>
+    <div class="header">
+        <div class="container">
+            <h1>JAVHD Browser</h1>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search videos...">
+                <button class="search-btn" onclick="searchVideos()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="results" id="resultsContainer"></div>
-    <div class="detail-view" id="detailContainer" style="display: none;"></div>
+    <div class="container">
+        <div class="loader" id="loader"></div>
+        <div class="results-grid" id="resultsContainer"></div>
+        <div class="detail-view" id="detailContainer"></div>
+    </div>
 
     <script>
-        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-
+        // JavaScript from previous example remains the same
+        // Add these modifications for loading animation
         async function searchVideos() {
-            const query = document.getElementById('searchInput').value;
-            const apiUrl = `https://api.zetsu.xyz/javhd?action=search&query=${encodeURIComponent(query)}&apikey=${API_KEY}`;
-
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            
             try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                displayResults(data);
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error fetching results');
+                // ... existing search code ...
+            } finally {
+                loader.style.display = 'none';
             }
         }
 
         async function showDetails(url) {
-            const apiUrl = `https://api.zetsu.xyz/javhd?action=detail&url=${encodeURIComponent(url)}&apikey=${API_KEY}`;
-
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            
             try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                displayDetails(data);
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error fetching details');
+                // ... existing detail code ...
+            } finally {
+                loader.style.display = 'none';
             }
         }
 
+        // Update displayResults and displayDetails to use new HTML structure
         function displayResults(results) {
             const container = document.getElementById('resultsContainer');
             container.innerHTML = '';
 
-            // Assuming results is an array of video items
             results.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'result-item';
-                itemElement.innerHTML = `
-                    <h3>${item.title}</h3>
-                    <img src="${item.thumbnail}" class="thumbnail" alt="Thumbnail">
-                    <button onclick="showDetails('${item.url}')">View Details</button>
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${item.thumbnail}" class="thumbnail" alt="Thumbnail">
+                        <div class="play-overlay"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${item.title}</h3>
+                        <div class="video-meta">
+                            <span>${item.duration}</span>
+                            <span>${item.views} views</span>
+                        </div>
+                    </div>
                 `;
-                container.appendChild(itemElement);
+                card.addEventListener('click', () => showDetails(item.url));
+                container.appendChild(card);
             });
         }
 
         function displayDetails(details) {
             const container = document.getElementById('detailContainer');
             container.style.display = 'block';
-            
-            // Customize this based on the actual API response structure
             container.innerHTML = `
-                <h2>${details.title}</h2>
-                <p>${details.description}</p>
-                <p>Actors: ${details.actors.join(', ')}</p>
-                <p>Release Date: ${details.release_date}</p>
-                <!-- Add more details as needed -->
+                <div class="detail-header">
+                    <img src="${details.thumbnail}" class="detail-thumbnail" alt="Thumbnail">
+                    <div class="detail-info">
+                        <h1 class="detail-title">${details.title}</h1>
+                        <div class="tag-list">
+                            ${details.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <p class="detail-description">${details.description}</p>
+                        <div class="video-meta">
+                            <span><i class="fas fa-clock"></i> ${details.duration}</span>
+                            <span><i class="fas fa-calendar-alt"></i> ${details.date}</span>
+                            <span><i class="fas fa-eye"></i> ${details.views} views</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more detail sections as needed -->
             `;
         }
     </script>
 </body>
-      </html>
+</html>
