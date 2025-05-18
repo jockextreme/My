@@ -3,282 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAVHD Browser</title>
+    <title>JAVHD Browser Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Add these new styles to existing CSS */
         :root {
             --primary: #ec4899;
             --secondary: #f472b6;
             --dark: #1a1a1a;
+            --light: #ffffff;
             --card-bg: #2d2d2d;
             --text: #f3f4f6;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        .theme-light {
+            --dark: #ffffff;
+            --light: #1a1a1a;
+            --card-bg: #f3f4f6;
+            --text: #2d2d2d;
         }
 
-        body {
-            background: var(--dark);
-            color: var(--text);
-            min-height: 100vh;
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .header {
-            text-align: center;
-            padding: 3rem 0;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border-radius: 0 0 30px 30px;
-            margin-bottom: 2rem;
-        }
-
-        .search-box {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        #searchInput {
-            width: 100%;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.1);
-            color: var(--text);
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        #searchInput:focus {
-            outline: none;
-            background: rgba(255,255,255,0.2);
-            box-shadow: 0 0 15px rgba(236,72,153,0.3);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text);
-            cursor: pointer;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .card {
+        .filter-group {
             background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .thumbnail {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-        }
-
-        .card-content {
-            padding: 1.5rem;
-        }
-
-        .error {
-            background: #ffebee;
-            color: #b71c1c;
             padding: 1rem;
             border-radius: 8px;
             margin: 1rem 0;
-            display: none;
         }
 
-        .loader {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-            display: none;
+        .pagination {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 2rem 0;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .page-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            border: none;
+            color: var(--text);
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .detail-view {
+        .favorites-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .history-item {
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .history-item:hover {
             background: var(--card-bg);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 2rem;
+        }
+
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <h1>JAVHD Browser</h1>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search videos...">
-                <button class="search-btn" onclick="searchVideos()">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
+    <!-- Add these new HTML elements -->
+    <div class="controls">
+        <button onclick="toggleTheme()"><i class="fas fa-moon"></i> Theme</button>
+        <button onclick="showFavorites()"><i class="fas fa-heart"></i> Favorites</button>
+        <button onclick="showHistory()"><i class="fas fa-history"></i> History</button>
     </div>
 
-    <div class="container">
-        <div class="loader" id="loader"></div>
-        <div class="error" id="error"></div>
-        <div class="grid" id="results"></div>
-        <div class="detail-view" id="detail"></div>
+    <div class="filter-group">
+        <select id="sortBy" onchange="searchVideos()">
+            <option value="relevance">Sort by Relevance</option>
+            <option value="newest">Newest First</option>
+            <option value="popular">Most Popular</option>
+        </select>
+        
+        <select id="durationFilter" onchange="searchVideos()">
+            <option value="all">Any Duration</option>
+            <option value="short">Short (&lt; 30min)</option>
+            <option value="medium">Medium (30-60min)</option>
+            <option value="long">Long (&gt; 60min)</option>
+        </select>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent"></div>
     </div>
 
     <script>
-        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-        
+        // Add these new features to the existing JavaScript
+        let currentPage = 1;
+        let totalPages = 1;
+        const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+        // Modified searchVideos function with pagination
         async function searchVideos() {
             const query = document.getElementById('searchInput').value;
-            if (!query) return showError('Please enter a search query');
+            if (!query) return;
+            
+            // Add to search history
+            if (!searchHistory.includes(query)) {
+                searchHistory.unshift(query);
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
 
-            showLoader();
-            clearError();
+            // Build API URL with filters
+            const sortBy = document.getElementById('sortBy').value;
+            const duration = document.getElementById('durationFilter').value;
+            const url = new URL(`https://api.zetsu.xyz/javhd`);
+            
+            url.searchParams.append('action', 'search');
+            url.searchParams.append('query', query);
+            url.searchParams.append('apikey', API_KEY);
+            url.searchParams.append('page', currentPage);
+            url.searchParams.append('sort', sortBy);
+            url.searchParams.append('duration', duration);
 
             try {
-                const url = `https://api.zetsu.xyz/javhd?action=search&query=${encodeURIComponent(query)}&apikey=${API_KEY}`;
                 const response = await fetchWithTimeout(url);
-                
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                
                 const data = await response.json();
-                if (data.error) throw new Error(data.error);
                 
-                displayResults(data);
+                totalPages = data.total_pages || 1;
+                displayResults(data.results);
+                updatePagination();
             } catch (error) {
                 showError(error.message);
-            } finally {
-                hideLoader();
             }
         }
 
-        async function showDetails(url) {
-            showLoader();
-            clearError();
-
-            try {
-                const response = await fetchWithTimeout(
-                    `https://api.zetsu.xyz/javhd?action=detail&url=${encodeURIComponent(url)}&apikey=${API_KEY}`
-                );
-                
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                
-                const data = await response.json();
-                if (data.error) throw new Error(data.error);
-                
-                displayDetails(data);
-            } catch (error) {
-                showError(error.message);
-            } finally {
-                hideLoader();
-            }
-        }
-
-        function displayResults(results) {
-            const container = document.getElementById('results');
-            container.innerHTML = '';
+        // New pagination controls
+        function updatePagination() {
+            const pagination = document.createElement('div');
+            pagination.className = 'pagination';
             
-            results.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${item.thumbnail}" class="thumbnail" alt="${item.title}">
-                    <div class="card-content">
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'page-btn';
+                btn.textContent = i;
+                btn.disabled = i === currentPage;
+                btn.onclick = () => {
+                    currentPage = i;
+                    searchVideos();
+                };
+                pagination.appendChild(btn);
+            }
+            
+            document.getElementById('results').after(pagination);
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('theme-light');
+            localStorage.setItem('theme', document.body.classList.contains('theme-light') ? 'light' : 'dark');
+        }
+
+        // Favorites system
+        function toggleFavorite(item) {
+            const index = favorites.findIndex(fav => fav.id === item.id);
+            if (index === -1) {
+                favorites.push(item);
+            } else {
+                favorites.splice(index, 1);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+        }
+
+        function showFavorites() {
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <h2>Favorites (${favorites.length})</h2>
+                ${favorites.map(item => `
+                    <div class="card">
                         <h3>${item.title}</h3>
-                        <p>${item.duration} • ${item.views} views</p>
+                        <button onclick="toggleFavorite(${JSON.stringify(item)})">
+                            <i class="fas fa-heart"></i>
+                        </button>
                     </div>
-                `;
-                card.addEventListener('click', () => showDetails(item.url));
-                container.appendChild(card);
-            });
-        }
-
-        function displayDetails(details) {
-            const container = document.getElementById('detail');
-            container.style.display = 'block';
-            container.innerHTML = `
-                <h2>${details.title}</h2>
-                <p>${details.description}</p>
-                <div class="meta">
-                    <p>Actors: ${details.actors.join(', ')}</p>
-                    <p>Released: ${details.date}</p>
-                </div>
+                `).join('')}
             `;
+            document.getElementById('modal').style.display = 'flex';
         }
 
-        // Helper functions
-        async function fetchWithTimeout(url, timeout = 8000) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeout);
-            
-            try {
-                return await fetch(url, {
-                    signal: controller.signal,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-            } finally {
-                clearTimeout(timeoutId);
+        // Search history
+        function showHistory() {
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <h2>Search History</h2>
+                ${searchHistory.map(term => `
+                    <div class="history-item" onclick="searchHistoryTerm('${term}')">
+                        ${term}
+                    </div>
+                `).join('')}
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function searchHistoryTerm(term) {
+            document.getElementById('searchInput').value = term;
+            searchVideos();
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Close modal
+        window.onclick = function(event) {
+            if (event.target.id === 'modal') {
+                document.getElementById('modal').style.display = 'none';
             }
         }
 
-        function showLoader() {
-            document.getElementById('loader').style.display = 'block';
+        // Initialize theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('theme-light');
         }
-
-        function hideLoader() {
-            document.getElementById('loader').style.display = 'none';
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function clearError() {
-            document.getElementById('error').style.display = 'none';
-        }
-
-        // Initial load
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchVideos();
-        });
     </script>
 </body>
 </html>
