@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAVHD Browser Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>JAVHD Browser Pro</h1>
+        <div class="auth-section">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="register()">Register</button>
+            <button onclick="login()">Login</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search content...">
+            <button onclick="searchContent()">Search</button>
+            <select id="filter">
+                <option value="all">All</option>
+                <option value="hd">HD Only</option>
+                <option value="recent">Recent</option>
+            </select>
+        </div>
+
+        <div class="content-grid" id="results"></div>
+        
+        <div class="video-modal" id="videoModal">
+            <div class="video-container">
+                <video id="videoPlayer" controls></video>
+                <div class="video-controls">
+                    <button onclick="addToFavorites()">❤️ Favorite</button>
+                    <button onclick="rateContent(5)">★★★★★</button>
+                    <button onclick="closeModal()">✖ Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h3>Watch History</h3>
+            <div id="historyList"></div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
