@@ -88,6 +88,15 @@
                 </div>
             </div>
         </div>
+
+        <!-- Add error container and loading indicator -->
+<div class="container">
+    <div id="errorContainer" class="notification is-danger is-hidden"></div>
+    <div class="loading-overlay">
+        <div class="loader">Loading...</div>
+    </div>
+</div>
+        
     </section>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -95,36 +104,3 @@
 </body>
 </html>
 
-/* styles.css */
-.content-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-}
-
-.content-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.video-player {
-    width: 100%;
-    height: 500px;
-    background: #000;
-}
-
-.comment {
-    border-left: 3px solid #3273dc;
-    padding-left: 1rem;
-    margin: 1rem 0;
-}
-
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.8);
-    z-index: 999;
-    display: none;
-}
