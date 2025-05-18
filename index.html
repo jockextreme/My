@@ -1,106 +1,74 @@
-<!-- FILE STRUCTURE -->
-<!--
-- index.html
-- styles.css
-- app.js
-- server.js
-- package.json
-- README.md
--->
-
 <!DOCTYPE html>
-<!-- index.html -->
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAVHD 2.0 - Dynamic Adult Content Platform</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <title>Instant JAV Browser</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .video-container { margin: 20px 0; }
+        video { width: 100%; max-width: 800px; height: auto; }
+        .search-box { margin-bottom: 20px; }
+        .result-item { padding: 10px; border-bottom: 1px solid #ccc; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <nav class="navbar is-primary">
-        <div class="container">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="/">
-                    <strong>JAVHD 2.0</strong>
-                </a>
-            </div>
-            <div class="navbar-menu">
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a class="button is-light" id="loginBtn">Log in</a>
-                            <a class="button is-info" id="signupBtn">Sign up</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <section class="section">
-        <div class="container">
-            <div class="box">
-                <div class="field has-addons">
-                    <div class="control is-expanded">
-                        <input class="input" type="text" id="searchInput" placeholder="Search content...">
-                    </div>
-                    <div class="control">
-                        <button class="button is-info" id="searchBtn">Search</button>
-                    </div>
-                </div>
-                <div class="field is-grouped">
-                    <div class="control">
-                        <div class="select">
-                            <select id="filterCategory">
-                                <option>All Categories</option>
-                                <option>Popular</option>
-                                <option>New Releases</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="contentFeed" class="columns is-multiline"></div>
-            
-            <div class="modal" id="detailModal">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title" id="modalTitle"></p>
-                        <button class="delete" aria-label="close"></button>
-                    </header>
-                    <section class="modal-card-body" id="modalContent"></section>
-                    <footer class="modal-card-foot">
-                        <button class="button is-success" id="favoriteBtn">Add to Favorites</button>
-                    </footer>
-                </div>
-            </div>
-
-            <div id="commentsSection" class="box mt-5" style="display: none;">
-                <h2 class="title is-5">User Comments</h2>
-                <div id="commentsList"></div>
-                <div class="field mt-3">
-                    <textarea class="textarea" placeholder="Add a comment..." id="commentInput"></textarea>
-                    <button class="button is-info mt-2" id="submitComment">Post Comment</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add error container and loading indicator -->
-<div class="container">
-    <div id="errorContainer" class="notification is-danger is-hidden"></div>
-    <div class="loading-overlay">
-        <div class="loader">Loading...</div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search...">
+        <button onclick="search()">Search</button>
     </div>
-</div>
-        
-    </section>
+    
+    <div id="results"></div>
+    
+    <div id="videoContainer" class="video-container" style="display: none;">
+        <video id="videoPlayer" controls>
+            <source id="videoSource" type="video/mp4">
+        </video>
+        <h3 id="videoTitle"></h3>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // Mock data - Replace with real API calls
+        const mockData = [
+            {
+                id: 1,
+                title: "Sample Video 1",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            },
+            {
+                id: 2,
+                title: "Sample Video 2",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            }
+        ];
+
+        function search() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const results = mockData.filter(item => 
+                item.title.toLowerCase().includes(query)
+            );
+            
+            displayResults(results);
+        }
+
+        function displayResults(items) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = items.map(item => `
+                <div class="result-item" onclick="playVideo('${item.videoUrl}', '${item.title}')">
+                    ${item.title}
+                </div>
+            `).join('');
+        }
+
+        function playVideo(url, title) {
+            document.getElementById('videoContainer').style.display = 'block';
+            document.getElementById('videoSource').src = url;
+            document.getElementById('videoTitle').textContent = title;
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.load();
+            videoPlayer.play();
+        }
+
+        // Initial load
+        displayResults(mockData);
+    </script>
 </body>
 </html>
-
