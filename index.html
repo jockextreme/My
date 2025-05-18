@@ -1,282 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zetsu Video Browser</title>
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --card-bg: #f8f9fa;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zetsu Video Browser</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: white;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #ffffff;
-            --card-bg: #2d2d2d;
-        }
+    .light {
+      background-color: white;
+      color: black;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background 0.3s ease;
-        }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: #1f1f1f;
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .light header {
+      background-color: #f0f0f0;
+    }
 
-        .search-container {
-            flex-grow: 1;
-            margin-right: 20px;
-        }
+    input[type="text"] {
+      padding: 0.5rem;
+      width: 60%;
+      max-width: 300px;
+      border-radius: 5px;
+      border: none;
+    }
 
-        #searchInput {
-            padding: 12px;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 16px;
-        }
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
 
-        button {
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
+    .light button {
+      background-color: #ccc;
+      color: black;
+    }
 
-        button:hover {
-            transform: scale(1.05);
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
 
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
+    .card {
+      background-color: #1e1e1e;
+      padding: 1rem;
+      border-radius: 10px;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
 
-        .video-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
+    .light .card {
+      background-color: #f5f5f5;
+    }
 
-        .video-card:hover {
-            transform: translateY(-5px);
-        }
+    .card:hover {
+      transform: scale(1.03);
+    }
 
-        .thumbnail-container {
-            position: relative;
-        }
+    .card img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
 
-        .duration {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9em;
-        }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
 
-        .video-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 3px solid #007bff;
-        }
+    .modal-content {
+      background: #1e1e1e;
+      border-radius: 10px;
+      max-width: 800px;
+      width: 100%;
+      padding: 1rem;
+      position: relative;
+      color: white;
+    }
 
-        .video-info {
-            padding: 15px;
-        }
+    .modal iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: 8px;
+    }
 
-        .video-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+    }
 
-        .uploader {
-            color: #007bff;
-            font-size: 0.9em;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-        }
+    .light .modal-content {
+      background: #fff;
+      color: black;
+    }
 
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2em;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 999;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            margin: 5% auto;
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 10px;
-        }
-    </style>
+    @media (max-width: 600px) {
+      .modal iframe {
+        height: 300px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search videos...">
-        </div>
-        <button onclick="toggleTheme()">Toggle Dark Mode</button>
+  <header>
+    <input type="text" id="searchInput" placeholder="Search videos..." />
+    <button onclick="toggleTheme()">Toggle Theme</button>
+  </header>
+
+  <div class="grid" id="videoGrid"></div>
+
+  <!-- Modal -->
+  <div id="videoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <iframe id="videoFrame" allowfullscreen></iframe>
+      <p id="modalUploader"></p>
     </div>
-    
-    <div class="loading" id="loading">Loading...</div>
-    <div class="video-grid" id="videoContainer"></div>
-    
-    <div class="modal" id="videoModal">
-        <div class="modal-content">
-            <span onclick="closeModal()" style="float:right;cursor:pointer">×</span>
-            <div id="modalContent"></div>
-        </div>
-    </div>
+  </div>
 
-    <script>
-        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-        let currentTheme = 'light';
+  <script>
+    const API_URL = "https://api.zetsu.xyz/prn/";
+    const API_KEY = "625156d0d268e4633b97980c0dc859d0";
+    const searchInput = document.getElementById("searchInput");
+    const videoGrid = document.getElementById("videoGrid");
+    const modal = document.getElementById("videoModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalUploader = document.getElementById("modalUploader");
+    const videoFrame = document.getElementById("videoFrame");
+    let currentVideoData = [];
 
-        // Debounce function for search input
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                if(e.target.value) {
-                    fetchVideos('search', e.target.value);
-                } else {
-                    fetchVideos('home');
-                }
-            }, 500);
-        });
+    async function fetchVideos(query = "") {
+      try {
+        const res = await fetch(`${API_URL}?apikey=${API_KEY}&q=${encodeURIComponent(query)}`);
+        const json = await res.json();
+        currentVideoData = json.result;
+        displayVideos(currentVideoData);
+      } catch (err) {
+        console.error("Error fetching videos:", err);
+      }
+    }
 
-        async function fetchVideos(type, query = '') {
-            showLoading();
-            try {
-                const url = type === 'home' 
-                    ? `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`
-                    : `https://api.zetsu.xyz/prn/search/${encodeURIComponent(query)}?apikey=${API_KEY}`;
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                displayVideos(data);
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to fetch videos');
-            } finally {
-                hideLoading();
-            }
+    function displayVideos(videos) {
+      videoGrid.innerHTML = "";
+      videos.forEach((video, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${video.thumbnail}" alt="${video.title}">
+          <h3>${video.title}</h3>
+        `;
+        card.addEventListener("click", () => showVideoDetails(index));
+        videoGrid.appendChild(card);
+      });
+    }
+
+    function showVideoDetails(index) {
+      const video = currentVideoData[index];
+      modalTitle.textContent = video.title;
+      modalUploader.textContent = `Uploader: ${video.uploader}`;
+      videoFrame.src = getEmbedUrl(video.url);
+      modal.style.display = "flex";
+    }
+
+    function getEmbedUrl(url) {
+      try {
+        const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+        if (ytMatch) {
+          return `https://www.youtube.com/embed/${ytMatch[1]}`;
         }
-
-        function displayVideos(data) {
-            const container = document.getElementById('videoContainer');
-            container.innerHTML = '';
-
-            Object.values(data).forEach((video, index) => {
-                if (!isNaN(index) && video.video) {
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.innerHTML = `
-                        <div class="thumbnail-container">
-                            <img src="${video.thumbnail}" alt="${video.title}" onclick="showVideoDetails(${index})">
-                            <div class="duration">${video.duration}</div>
-                        </div>
-                        <div class="video-info">
-                            <div class="video-title">${video.title}</div>
-                            ${video.uploaderName ? `
-                            <div class="uploader">
-                                <span>${video.uploaderName}</span>
-                            </div>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(card);
-                }
-            });
+        const dailymotionMatch = url.match(/dailymotion\.com\/video\/([a-zA-Z0-9]+)/);
+        if (dailymotionMatch) {
+          return `https://www.dailymotion.com/embed/video/${dailymotionMatch[1]}`;
         }
+        return url.replace("/video.", "/embed/");
+      } catch {
+        return url;
+      }
+    }
 
-        function showVideoDetails(index) {
-            const modal = document.getElementById('videoModal');
-            const modalContent = document.getElementById('modalContent');
-            // Add video details to modal
-            modalContent.innerHTML = `
-                <h2>${data[index].title}</h2>
-                <p>Duration: ${data[index].duration}</p>
-                <p>Uploader: <a href="${data[index].uploaderProfile}" target="_blank">${data[index].uploaderName}</a></p>
-                <a href="${data[index].video}" target="_blank" class="watch-button">Watch Video</a>
-            `;
-            modal.style.display = 'block';
-        }
+    function closeModal() {
+      modal.style.display = "none";
+      videoFrame.src = "";
+    }
 
-        function closeModal() {
-            document.getElementById('videoModal').style.display = 'none';
-        }
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
 
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', currentTheme);
-        }
+    // Close modal on ESC key
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeModal();
+    });
 
-        function showLoading() {
-            document.getElementById('loading').style.display = 'block';
-        }
+    // Search debounce
+    let debounceTimeout;
+    searchInput.addEventListener("input", () => {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        fetchVideos(searchInput.value);
+      }, 400);
+    });
 
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        // Initial load
-        window.onload = () => {
-            fetchVideos('home');
-            document.getElementById('searchInput').focus();
-        };
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('videoModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        };
-    </script>
+    // Initial load
+    fetchVideos();
+  </script>
 </body>
 </html>
