@@ -3,153 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zetsu Video Hub</title>
-    <meta name="description" content="Comprehensive interface for Zetsu API video content">
+    <title>Zetsu Video Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Core Styles */
         :root {
             --primary: #2c3e50;
             --secondary: #e74c3c;
             --background: #f8f9fa;
             --text: #2c3e50;
             --card-bg: #ffffff;
-            --transition: all 0.3s ease;
         }
 
-        [data-theme="dark"] {
+        /* Dark Theme */
+        .dark-theme {
             --primary: #3498db;
-            --secondary: #e67e22;
             --background: #2c3e50;
             --text: #ecf0f1;
             --card-bg: #34495e;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--background);
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background);
             color: var(--text);
-            line-height: 1.6;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
 
-        /* Header */
+        /* Header with Theme Toggle */
         .header {
-            background: var(--primary);
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: white;
+            margin: -20px -20px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .controls {
-            display: flex;
-            gap: 1rem;
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
         }
 
-        /* Main Content */
-        .main {
-            max-width: 1200px;
+        /* Search Container */
+        .search-container {
+            max-width: 800px;
             margin: 2rem auto;
-            padding: 0 1rem;
+            position: relative;
         }
 
-        /* Video Grid */
+        #searchInput {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(46, 134, 222, 0.3);
+        }
+
+        /* Video Grid Animation */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem 0;
+            gap: 25px;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease forwards;
         }
 
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Video Card Enhancements */
         .video-card {
             background: var(--card-bg);
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .video-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
         }
 
-        .video-thumbnail {
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(transparent 60%, rgba(0,0,0,0.7));
+            z-index: 1;
+        }
+
+        .video-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-bottom: 3px solid var(--secondary);
+            transition: transform 0.3s ease;
         }
 
+        .video-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Video Info Overlay */
         .video-info {
-            padding: 1rem;
-        }
-
-        .video-title {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--text);
-        }
-
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: #7f8c8d;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
+            position: absolute;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            border-radius: 10px;
-            position: relative;
-        }
-
-        /* Utilities */
-        .button {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .button-primary {
-            background: var(--secondary);
+            right: 0;
+            padding: 15px;
             color: white;
+            z-index: 2;
         }
 
+        /* Loading Spinner */
         .loader {
+            display: none;
             border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--secondary);
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -161,187 +155,165 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            background: var(--secondary);
+        }
+
+        /* Modal Enhancements */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            animation: modalFade 0.3s ease;
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <!-- Age Verification -->
-    <div id="ageGate" class="modal" style="display: block;">
-        <div class="modal-content">
-            <h2>Age Verification</h2>
-            <p>You must be 18+ to access this content</p>
-            <button onclick="verifyAge(true)" class="button-primary">I am 18+</button>
-            <button onclick="verifyAge(false)">Exit</button>
-        </div>
+    <header class="header">
+        <h1>🎥 Zetsu Video Explorer</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="🔍 Search videos...">
     </div>
 
-    <!-- Main Interface -->
-    <div id="mainInterface" style="display: none;">
-        <header class="header">
-            <nav class="nav">
-                <h1>Zetsu Video Hub</h1>
-                <div class="controls">
-                    <button onclick="toggleTheme()" class="button">Toggle Theme</button>
-                    <button onclick="showFavorites()" class="button">Favorites</button>
-                </div>
-            </nav>
-        </header>
-
-        <main class="main">
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search videos...">
-                <button onclick="searchVideos()" class="button-primary">Search</button>
-            </div>
-            
-            <div class="video-grid" id="videoContainer"></div>
-            <div id="loading" class="loader" style="display: none;"></div>
-        </main>
-
-        <!-- Video Modal -->
-        <div id="videoModal" class="modal">
-            <div class="modal-content">
-                <h2 id="modalTitle"></h2>
-                <img id="modalThumbnail" class="video-thumbnail">
-                <div class="video-meta">
-                    <span id="modalDuration"></span>
-                    <span id="modalUploader"></span>
-                </div>
-                <button onclick="closeModal()" class="button">Close</button>
-                <button onclick="shareVideo()" class="button-primary">Share</button>
-                <button onclick="toggleFavorite()" class="button">Add to Favorites</button>
-            </div>
-        </div>
-    </div>
+    <div class="loader" id="loader"></div>
+    <div class="video-grid" id="videoContainer"></div>
+    <div class="back-to-top" id="backToTop">↑</div>
 
     <script>
-        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-        const STATE = {
-            currentVideo: null,
-            favorites: new Set(),
-            theme: 'light'
+        // Theme Management
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? 
+                '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+
+        // Scroll Events
+        window.onscroll = function() {
+            const backToTop = document.getElementById('backToTop');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
         };
 
-        // Initialize application
-        function init() {
-            loadFavorites();
-            loadTheme();
-            window.onload = () => fetchVideos('home');
+        document.getElementById('backToTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Video Click Handler
+        function handleVideoClick(videoData) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>${videoData.title}</h3>
+                    <p>Duration: ${videoData.duration}</p>
+                    <p>Uploader: ${videoData.uploaderName}</p>
+                    <a href="${videoData.video}" target="_blank">Watch Video</a>
+                    <button onclick="this.parentElement.parentElement.remove()">Close</button>
+                </div>
+            `;
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+            document.body.appendChild(modal);
         }
 
-        // Video fetching
-        async function fetchVideos(type, query = '') {
-            showLoader();
-            try {
-                const url = type === 'home' 
-                    ? `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`
-                    : `https://api.zetsu.xyz/prn/search/${encodeURIComponent(query)}?apikey=${API_KEY}`;
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                renderVideos(data);
-                addHistoryState(type, query);
-            } catch (error) {
-                showError(error.message);
-            } finally {
-                hideLoader();
-            }
-        }
+        // Enhanced Search with Debounce
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (e.target.value.trim()) {
+                    fetchVideos('search', e.target.value.trim());
+                }
+            }, 500);
+        });
 
-        // Video rendering
-        function renderVideos(data) {
+        // Modified Display Videos with Click Events
+        function displayVideos(data) {
             const container = document.getElementById('videoContainer');
             container.innerHTML = '';
-            
-            Object.entries(data).forEach(([key, video]) => {
-                if (!isNaN(key)) {
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.innerHTML = `
-                        <img src="${video.thumbnail}" class="video-thumbnail">
-                        <div class="video-info">
-                            <h3 class="video-title">${video.title}</h3>
-                            <div class="video-meta">
-                                <span>${video.duration}</span>
-                                <span>${video.uploaderName}</span>
-                            </div>
-                        </div>
-                    `;
-                    card.onclick = () => showVideoDetail(video);
-                    container.appendChild(card);
-                }
+
+            Object.values(data).forEach((video, index) => {
+                if (!video.video || isNaN(index)) return;
+
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <img src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
+                         alt="${video.title}" 
+                         loading="lazy">
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => handleVideoClick(video));
+                container.appendChild(card);
+            });
+
+            // Animate cards sequentially
+            gsap.from('.video-card', {
+                duration: 0.5,
+                opacity: 0,
+                y: 50,
+                stagger: 0.1,
+                ease: "power2.out"
             });
         }
 
-        // Favorites system
-        function toggleFavorite() {
-            const video = STATE.currentVideo;
-            STATE.favorites.has(video.video) 
-                ? STATE.favorites.delete(video.video) 
-                : STATE.favorites.add(video.video);
-            
-            localStorage.setItem('favorites', JSON.stringify([...STATE.favorites]));
+        // Initialize theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.querySelector('.theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
         }
 
-        // Theme management
-        function toggleTheme() {
-            STATE.theme = STATE.theme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', STATE.theme);
-            localStorage.setItem('theme', STATE.theme);
-        }
-
-        // History management
-        function addHistoryState(type, query) {
-            const state = { type, query };
-            const title = query ? `Search: ${query}` : 'Home';
-            const url = query ? `/?search=${query}` : '/';
-            
-            history.pushState(state, title, url);
-        }
-
-        // Modal controls
-        function showVideoDetail(video) {
-            STATE.currentVideo = video;
-            document.getElementById('modalTitle').textContent = video.title;
-            document.getElementById('modalThumbnail').src = video.thumbnail;
-            document.getElementById('modalDuration').textContent = video.duration;
-            document.getElementById('modalUploader').textContent = video.uploaderName;
-            document.getElementById('videoModal').style.display = 'block';
-        }
-
-        // Utility functions
-        function verifyAge(confirmed) {
-            document.getElementById('ageGate').style.display = 'none';
-            document.getElementById('mainInterface').style.display = confirmed ? 'block' : 'none';
-            if (!confirmed) window.location.href = 'https://google.com';
-        }
-
-        function loadFavorites() {
-            STATE.favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
-        }
-
-        function loadTheme() {
-            STATE.theme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', STATE.theme);
-        }
-
-        function shareVideo() {
-            navigator.share({
-                title: STATE.currentVideo.title,
-                url: STATE.currentVideo.video
-            });
-        }
-
-        // Event listeners
-        window.onpopstate = (event) => {
-            if (event.state) {
-                fetchVideos(event.state.type, event.state.query);
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === '/') {
+                document.getElementById('searchInput').focus();
             }
-        };
-
-        document.getElementById('searchInput').addEventListener('input', 
-            debounce(searchVideos, 500));
-
-        // Initialization
-        init();
+        });
     </script>
 </body>
 </html>
