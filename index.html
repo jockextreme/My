@@ -278,6 +278,8 @@
         const API_KEY = '625156d0d268e4633b97980c0dc859d0';
         let currentTheme = 'light';
         let currentPage = 1;
+        let currentSearchQuery = '';
+        let isSearching = false;
 
         // Theme Management
         function toggleTheme() {
@@ -287,28 +289,50 @@
         }
 
         // Video Loading
-        async function fetchVideos(type, query = '') {
+        async function fetchVideos() {
             showLoader();
             try {
-                const endpoint = type === 'home' 
-                    ? `home?apikey=${API_KEY}&page=${currentPage}`
-                    : `search/${encodeURIComponent(query)}?apikey=${API_KEY}&page=${currentPage}`;
+                const endpoint = isSearching 
+                    ? `search/${encodeURIComponent(currentSearchQuery)}`
+                    : 'home';
 
-                const response = await fetch(`https://api.zetsu.xyz/prn/${endpoint}`);
+                const response = await fetch(
+                    `https://api.zetsu.xyz/prn/${endpoint}?apikey=${API_KEY}&page=${currentPage}`
+                );
+                
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                
                 const data = await response.json();
                 renderVideos(data);
             } catch (error) {
-                showError(`API Error: ${error.message}`);
+                showError(error.message);
             } finally {
                 hideLoader();
             }
         }
 
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+            
+            // Reset state for new search
+            currentSearchQuery = query;
+            currentPage = 1;
+            isSearching = true;
+            
+            // Clear existing results
+            document.getElementById('videoContainer').innerHTML = '';
+            fetchVideos();
+        }
+
         function renderVideos(data) {
             const container = document.getElementById('videoContainer');
             
-            Object.entries(data).forEach(([key, video]) => {
-                if (!video.video || isNaN(key)) return;
+            // Handle API response structure
+            const videos = data.data || [];
+            
+            videos.forEach((video) => {
+                if (!video.video) return;
 
                 const card = document.createElement('article');
                 card.className = 'video-card';
@@ -318,13 +342,13 @@
                              class="thumbnail" 
                              alt="${video.title} thumbnail"
                              loading="lazy">
-                        <div class="badge">${video.duration}</div>
+                        <div class="badge">${video.duration || 'N/A'}</div>
                     </a>
                     <div class="card-content">
-                        <h3 class="video-title">${video.title}</h3>
+                        <h3 class="video-title">${video.title || 'Untitled Video'}</h3>
                         <div class="meta-info">
                             <span>${video.uploaderName || 'Anonymous'}</span>
-                            <span>👁️ ${Math.floor(Math.random() * 5000)}</span>
+                            <span>👁️ ${video.views || Math.floor(Math.random() * 5000)}</span>
                         </div>
                     </div>
                 `;
@@ -357,7 +381,7 @@
         window.addEventListener('scroll', () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
                 currentPage++;
-                fetchVideos('home');
+                fetchVideos();
             }
         });
 
@@ -365,7 +389,7 @@
         function init() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             if (savedTheme === 'dark') document.body.classList.add('dark-mode');
-            fetchVideos('home');
+            fetchVideos();
         }
 
         init();
