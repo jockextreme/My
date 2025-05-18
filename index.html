@@ -6,13 +6,6 @@
     <title>Zetsu Video Browser</title>
     <style>
         :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --card-bg: #f8f9fa;
-            --primary-color: #007bff;
-        }
-
-        [data-theme="dark"] {
             --bg-color: #1a1a1a;
             --text-color: #ffffff;
             --card-bg: #2d2d2d;
@@ -25,50 +18,30 @@
             padding: 20px;
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: all 0.3s ease;
         }
 
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
         }
 
         .search-container {
-            flex-grow: 1;
             max-width: 600px;
+            margin: 0 auto;
         }
 
         #searchInput {
             padding: 12px 20px;
             width: 100%;
-            border: 2px solid #ddd;
+            border: 2px solid #444;
             border-radius: 30px;
             font-size: 16px;
-            transition: all 0.3s ease;
+            background: #333;
+            color: white;
         }
 
         #searchInput:focus {
             outline: none;
             border-color: var(--primary-color);
-        }
-
-        button {
-            padding: 10px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
         }
 
         .video-grid {
@@ -82,7 +55,7 @@
             background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
         }
 
@@ -135,13 +108,6 @@
             gap: 5px;
         }
 
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
         .loading {
             display: none;
             text-align: center;
@@ -171,25 +137,6 @@
             position: relative;
         }
 
-        .video-player {
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%;
-            position: relative;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .video-player iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
         .close-modal {
             position: absolute;
             top: 15px;
@@ -208,16 +155,21 @@
 
         .video-details {
             margin-top: 20px;
-            color: var(--text-color);
+        }
+
+        .watch-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
         }
 
         @media (max-width: 768px) {
             .header {
-                flex-direction: column;
-            }
-            
-            #searchInput {
-                margin-bottom: 10px;
+                padding: 0 10px;
             }
         }
     </style>
@@ -227,7 +179,6 @@
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Search videos...">
         </div>
-        <button onclick="toggleTheme()">Toggle Dark Mode</button>
     </div>
     
     <div class="loading" id="loading">Loading...</div>
@@ -236,28 +187,24 @@
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">×</span>
-            <div class="video-player" id="videoPlayer"></div>
             <div class="video-details">
                 <h2 id="videoTitle"></h2>
                 <p id="videoDuration"></p>
                 <p id="videoUploader"></p>
-                <a id="videoLink" target="_blank" class="watch-button">Open Original Page</a>
+                <a id="videoLink" target="_blank" class="watch-button">Watch Video</a>
             </div>
         </div>
     </div>
 
     <script>
         const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-        let currentTheme = 'light';
         let currentVideoData = [];
 
-        // Initialize with home page videos
         window.addEventListener('DOMContentLoaded', () => {
             fetchVideos('home');
             document.getElementById('searchInput').focus();
         });
 
-        // Search input handler with debounce
         let searchTimeout;
         document.getElementById('searchInput').addEventListener('input', function(e) {
             clearTimeout(searchTimeout);
@@ -299,7 +246,7 @@
                     card.className = 'video-card';
                     card.innerHTML = `
                         <div class="thumbnail-container">
-                            <img src="${video.thumbnail || 'https://via.placeholder.com/300x200'}" 
+                            <img src="${video.thumbnail || 'https://via.placeholder.com/300x200/333/fff?text=No+Preview'}" 
                                  alt="${video.title}" 
                                  onclick="showVideoDetails(${index})">
                             <div class="duration">${video.duration}</div>
@@ -320,17 +267,7 @@
         function showVideoDetails(index) {
             const video = currentVideoData[index];
             const modal = document.getElementById('videoModal');
-            const videoPlayer = document.getElementById('videoPlayer');
             
-            // Set video content
-            videoPlayer.innerHTML = `
-                <iframe src="${getEmbedUrl(video.video)}" 
-                        allow="autoplay; fullscreen" 
-                        allowfullscreen>
-                </iframe>
-            `;
-
-            // Set video details
             document.getElementById('videoTitle').textContent = video.title;
             document.getElementById('videoDuration').textContent = `Duration: ${video.duration}`;
             document.getElementById('videoUploader').innerHTML = video.uploaderName 
@@ -341,26 +278,8 @@
             modal.style.display = 'block';
         }
 
-        function getEmbedUrl(url) {
-            // Convert regular video URL to embed URL
-            try {
-                const urlObj = new URL(url);
-                const pathParts = urlObj.pathname.split('/');
-                const videoId = pathParts[pathParts.length - 1];
-                return `https://www.xvideos2.com/embedframe/${videoId}`;
-            } catch {
-                return url;
-            }
-        }
-
         function closeModal() {
             document.getElementById('videoModal').style.display = 'none';
-            document.getElementById('videoPlayer').innerHTML = '';
-        }
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', currentTheme);
         }
 
         function showLoading() {
@@ -371,7 +290,6 @@
             document.getElementById('loading').style.display = 'none';
         }
 
-        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('videoModal');
             if (event.target === modal) {
@@ -379,7 +297,6 @@
             }
         };
 
-        // Handle keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal();
