@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zetsu API Explorer</title>
     <style>
-        /* Design System */
         :root {
             --primary: #2A2F4F;
             --secondary: #917FB3;
@@ -28,7 +27,6 @@
             }
         }
 
-        /* Base Styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -44,7 +42,41 @@
             padding: 2rem;
         }
 
-        /* Header */
+        .age-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .modal-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-actions button {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: calc(var(--radius) / 2);
+            cursor: pointer;
+        }
+
         .hero {
             text-align: center;
             padding: 4rem 0;
@@ -55,17 +87,9 @@
             box-shadow: var(--shadow);
         }
 
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        /* Search Section */
         .search-container {
             max-width: 800px;
             margin: 2rem auto;
-            position: relative;
         }
 
         .search-box {
@@ -74,7 +98,6 @@
             background: rgba(255,255,255,0.1);
             padding: 1rem;
             border-radius: var(--radius);
-            backdrop-filter: blur(10px);
         }
 
         #searchInput {
@@ -84,15 +107,18 @@
             border-radius: calc(var(--radius) / 2);
             background: rgba(255,255,255,0.9);
             font-size: 1rem;
-            transition: all 0.3s ease;
         }
 
-        #searchInput:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px var(--accent);
+        .search-button {
+            padding: 1rem 2rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: calc(var(--radius) / 2);
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        /* Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -104,21 +130,14 @@
             background: rgba(255,255,255,0.1);
             border-radius: var(--radius);
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
             border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
         }
 
         .video-thumbnail {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-bottom: 3px solid var(--secondary);
         }
 
         .video-content {
@@ -128,24 +147,12 @@
         .video-title {
             font-weight: 600;
             margin-bottom: 0.5rem;
-            color: var(--text);
-            font-size: 1rem;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: var(--secondary);
-            margin-top: 1rem;
-        }
-
-        /* Loader */
         .loader {
             display: none;
             text-align: center;
@@ -161,75 +168,61 @@
             animation: spin 1s linear infinite;
         }
 
+        .error-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--error);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease-out;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Documentation */
-        .documentation {
-            max-width: 800px;
-            margin: 3rem auto;
-            background: rgba(255,255,255,0.1);
-            padding: 2rem;
-            border-radius: var(--radius);
+        @keyframes slideIn {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .feature-card {
-            background: rgba(255,255,255,0.05);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            text-align: center;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 3rem 0 1rem;
-            color: var(--secondary);
-        }
-
-        .credits {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
             }
 
-            .hero {
-                padding: 2rem 0;
-            }
-
-            .search-box {
-                flex-direction: column;
+            .video-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <div id="ageModal" class="age-modal">
+        <div class="modal-content">
+            <h2>Age Verification Required</h2>
+            <p>You must be at least 18 years old to access this content</p>
+            <div class="modal-actions">
+                <button onclick="verifyAge(true)">Confirm</button>
+                <button onclick="verifyAge(false)">Exit</button>
+            </div>
+        </div>
+    </div>
+
     <header class="hero">
         <h1>Zetsu API Explorer</h1>
-        <p>Premium Interface for Adult Content API</p>
+        <p>Secure Adult Content Browser</p>
     </header>
 
     <main>
         <div class="search-container">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search videos..." 
-                       aria-label="Search adult content">
-                <button class="search-button" onclick="searchVideos()">Explore</button>
+                <input type="text" id="searchInput" placeholder="Search content..." 
+                       aria-label="Search content">
+                <button class="search-button" onclick="searchVideos()">Search</button>
             </div>
         </div>
 
@@ -238,115 +231,80 @@
         </div>
 
         <div class="video-grid" id="videoContainer"></div>
-
-        <section class="documentation">
-            <h2>Documentation & Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>🔒 Secure API Access</h3>
-                    <p>Protected API key integration with automatic refresh</p>
-                </div>
-                <div class="feature-card">
-                    <h3>🎨 Adaptive Design</h3>
-                    <p>Automatic dark mode + mobile-first responsive layout</p>
-                </div>
-                <div class="feature-card">
-                    <h3>⚡ Performance</h3>
-                    <p>Lazy loading + optimized network requests</p>
-                </div>
-            </div>
-
-            <h3>Usage Guidelines</h3>
-            <ul>
-                <li>✅ Educational/research purposes only</li>
-                <li>❌ No commercial use without authorization</li>
-                <li>🔞 Age-restricted content - user discretion advised</li>
-                <li>📈 API rate limits: 100 requests/hour</li>
-            </ul>
-        </section>
     </main>
 
-    <footer class="footer">
-        <div class="credits">
-            <div>
-                <h4>API Provider</h4>
-                <p>Zetsu API v1.0</p>
-                <p>Maintained by Deku</p>
-            </div>
-            <div>
-                <h4>Interface Design</h4>
-                <p>© 2024 Your Name</p>
-                <p>MIT License</p>
-            </div>
-            <div>
-                <h4>Contribute</h4>
-                <p>GitHub Repository</p>
-                <p>Report Issues</p>
-            </div>
-        </div>
-        <p class="disclaimer">
-            This interface is not affiliated with or endorsed by the API provider. 
-            Use at your own risk. Content may be explicit.
-        </p>
-    </footer>
-</body>
+    <script>
+        const API_KEY = '625156d0d268e4633b97980c0dc859d0';
+        const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMyYTJmNGYiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjIyIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Obw0KVGh1bWJuYWlsPC90ZXh0Pjwvc3ZnPg==';
 
-<script>
-    const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-    const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMyYTJmNGYiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjIyIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Obw0KVGh1bWJuYWlsPC90ZXh0Pjwvc3ZnPg==';
+        let currentPage = 1;
+        let isLoading = false;
+        let currentSearchQuery = '';
+        const videoContainer = document.getElementById('videoContainer');
+        const loader = document.getElementById('loader');
 
-    // State Management
-    let currentPage = 1;
-    let isLoading = false;
-
-    // UI Elements
-    const loader = document.getElementById('loader');
-    const videoContainer = document.getElementById('videoContainer');
-
-    // Initial Load
-    window.addEventListener('DOMContentLoaded', () => {
-        showLoader();
-        fetchVideos('home').finally(hideLoader);
-    });
-
-    // API Handler
-    async function fetchVideos(type, query = '') {
-        try {
-            showLoader();
-            isLoading = true;
-
-            const endpoint = type === 'home' 
-                ? `home?apikey=${API_KEY}`
-                : `search/${encodeURIComponent(query)}?apikey=${API_KEY}`;
-
-            const response = await fetch(`https://api.zetsu.xyz/prn/${endpoint}`);
-            
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-            
-            const data = await response.json();
-            renderVideos(data);
-        } catch (error) {
-            showErrorToast(error.message);
-        } finally {
-            hideLoader();
-            isLoading = false;
+        // Age verification
+        if (!localStorage.getItem('ageVerified')) {
+            document.getElementById('ageModal').style.display = 'flex';
         }
-    }
 
-    // Render Videos
-    function renderVideos(data) {
-        videoContainer.innerHTML = Object.values(data)
-            .filter(item => item.video && !isNaN(item))
-            .map(video => `
-                <article class="video-card">
+        function verifyAge(confirmed) {
+            if (confirmed) {
+                localStorage.setItem('ageVerified', 'true');
+                document.getElementById('ageModal').style.display = 'none';
+            } else {
+                window.location.href = 'https://www.google.com';
+            }
+        }
+
+        // Initial load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('ageVerified') === 'true') {
+                fetchVideos('home');
+            }
+        });
+
+        async function fetchVideos(type, query = '') {
+            try {
+                showLoader();
+                isLoading = true;
+
+                const endpoint = type === 'home' 
+                    ? `home?apikey=${API_KEY}&page=${currentPage}`
+                    : `search/${encodeURIComponent(query)}?apikey=${API_KEY}&page=${currentPage}`;
+
+                const response = await fetch(`https://api.zetsu.xyz/prn/${endpoint}`);
+                
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                
+                const data = await response.json();
+                renderVideos(data);
+            } catch (error) {
+                showErrorToast(error.message);
+            } finally {
+                hideLoader();
+                isLoading = false;
+            }
+        }
+
+        function renderVideos(data) {
+            const videos = Object.values(data).filter(item => item.video && !isNaN(item));
+            
+            if (videos.length === 0) {
+                showErrorToast('No results found');
+                return;
+            }
+
+            videoContainer.innerHTML += videos.map(video => `
+                <div class="video-card">
                     <a href="${video.video}" target="_blank" rel="noopener noreferrer">
                         <img class="video-thumbnail" 
                              src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
-                             alt="${video.title || 'Untitled video'}"
+                             alt="${video.title || 'Content thumbnail'}"
                              loading="lazy">
                     </a>
                     <div class="video-content">
-                        <h4 class="video-title">${video.title || 'Untitled Video'}</h4>
+                        <h3 class="video-title">${video.title || 'Untitled Content'}</h3>
                         <div class="video-meta">
                             <span>${video.duration || 'N/A'}</span>
                             ${video.uploaderName ? `
@@ -359,56 +317,55 @@
                             ` : ''}
                         </div>
                     </div>
-                </article>
+                </div>
             `).join('');
-    }
-
-    // Search Handler
-    function searchVideos() {
-        const query = document.getElementById('searchInput').value.trim();
-        if (!query) return;
-        
-        currentPage = 1;
-        videoContainer.innerHTML = '';
-        fetchVideos('search', query);
-    }
-
-    // UI Helpers
-    function showLoader() {
-        loader.style.display = 'block';
-    }
-
-    function hideLoader() {
-        loader.style.display = 'none';
-    }
-
-    function showErrorToast(message) {
-        const toast = document.createElement('div');
-        toast.textContent = message;
-        toast.style.position = 'fixed';
-        toast.style.bottom = '20px';
-        toast.style.right = '20px';
-        toast.style.background = 'var(--error)';
-        toast.style.color = 'white';
-        toast.style.padding = '1rem';
-        toast.style.borderRadius = 'var(--radius)';
-        toast.style.boxShadow = 'var(--shadow)';
-        document.body.appendChild(toast);
-
-        setTimeout(() => toast.remove(), 5000);
-    }
-
-    // Event Listeners
-    document.getElementById('searchInput').addEventListener('keypress', e => {
-        if (e.key === 'Enter') searchVideos();
-    });
-
-    // Infinite Scroll (Optional)
-    window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
-            currentPage++;
-            fetchVideos('home', currentPage);
         }
-    });
-</script>
+
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return showErrorToast('Please enter a search term');
+            
+            currentPage = 1;
+            currentSearchQuery = query;
+            videoContainer.innerHTML = '';
+            fetchVideos('search', query);
+        }
+
+        window.addEventListener('scroll', () => {
+            if (shouldLoadMore()) {
+                currentPage++;
+                fetchVideos(currentSearchQuery ? 'search' : 'home', currentSearchQuery);
+            }
+        });
+
+        function shouldLoadMore() {
+            return (
+                window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+                !isLoading &&
+                currentPage < 5
+            );
+        }
+
+        function showLoader() {
+            loader.style.display = 'block';
+        }
+
+        function hideLoader() {
+            loader.style.display = 'none';
+        }
+
+        function showErrorToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'error-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') searchVideos();
+        });
+    </script>
+</body>
 </html>
