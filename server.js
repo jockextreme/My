@@ -1,44 +1,34 @@
-// server.js (Express backend)
-const express = require('express');
-const bodyParser = require('body-parser');
-const sqlite3 = require('sqlite3').verbose();
-const app = express();
-
-// Database setup
-const db = new sqlite3.Database(':memory:');
-db.serialize(() => {
-    db.run("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, email TEXT)");
-    db.run("CREATE TABLE content (id INTEGER PRIMARY KEY, title TEXT, description TEXT)");
-    db.run("CREATE TABLE comments (id INTEGER PRIMARY KEY, content_id INTEGER, user_id INTEGER, text TEXT)");
+// Add CORS support
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
 });
 
-// Middleware
-app.use(bodyParser.json());
-app.use(express.static('public'));
-
-// API Endpoints
+// Enhanced search endpoint
 app.post('/api/search', (req, res) => {
-    // Search logic
+    const { query, category } = req.body;
+    
+    // Sample response with video URLs
     res.json({
-        results: [
-            // Sample data
-            { id: 1, title: 'Sample Video', duration: '120min', rating: 4 }
-        ]
+        results: [{
+            id: 1,
+            title: 'Sample Video 1',
+            duration: '02:00:00',
+            rating: 4.5,
+            thumbnail: 'https://via.placeholder.com/300x169',
+            videoUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+        }]
     });
 });
 
+// Enhanced content endpoint
 app.get('/api/content/:id', (req, res) => {
-    // Content details logic
+    res.json({
+        id: 1,
+        title: 'Sample Video 1',
+        description: 'Sample description text',
+        tags: ['tag1', 'tag2'],
+        videoUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+    });
 });
-
-app.get('/api/comments/:contentId', (req, res) => {
-    // Comments retrieval
-});
-
-app.post('/api/comments', (req, res) => {
-    // Comment submission
-});
-
-// Start server
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
