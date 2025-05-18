@@ -3,52 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zetsu API Videos</title>
+    <title>Zetsu API Video Browser</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+        /* Base Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #ecf0f1;
         }
 
-        .search-container {
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
             text-align: center;
-            margin-bottom: 20px;
+            padding: 2rem 0;
+            background: var(--primary-color);
+            color: white;
+            margin: -20px -20px 20px;
+        }
+
+        /* Search Section */
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            display: flex;
+            gap: 10px;
         }
 
         #searchInput {
-            padding: 10px;
-            width: 300px;
-            margin-right: 10px;
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
         }
 
         button {
-            padding: 10px 20px;
-            background-color: #007bff;
+            padding: 12px 25px;
+            background-color: var(--secondary-color);
             color: white;
             border: none;
+            border-radius: 25px;
             cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        /* Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
             padding: 20px;
         }
 
         .video-card {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
         }
 
         .video-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
+            border-bottom: 3px solid var(--secondary-color);
         }
 
         .video-info {
@@ -56,53 +92,149 @@
         }
 
         .video-title {
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 8px;
-            color: #333;
+            color: var(--primary-color);
+            font-size: 0.95rem;
         }
 
         .video-duration {
-            color: #666;
-            font-size: 0.9em;
+            color: #7f8c8d;
+            font-size: 0.85rem;
         }
 
         .uploader {
-            color: #007bff;
-            font-size: 0.9em;
+            color: var(--secondary-color);
+            font-size: 0.85rem;
             margin-top: 8px;
+        }
+
+        /* Loading State */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        /* Footer & Credits */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .notes {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .search-container {
+                flex-direction: column;
+            }
+            
+            #searchInput {
+                width: auto;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>Zetsu API Video Browser</h1>
+        <p>Explore adult content through the Zetsu API</p>
+    </div>
+
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search videos...">
+        <input type="text" id="searchInput" placeholder="Search videos..." aria-label="Search videos">
         <button onclick="searchVideos()">Search</button>
     </div>
+
+    <div class="loader" id="loader">Loading videos...</div>
+    <div class="error-message" id="errorMessage"></div>
     <div class="video-grid" id="videoContainer"></div>
+
+    <div class="notes">
+        <h2>Features & Notes</h2>
+        <ul>
+            <li>Responsive grid layout with hover effects</li>
+            <li>Automatic home page content loading</li>
+            <li>Search functionality with error handling</li>
+            <li>Loading states and visual feedback</li>
+            <li>Mobile-friendly design</li>
+            <li>Direct links to video sources</li>
+            <li>API request rate limiting awareness</li>
+        </ul>
+
+        <h2>Important Notes</h2>
+        <ul>
+            <li>This is a demo interface for educational purposes</li>
+            <li>Content is provided by third-party API</li>
+            <li>API key must be kept confidential</li>
+            <li>Not intended for production use</li>
+            <li>May contain explicit content - use discretion</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <h3>Credits & Attribution</h3>
+        <p>API Provider: <a href="https://api.zetsu.xyz" target="_blank">Zetsu.xyz</a></p>
+        <p>Original API Author: Deku</p>
+        <p>Interface Design: [Your Name]</p>
+        <p>Developed for GitHub Pages deployment</p>
+    </div>
 
     <script>
         const API_KEY = '625156d0d268e4633b97980c0dc859d0';
-        
-        // Load initial videos
+        const PLACEHOLDER_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
+
+        // UI Elements
+        const loader = document.getElementById('loader');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Initial load
         window.onload = function() {
-            fetchVideos('home');
+            showLoader();
+            fetchVideos('home').finally(hideLoader);
         };
 
         async function fetchVideos(type, query = '') {
-            let url;
-            if (type === 'home') {
-                url = `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`;
-            } else {
-                const encodedQuery = encodeURIComponent(query);
-                url = `https://api.zetsu.xyz/prn/search/${encodedQuery}?apikey=${API_KEY}`;
-            }
-
             try {
+                showLoader();
+                clearError();
+
+                const url = type === 'home' 
+                    ? `https://api.zetsu.xyz/prn/home?apikey=${API_KEY}`
+                    : `https://api.zetsu.xyz/prn/search/${encodeURIComponent(query)}?apikey=${API_KEY}`;
+
                 const response = await fetch(url);
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
                 const data = await response.json();
                 displayVideos(data);
             } catch (error) {
-                console.error('Error fetching videos:', error);
+                showError(`Failed to load videos: ${error.message}`);
+                console.error('API Error:', error);
+            } finally {
+                hideLoader();
             }
         }
 
@@ -110,38 +242,62 @@
             const container = document.getElementById('videoContainer');
             container.innerHTML = '';
 
-            for (let key in data) {
-                if (!isNaN(key) && data[key].video) {
-                    const video = data[key];
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.innerHTML = `
-                        <a href="${video.video}" target="_blank">
-                            <img src="${video.thumbnail || 'placeholder.jpg'}" alt="${video.title}">
-                        </a>
-                        <div class="video-info">
-                            <div class="video-title">${video.title}</div>
-                            <div class="video-duration">${video.duration}</div>
-                            ${video.uploaderName ? `<div class="uploader">${video.uploaderName}</div>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(card);
-                }
-            }
+            Object.values(data).forEach((video, index) => {
+                if (!video.video || isNaN(index)) return;
+
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <a href="${video.video}" target="_blank" rel="noopener">
+                        <img src="${video.thumbnail || PLACEHOLDER_IMAGE}" 
+                             alt="${video.title || 'Untitled video'} thumbnail"
+                             loading="lazy">
+                    </a>
+                    <div class="video-info">
+                        <div class="video-title">${video.title || 'Untitled video'}</div>
+                        ${video.duration ? `<div class="video-duration">${video.duration}</div>` : ''}
+                        ${video.uploaderName ? `
+                            <div class="uploader">
+                                <a href="${video.uploaderProfile}" target="_blank" rel="noopener">
+                                    ${video.uploaderName}
+                                </a>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
 
         function searchVideos() {
-            const query = document.getElementById('searchInput').value;
-            if (query) {
-                fetchVideos('search', query);
-            }
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return showError('Please enter a search term');
+            
+            showLoader();
+            fetchVideos('search', query);
         }
 
-        // Handle Enter key in search input
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchVideos();
-            }
+        /* Helper Functions */
+        function showLoader() {
+            loader.style.display = 'block';
+        }
+
+        function hideLoader() {
+            loader.style.display = 'none';
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function clearError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Handle Enter key
+        document.getElementById('searchInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') searchVideos();
         });
     </script>
 </body>
