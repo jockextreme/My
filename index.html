@@ -27,72 +27,33 @@
         .header {
             background: linear-gradient(135deg, var(--primary-color), #1a252f);
             color: white;
-            padding: 1.5rem;
+            padding: 2rem 1rem;
             text-align: center;
             box-shadow: 0 2px 15px rgba(0,0,0,0.1);
         }
 
-        .hero {
+        .hero-section {
             position: relative;
-            height: 70vh;
-            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)),
-                        url('YOUR_MAIN_IMAGE_URL_HERE');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            padding: 4rem 1rem;
+            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9));
             color: white;
             text-align: center;
-            padding: 2rem;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 50px 50px 0;
-            border-style: solid;
-            border-color: var(--primary-color) transparent transparent;
         }
 
         .verse {
             font-size: 1.2rem;
             max-width: 800px;
-            margin: 1rem auto;
+            margin: 0 auto 2rem;
             font-style: italic;
-            color: rgba(255,255,255,0.9);
-        }
-
-        .section-title {
-            text-align: center;
-            margin: 4rem 0 2rem;
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--secondary-color);
         }
 
         .achievements-grid {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
         }
 
         .achievement-card {
@@ -109,8 +70,18 @@
 
         .card-image {
             height: 250px;
-            background-size: cover;
-            background-position: center;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-card:hover .card-image img {
+            transform: scale(1.1);
         }
 
         .card-content {
@@ -118,26 +89,16 @@
             text-align: center;
         }
 
-        .card-content h3 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .card-content p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .winners-list {
+        .awards-list {
             max-width: 800px;
             margin: 3rem auto;
-            background: white;
             padding: 2rem;
+            background: white;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .winner-item {
+        .award-item {
             padding: 1rem;
             margin: 0.5rem 0;
             background: #f8f9fa;
@@ -147,39 +108,34 @@
             align-items: center;
         }
 
-        .gallery {
-            columns: 3 300px;
-            gap: 1rem;
-            padding: 2rem;
+        .gallery-grid {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
         }
 
         .gallery-item {
-            width: 100%;
-            margin-bottom: 1rem;
             border-radius: 10px;
             overflow: hidden;
             position: relative;
             transition: transform 0.3s ease;
         }
 
-        .gallery-item:hover {
-            transform: scale(1.02);
-        }
-
         .gallery-item img {
             width: 100%;
-            height: auto;
-            display: block;
+            height: 200px;
+            object-fit: cover;
         }
 
         footer {
             background: var(--primary-color);
             color: white;
             text-align: center;
-            padding: 3rem 2rem;
-            margin-top: 5rem;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
         }
 
         .social-link {
@@ -192,17 +148,6 @@
         .social-link:hover {
             color: var(--secondary-color);
         }
-
-        @media (max-width: 768px) {
-            .hero {
-                height: 50vh;
-                padding: 1rem;
-            }
-            
-            .verse {
-                font-size: 1rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -211,78 +156,83 @@
         <p>Valenzuela Youth Bible Festival 2025 Champions</p>
     </header>
 
-    <section class="hero">
+    <section class="hero-section">
         <div class="verse">
             <p>"A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another."</p>
             <p>- JOHN 13:34 (KJV)</p>
         </div>
-        <h2 style="margin-top: 2rem; font-size: 2.5rem;">OVERALL CHAMPION</h2>
-        <h1 style="font-size: 3rem; color: var(--secondary-color);">MCGI YOUTH UGONG</h1>
+        <h2>OVERALL CHAMPION</h2>
+        <h1 style="color: var(--secondary-color); margin-top: 1rem;">MCGI YOUTH UGONG</h1>
     </section>
 
-    <h2 class="section-title">Our Achievements</h2>
-
     <div class="achievements-grid">
+        <!-- Youth News Champion -->
         <div class="achievement-card">
-            <div class="card-image" style="background-image: url('YOUR_YOUTH_NEWS_IMAGE_URL')"></div>
+            <div class="card-image">
+                <img src="https://example.com/youth-news.jpg" alt="Youth News Champion">
+            </div>
             <div class="card-content">
                 <h3>Youth News</h3>
                 <p>Champion Division</p>
-                <p style="color: var(--secondary-color); font-weight: bold;">1st Place</p>
+                <p style="color: var(--secondary-color);">1st Place</p>
             </div>
         </div>
 
+        <!-- Kristiano Drama Champion -->
         <div class="achievement-card">
-            <div class="card-image" style="background-image: url('YOUR_DRAMA_IMAGE_URL')"></div>
+            <div class="card-image">
+                <img src="https://example.com/drama.jpg" alt="Kristiano Drama">
+            </div>
             <div class="card-content">
                 <h3>Kristiano Drama</h3>
-                <p>Best Performance Award</p>
-                <p style="color: var(--secondary-color); font-weight: bold;">1st Place</p>
+                <p>Best Performance</p>
+                <p style="color: var(--secondary-color);">1st Place</p>
             </div>
         </div>
 
+        <!-- Tula Champion -->
         <div class="achievement-card">
-            <div class="card-image" style="background-image: url('YOUR_TULA_IMAGE_URL')"></div>
+            <div class="card-image">
+                <img src="https://example.com/tula.jpg" alt="Tula Champion">
+            </div>
             <div class="card-content">
                 <h3>Tula Competition</h3>
                 <p>Sis. Eunice Manaras</p>
-                <p style="color: var(--secondary-color); font-weight: bold;">1st Place</p>
+                <p style="color: var(--secondary-color);">1st Place</p>
             </div>
         </div>
     </div>
 
-    <div class="winners-list">
-        <h3 style="text-align: center; margin-bottom: 1.5rem;">Other Notable Achievements</h3>
-        <div class="winner-item">
+    <div class="awards-list">
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">Other Achievements</h2>
+        <div class="award-item">
             <span>Bible Preaching English</span>
             <span style="color: var(--accent-color);">1st Runner Up</span>
         </div>
-        <div class="winner-item">
+        <div class="award-item">
             <span>Mural Making</span>
             <span style="color: var(--accent-color);">2nd Runner Up</span>
         </div>
-        <!-- Add other winners following the same pattern -->
+        <!-- Add other awards following same pattern -->
     </div>
 
-    <h2 class="section-title">Event Gallery</h2>
-
-    <div class="gallery">
-        <!-- Add your gallery images here -->
+    <div class="gallery-grid">
         <div class="gallery-item">
-            <img src="YOUR_GALLERY_IMAGE_URL" alt="Event photo">
+            <img src="https://example.com/gallery1.jpg" alt="Event Photo">
         </div>
-        <!-- Repeat for other images -->
+        <div class="gallery-item">
+            <img src="https://example.com/gallery2.jpg" alt="Event Photo">
+        </div>
+        <!-- Add more gallery items -->
     </div>
 
     <footer>
         <h3>To God Be the Glory!</h3>
-        <p style="margin: 1rem 0;">Connect with us on social media:</p>
-        <div>
-            <a href="YOUR_FACEBOOK_LINK" class="social-link">Facebook</a>
-            <a href="#" class="social-link">Instagram</a>
-            <a href="#" class="social-link">YouTube</a>
+        <div style="margin: 2rem 0;">
+            <a href="https://www.facebook.com/share/p/15HAmj9FTy/" class="social-link">Facebook Post</a>
+            <a href="#" class="social-link">Contact Us</a>
         </div>
-        <p style="margin-top: 2rem; font-size: 0.9rem;">&copy; 2024 MCGI Youth Ugong. All rights reserved.</p>
+        <p>&copy; 2024 MCGI Youth Ugong. All rights reserved.</p>
     </footer>
 </body>
 </html>
