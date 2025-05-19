@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCGI Youth Ugong - Bible Festival 2025 Champions</title>
+    <title>MCGI Youth Ugong Achievements</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -13,128 +13,88 @@
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            line-height: 1.6;
-        }
-
-        .hero {
-            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)),
-                        url('https://www.facebook.com/share/p/1EK4TRbivG/') center/cover;
-            height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
             padding: 2rem;
+            background-color: var(--light-bg);
         }
 
-        .gallery-section {
+        .gallery-grid {
             max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 2rem;
-        }
-
-        .category-grid {
+            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin: 3rem 0;
         }
 
-        .category-card {
+        .achievement-card {
+            background: white;
             border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
+            text-align: center;
         }
 
-        .category-card:hover {
+        .achievement-card:hover {
             transform: translateY(-5px);
         }
 
-        .fb-post {
+        .achievement-image {
             width: 100%;
-            height: 400px;
-            border: none;
-            overflow: hidden;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
 
-        .section-title {
+        .category-title {
             color: var(--primary-color);
-            border-left: 4px solid var(--accent-color);
-            padding-left: 1rem;
-            margin: 2rem 0;
+            margin: 0.5rem 0;
+        }
+
+        .facebook-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
         }
     </style>
 </head>
 <body>
-    <section class="hero">
-        <div>
-            <h1>MCGI Youth Ugong</h1>
-            <p>Valenzuela Bible Festival 2025 Overall Champions</p>
-            <em>"A new commandment I give unto you, That ye love one another..." - John 13:34</em>
-        </div>
-    </section>
+    <h1 style="text-align: center; color: var(--primary-color);">MCGI Youth Ugong Achievements</h1>
 
-    <main class="gallery-section">
+    <div class="gallery-grid">
         <!-- Overall Champion -->
-        <h2 class="section-title">Championship Moments</h2>
-        <div class="category-grid">
-            <div class="category-card">
-                <iframe src="https://www.facebook.com/plugins/post.php?href=https://www.facebook.com/share/p/1EK4TRbivG/&show_text=false" 
-                        class="fb-post"></iframe>
-            </div>
-            <div class="category-card">
-                <iframe src="https://www.facebook.com/plugins/post.php?href=https://www.facebook.com/share/p/16NgSgUe3H/&show_text=false" 
-                        class="fb-post"></iframe>
-            </div>
+        <div class="achievement-card">
+            <h2 class="category-title">🏆 Overall Champion</h2>
+            <a href="https://www.facebook.com/share/p/1EK4TRbivG/" target="_blank" class="facebook-link">
+                View Photos <i class="fas fa-external-link-alt"></i>
+            </a>
         </div>
 
         <!-- Kristiano Drama -->
-        <h2 class="section-title">Kristiano Drama Champions</h2>
-        <div class="category-grid">
-            <div class="category-card">
-                <iframe src="https://www.facebook.com/plugins/post.php?href=https://www.facebook.com/share/p/1C9XEjMS5v/&show_text=false" 
-                        class="fb-post"></iframe>
-            </div>
+        <div class="achievement-card">
+            <h2 class="category-title">🎭 Kristiano Drama</h2>
+            <a href="https://www.facebook.com/share/p/1C9XEjMS5v/" target="_blank" class="facebook-link">
+                View Performance <i class="fas fa-external-link-alt"></i>
+            </a>
         </div>
 
         <!-- Other Categories -->
-        <h2 class="section-title">Other Achievements</h2>
-        <div class="category-grid">
-            <div class="category-card">
-                <iframe src="https://www.facebook.com/plugins/post.php?href=https://www.facebook.com/share/p/1QtFa1Mzqi/&show_text=false" 
-                        class="fb-post"></iframe>
-            </div>
-            <div class="category-card">
-                <iframe src="https://www.facebook.com/plugins/post.php?href=https://www.facebook.com/share/p/15sDJTVXT6/&show_text=false" 
-                        class="fb-post"></iframe>
-            </div>
+        <div class="achievement-card">
+            <h2 class="category-title">📜 Certificates</h2>
+            <a href="https://www.facebook.com/share/p/1APFn8wa9Y/" target="_blank" class="facebook-link">
+                View Certificates <i class="fas fa-external-link-alt"></i>
+            </a>
         </div>
 
-        <!-- Certificates -->
-        <h2 class="section-title">Certificates of Achievement</h2>
-        <div class="category-grid">
-            <div class="category-card">
-                <iframe src="https://www.facebook.com/plugins/post.php?href=https://www.facebook.com/share/p/1APFn8wa9Y/&show_text=false" 
-                        class="fb-post"></iframe>
-            </div>
-        </div>
-    </main>
+        <!-- Add more cards following the same pattern -->
+    </div>
 
-    <script>
-        // Facebook embed script
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId            : 'your-app-id',
-                autoLogAppEvents : true,
-                xfbml            : true,
-                version          : 'v18.0'
-            });
-        };
-    </script>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <div style="text-align: center; margin-top: 3rem;">
+        <p>To God be the glory! 🙌</p>
+        <p>John 13:34 - "A new commandment I give unto you, That ye love one another..."</p>
+    </div>
 </body>
 </html>
