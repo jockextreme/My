@@ -3,93 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCGI Youth Ugong Triumphs at Valenzuela Youth Bible Festival 2025</title>
+    <title>MCGI Youth Ugong: Valenzuela Bible Festival 2025 Champions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #3498db);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
         .article-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
         }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 20px;
+
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            margin: 2rem 0;
         }
+
+        .hero-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.02);
+        }
+
         .bible-verse {
-            text-align: center;
-            font-style: italic;
-            color: #666;
-            margin: 20px 0;
+            background: var(--light-bg);
+            padding: 2rem;
+            border-left: 4px solid var(--accent-color);
+            margin: 2rem 0;
+            font-size: 1.2em;
+            position: relative;
         }
-        .achievements-list {
-            margin: 25px 0;
-            padding-left: 20px;
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
         }
-        .achievements-list li {
-            margin: 10px 0;
-        }
-        .image-container {
-            text-align: center;
-            margin: 25px 0;
-        }
-        img {
-            max-width: 100%;
+
+        .achievement-card {
+            padding: 1.5rem;
+            background: var(--light-bg);
             border-radius: 8px;
+            transition: transform 0.3s ease;
         }
-        .credit {
-            text-align: right;
-            color: #888;
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
             font-size: 0.9em;
-            margin-top: 20px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .social-share {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .social-icon {
+            font-size: 1.5em;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .article-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .hero-image {
+                height: 300px;
+            }
+        }
+
+        /* Scroll Animation */
+        [data-aos] {
+            opacity: 0;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        [data-aos="fade-up"] {
+            transform: translateY(20px);
+        }
+
+        [data-aos].aos-animate {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>MCGI Youth Ugong<br><span style="font-size: 0.8em; font-weight: normal;">Valenzuela Bible Festival 2025 Champions</span></h1>
+    </div>
+
     <div class="article-container">
-        <h1>Love in Action: MCGI Youth Ugong Crowned Overall Champion at Valenzuela Youth Bible Festival 2025</h1>
-        
-        <div class="bible-verse">
-            “A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another.”<br>
-            <strong>— John 13:34 (KJV)</strong>
+        <div class="bible-verse" data-aos="fade-up">
+            <i class="fas fa-bible"></i>
+            “A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another.”
+            <br><strong>— John 13:34 (KJV)</strong>
         </div>
 
-        <div class="image-container">
-            <img src="https://www.facebook.com/100024531457377/posts/pfbid02kJrGtqB3MK5FfgPmHFVPRbgktnEay3FtBtAKFBN9HsfTz79Ger7yjw95A8SvMmt3l/?app=fbl" 
-                 alt="MCGI Youth Ugong Celebration Photo">
+        <div class="hero-section" data-aos="fade-up">
+            <img src="YOUR_IMAGE_URL_HERE" alt="Victorious MCGI Youth Ugong" class="hero-image">
         </div>
 
-        <h2>A Historic Victory for God’s Glory</h2>
-        <p>In an extraordinary display of faith and unity, the MCGI Youth Ugong secured the title of <strong>Overall Champion</strong> at the Valenzuela Youth Bible Festival 2025. This first-ever participation became a testament to the power of Christ-centered fellowship and the verse that guided their journey: <em>“Love one another as I have loved you.”</em></p>
+        <div class="achievements-grid">
+            <div class="achievement-card" data-aos="fade-up">
+                <div class="badge">🏆 Overall Champion</div>
+                <h3>MCGI Youth Ugong</h3>
+                <p>First-ever participation crowned with highest honor</p>
+            </div>
 
-        <h2>Celebrating God-Given Talents</h2>
-        <p>From soul-stirring performances to creative expressions of faith, the group’s achievements included:</p>
-        <ul class="achievements-list">
-            <li>🏆 <strong>OVERALL CHAMPION</strong> - MCGI Youth Ugong</li>
-            <li>🥇 <strong>Champion</strong> - Youth News, Kristiano Drama, Tula (Sis. Eunice Manaras)</li>
-            <li>🥈 <strong>1st Runner Up</strong> - Bible Preaching English</li>
-            <li>🥉 <strong>2nd & 3rd Runner Up</strong> - Mural Making, Solo Singing, Poster Making, and more!</li>
-        </ul>
+            <div class="achievement-card" data-aos="fade-up">
+                <div class="badge">🥇 Champions</div>
+                <h3>Youth News<br>Kristiano Drama<br>Tula</h3>
+                <p>Outstanding performances in multiple categories</p>
+            </div>
 
-        <h2>Hearts United in Gratitude</h2>
-        <p>“Our joy overflows not because of the awards, but because we witnessed God’s love uniting us,” shared one member. The group extends heartfelt thanks to their mentors, families, and the entire MCGI community for their unwavering prayers and support.</p>
+            <div class="achievement-card" data-aos="fade-up">
+                <div class="badge">🥈 Runners Up</div>
+                <h3>Bible Preaching<br>Mural Making<br>Solo Singing</h3>
+                <p>Remarkable achievements across artistic disciplines</p>
+            </div>
+        </div>
 
-        <h2>To God Be the Glory!</h2>
-        <p>As MCGI Youth Ugong rejoices in this milestone, they reaffirm their commitment to using their talents for God’s kingdom. This victory is not an end, but a beginning—a call to continue shining as lights in a world hungry for Christ’s love.</p>
+        <h2 data-aos="fade-up">Victory Through Divine Guidance</h2>
+        <p data-aos="fade-up">This historic triumph reflects months of prayerful preparation and unwavering faith. Our youth members demonstrated exceptional talent guided by spiritual discipline...</p>
 
-        <div class="credit">
-            <p>Posted by: MCGI Youth Ugong Valenzuela<br>
-            #LoveInAction #ToGodBeTheGlory</p>
+        <div class="social-share">
+            <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
         </div>
     </div>
+
+    <script>
+        // Simple scroll animation implementation
+        function initAOS() {
+            const elements = document.querySelectorAll('[data-aos]');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('aos-animate');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            elements.forEach(el => observer.observe(el));
+        }
+
+        window.addEventListener('DOMContentLoaded', initAOS);
+    </script>
 </body>
 </html>
