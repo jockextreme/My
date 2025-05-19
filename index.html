@@ -1,295 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCGI Youth UGONG - 2025 Bible Festival Champions</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #e67e22;
-            --light-bg: #f8f9fa;
-            --text-dark: #2d3436;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCGI Youth UGONG - Bible Festival 2025 Champions</title>
+  <meta name="description" content="Celebrating the achievements of MCGI Youth UGONG in the Valenzuela Youth Bible Festival 2025. See our champions, photos, and God-given victories.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --accent: #e67e22;
+      --light-bg: #f4f4f4;
+      --dark: #1c1c1c;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            line-height: 1.7;
-            color: var(--text-dark);
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light-bg);
+      color: #333;
+      line-height: 1.6;
+    }
 
-        /* Professional Header */
-        .hero {
-            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(44, 62, 80, 0.98)),
-                        url('https://surli.cc/jpfjkc') center/cover fixed;
-            color: white;
-            padding: 6rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+    header {
+      background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://surli.cc/jpfjkc') center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      padding: 4rem 1rem;
+    }
 
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.3);
-            z-index: 1;
-        }
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    header h2 {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+    }
 
-        .verse-text {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
+    nav {
+      background: var(--primary);
+      padding: 1rem;
+      text-align: center;
+    }
 
-        /* Achievements Section */
-        .achievements-section {
-            padding: 4rem 2rem;
-            background: var(--light-bg);
-        }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: bold;
+    }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
+    .section {
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-        .section-title {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
-        }
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--accent-color);
-        }
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
 
-        /* Timeline Feature */
-        .timeline {
-            position: relative;
-            max-width: 1200px;
-            margin: 4rem auto;
-        }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+      transition: transform 0.3s ease;
+      text-align: center;
+    }
 
-        .timeline-item {
-            padding: 2rem;
-            position: relative;
-            width: 50%;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-            margin: 2rem 0;
-        }
+    .card:hover {
+      transform: translateY(-5px);
+    }
 
-        .timeline-item:nth-child(odd) {
-            left: 0;
-            clear: both;
-        }
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
 
-        .timeline-item:nth-child(even) {
-            left: 50%;
-        }
+    .card h3 {
+      color: var(--accent);
+    }
 
-        /* Image Gallery Enhancements */
-        .masonry-grid {
-            columns: 3 300px;
-            gap: 1.5rem;
-            padding: 2rem;
-        }
+    .card p {
+      margin-top: 0.5rem;
+    }
 
-        .masonry-item {
-            break-inside: avoid;
-            margin-bottom: 1.5rem;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            position: relative;
-        }
+    .description {
+      font-size: 0.95rem;
+      color: #555;
+      margin-top: 1rem;
+    }
 
-        .masonry-item:hover {
-            transform: translateY(-5px);
-        }
+    .gallery {
+      columns: 2;
+      gap: 1rem;
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+    }
 
-        /* Testimonials */
-        .testimonial-carousel {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding: 2rem;
-            gap: 2rem;
-        }
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-        .testimonial-card {
-            flex: 0 0 300px;
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            scroll-snap-align: start;
-        }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
 
-        /* Modern Features */
-        .scroll-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--accent-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+    .gallery-item:hover img {
+      transform: scale(1.03);
+    }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            background: var(--primary-color);
-            color: white;
-        }
+    .facebook-embed {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
 
-        .stat-item {
-            text-align: center;
-            padding: 2rem;
-        }
+    iframe {
+      border-radius: 8px;
+    }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-    </style>
+    footer {
+      background: var(--primary);
+      color: #fff;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+    }
+
+    @media (max-width: 768px) {
+      .gallery {
+        columns: 1;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class="hero">
-        <div class="hero-content">
-            <div class="verse-text">
-                "A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another."
-            </div>
-            <p class="verse-reference">John 13:34 (KJV)</p>
-            <h1 class="event-title">Valenzuela Youth Bible Festival 2025</h1>
-            <div class="hero-cta">
-                <button class="cta-button">Explore Our Journey</button>
-            </div>
-        </div>
-    </header>
 
-    <section class="achievements-section">
-        <div class="section-header">
-            <h2 class="section-title">Historic Achievements</h2>
-            <p class="section-subtitle">Celebrating God's Grace Through Talent</p>
-        </div>
+  <nav>
+    <a href="#achievements">Achievements</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#post">Facebook Post</a>
+  </nav>
 
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Competitions Joined</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">9</div>
-                <div class="stat-label">Awards Won</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Participants</div>
-            </div>
-        </div>
+  <header>
+    <h1>"A new commandment I give unto you, That ye love one another"</h1>
+    <p>John 13:34 (KJV)</p>
+    <h2>Valenzuela Youth Bible Festival 2025 Champions</h2>
+  </header>
 
-        <div class="timeline">
-            <div class="timeline-item">
-                <h3>Opening Ceremony</h3>
-                <p>Our youth group united in prayer and determination to glorify God through our talents</p>
-            </div>
-            <div class="timeline-item">
-                <h3>Drama Competition Victory</h3>
-                <p>Presenting "The Prodigal Son" with heartfelt performances that touched many souls</p>
-            </div>
-        </div>
-    </section>
+  <section id="achievements" class="section">
+    <h2 class="section-title">Our Triumphs</h2>
+    <div class="achievements-grid">
+      <div class="card">
+        <h3>🏆 Overall Champion</h3>
+        <p>MCGI Youth UGONG</p>
+        <img src="https://surl.lu/lltlil" alt="Overall Champion">
+        <p class="description">Crowned as the overall champion in the 2025 Bible Festival—proof of unity, dedication, and divine inspiration.</p>
+      </div>
 
-    <section class="gallery-section">
-        <h2 class="section-title">Divine Moments Captured</h2>
-        <div class="masonry-grid">
-            <div class="masonry-item">
-                <img src="https://surl.lu/lltlil" alt="Overall Champions">
-                <div class="image-caption">Receiving the Overall Champion Award</div>
-            </div>
-            <!-- Add all gallery images with captions -->
-        </div>
-    </section>
+      <div class="card">
+        <h3>🎭 Kristiano Drama</h3>
+        <p>Champions</p>
+        <img src="https://surl.lu/huilzx" alt="Kristiano Drama">
+        <p class="description">An emotional and faith-filled theatrical performance that touched hearts and earned the top award.</p>
+      </div>
 
-    <section class="testimonial-section">
-        <h2 class="section-title">Voices of Praise</h2>
-        <div class="testimonial-carousel">
-            <div class="testimonial-card">
-                <blockquote>
-                    "This victory is a testament to God's faithfulness. Through unity and prayer, we achieved what seemed impossible!"
-                </blockquote>
-                <cite>- Youth Leader</cite>
-            </div>
-        </div>
-    </section>
+      <div class="card">
+        <h3>🎨 Mural Making</h3>
+        <p>2nd Runner-Up</p>
+        <img src="https://surl.lu/ikosio" alt="Mural Making">
+        <p class="description">A collaborative artwork capturing our faith and unity through vibrant visual storytelling.</p>
+      </div>
 
-    <div class="scroll-top" id="scrollTop">
-        <i class="fas fa-chevron-up"></i>
+      <div class="card">
+        <h3>📜 Tula Champion</h3>
+        <p>Sis. Eunice Manaras</p>
+        <img src="https://surl.li/bjpbqu" alt="Tula Champion">
+        <p class="description">An inspiring poem delivered with grace and passion, glorifying God through Filipino literature.</p>
+      </div>
     </div>
+  </section>
 
-    <script>
-        // Scroll to Top
-        const scrollTop = document.getElementById('scrollTop');
-        
-        window.addEventListener('scroll', () => {
-            scrollTop.style.opacity = window.scrollY > 500 ? '1' : '0';
-        });
+  <section id="gallery" class="section">
+    <h2 class="section-title">Victory Moments</h2>
+    <div class="gallery">
+      <div class="gallery-item"><img src="https://surl.lu/bfhtgd" alt="Youth News Champions"></div>
+      <div class="gallery-item"><img src="https://surl.li/fodfqa" alt="Solo Singing"></div>
+      <div class="gallery-item"><img src="https://surli.cc/kixrke" alt="Digital Poster"></div>
+      <div class="gallery-item"><img src="https://surl.lu/xwtcub" alt="Traditional Poster"></div>
+      <div class="gallery-item"><img src="https://surli.cc/nndund" alt="Award Ceremony"></div>
+      <div class="gallery-item"><img src="https://surl.li/fwngaj" alt="Group Photo"></div>
+    </div>
+  </section>
 
-        scrollTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+  <section id="post" class="section">
+    <h2 class="section-title">Featured Facebook Post</h2>
+    <div class="facebook-embed">
+      <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F100024531457377%2Fposts%2F1915138955980468%2F%3Fmibextid%3DrS40aB7S9Ucbxw6v&show_text=true"
+        width="100%" height="500" style="border:none;overflow:hidden" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+    </div>
+  </section>
 
-        // Intersection Observer for animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, { threshold: 0.1 });
+  <footer>
+    <h3>To God Be All the Glory!</h3>
+    <p>© 2025 MCGI Youth UGONG. All rights reserved. Guided by faith, inspired by truth.</p>
+  </footer>
 
-        document.querySelectorAll('.timeline-item, .stat-item').forEach(el => observer.observe(el));
-    </script>
+  <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });" class="back-to-top" id="topBtn"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    const topBtn = document.getElementById('topBtn');
+    window.onscroll = () => {
+      topBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+    };
+  </script>
 </body>
 </html>
