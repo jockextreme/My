@@ -25,10 +25,10 @@
         }
 
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                        url('https://i.ibb.co/0jQZ0Qz/hero-bg.jpg') center/cover;
+            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)),
+                        url('https://surli.cc/jpfjkc') center/cover;
             color: white;
-            padding: 120px 20px;
+            padding: 8rem 2rem;
             text-align: center;
             min-height: 80vh;
             display: flex;
@@ -36,18 +36,25 @@
             justify-content: center;
         }
 
+        .section-title {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            padding: 4rem 2rem;
+            padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .card {
             background: white;
-            border-radius: 10px;
+            border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             padding: 2rem;
             transition: transform 0.3s ease;
@@ -66,16 +73,22 @@
             margin: 0 auto;
         }
 
-        .gallery img {
-            width: 100%;
+        .gallery-item {
+            break-inside: avoid;
             margin-bottom: 1rem;
+            position: relative;
             border-radius: 8px;
-            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
             transition: transform 0.3s ease;
         }
 
-        .gallery img:hover {
-            transform: scale(1.02);
+        .gallery-item:hover img {
+            transform: scale(1.05);
         }
 
         .modal {
@@ -99,20 +112,29 @@
 
         .close {
             position: absolute;
-            top: 20px;
-            right: 35px;
+            top: 2rem;
+            right: 2rem;
             color: white;
-            font-size: 40px;
+            font-size: 3rem;
             cursor: pointer;
         }
 
-        section {
-            padding: 4rem 2rem;
+        .certificates-section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        h1, h2, h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
+        .certificate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .facebook-embed {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
         }
 
         .glory-footer {
@@ -123,23 +145,13 @@
             margin-top: 4rem;
         }
 
-        .facebook-embed {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .champion-card {
-            background: linear-gradient(135deg, #e67e22, #d35400);
-            color: white;
-        }
-
         @media (max-width: 768px) {
             .hero {
-                padding: 80px 20px;
+                padding: 4rem 1rem;
             }
             
-            .gallery {
-                columns: 2;
+            .section-title {
+                font-size: 2rem;
             }
         }
     </style>
@@ -152,73 +164,83 @@
     </header>
 
     <section class="achievements-section">
-        <h2 style="text-align: center; margin-bottom: 2rem;">Our Triumphs</h2>
+        <h2 class="section-title">Our Triumphs</h2>
         <div class="achievements-grid">
-            <div class="card champion-card">
+            <div class="card champion">
                 <h3>🏆 Overall Champion</h3>
                 <p>MCGI Youth UGONG</p>
+                <img src="https://surl.lu/lltlil" alt="Overall Champion" style="width:100%; margin-top:1rem;">
             </div>
 
             <div class="card">
-                <h3>🥇 Youth News</h3>
-                <p>Champion</p>
+                <h3>🎭 Kristiano Drama</h3>
+                <p>Champions</p>
+                <img src="https://surl.lu/huilzx" alt="Kristiano Drama" style="width:100%; margin-top:1rem;">
             </div>
 
             <div class="card">
-                <h3>🥇 Kristiano Drama</h3>
-                <img src="https://surl.lu/huilzx" alt="Kristiano Drama" style="width: 100%; margin-top: 1rem;">
+                <h3>🎨 Mural Making</h3>
+                <p>2nd Runner Up</p>
+                <img src="https://surl.lu/ikosio" alt="Mural Making" style="width:100%; margin-top:1rem;">
             </div>
 
             <div class="card">
-                <h3>🥇 Tula</h3>
+                <h3>📜 Tula Champion</h3>
                 <p>Sis. Eunice Manaras</p>
-                <img src="https://surl.li/bjpbqu" alt="Sis. Eunice" style="width: 100%; margin-top: 1rem;">
+                <img src="https://surl.li/bjpbqu" alt="Tula Champion" style="width:100%; margin-top:1rem;">
             </div>
-
-            <!-- Add other achievements following same pattern -->
         </div>
     </section>
 
     <section class="gallery-section">
-        <h2 style="text-align: center; margin-bottom: 2rem;">Victory Moments</h2>
+        <h2 class="section-title">Victory Moments</h2>
         <div class="gallery">
-            <img src="https://surl.lu/lltlil" alt="Champions Photo 1">
-            <img src="https://surl.lu/bfhtgd" alt="Champions Photo 2">
-            <img src="https://surli.cc/jpfjkc" alt="Event Photo 1">
-            <img src="https://surli.cc/kixrke" alt="Event Photo 2">
-            <img src="https://surl.lu/xwtcub" alt="Mural Making">
-            <img src="https://surli.cc/nndund" alt="Group Photo">
-            <img src="https://surl.li/fwngaj" alt="Award Ceremony">
-        </div>
-    </section>
-
-    <section class="social-proof">
-        <h2 style="text-align: center; margin-bottom: 2rem;">Celebrate With Us</h2>
-        <div class="facebook-embed">
-            <div id="fb-root"></div>
-            <script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2"></script>
-            <div class="fb-post" 
-                data-href="https://www.facebook.com/share/p/15HAmj9FTy/" 
-                data-width="500" 
-                data-show-text="true">
+            <div class="gallery-item">
+                <img src="https://surl.lu/bfhtgd" alt="Youth News Champions">
+            </div>
+            <div class="gallery-item">
+                <img src="https://surl.li/fodfqa" alt="Solo Singing">
+            </div>
+            <div class="gallery-item">
+                <img src="https://surli.cc/kixrke" alt="Digital Poster">
+            </div>
+            <div class="gallery-item">
+                <img src="https://surl.lu/xwtcub" alt="Traditional Poster">
+            </div>
+            <div class="gallery-item">
+                <img src="https://surli.cc/nndund" alt="Award Ceremony">
+            </div>
+            <div class="gallery-item">
+                <img src="https://surl.li/fwngaj" alt="Group Photo">
             </div>
         </div>
     </section>
 
     <section class="certificates-section">
-        <h2 style="text-align: center; margin-bottom: 2rem;">Our Certificates</h2>
-        <div class="gallery">
-            <img src="https://surl.li/xndlak" alt="Certificates">
+        <h2 class="section-title">Certificates of Achievement</h2>
+        <div class="certificate-grid">
+            <img src="https://surl.li/xndlak" alt="Certificate 1" class="certificate">
+            <!-- Add more certificate images as needed -->
+        </div>
+    </section>
+
+    <section class="social-proof">
+        <div class="facebook-embed">
+            <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fshare%2Fp%2F15HAmj9FTy%2F&show_text=true" 
+                    width="100%" 
+                    height="500" 
+                    style="border:none;overflow:hidden" 
+                    scrolling="no" 
+                    frameborder="0" 
+                    allowfullscreen="true" 
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+            </iframe>
         </div>
     </section>
 
     <footer class="glory-footer">
         <h3>To God Be All the Glory!</h3>
         <p>© 2025 MCGI Youth UGONG. All glory to the Almighty.</p>
-        <div style="margin-top: 1rem;">
-            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-facebook"></i></a>
-            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
-        </div>
     </footer>
 
     <div class="modal" id="imageModal">
@@ -232,7 +254,7 @@
         const modalImg = document.getElementById('modalImage');
         const closeBtn = document.querySelector('.close');
 
-        document.querySelectorAll('.gallery img').forEach(img => {
+        document.querySelectorAll('.gallery-item img, .card img').forEach(img => {
             img.addEventListener('click', () => {
                 modal.style.display = "flex";
                 modalImg.src = img.src;
@@ -248,16 +270,6 @@
                 modal.style.display = "none";
             }
         });
-
-        // Facebook embed script
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId            : 'your-app-id',
-                autoLogAppEvents : true,
-                xfbml            : true,
-                version          : 'v18.0'
-            });
-        };
     </script>
 </body>
 </html>
