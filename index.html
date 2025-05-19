@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Video Hub</title>
+    <title>Premium Video Hub+</title>
     <style>
         :root {
             --primary: #ff4757;
@@ -35,6 +35,7 @@
         .header {
             text-align: center;
             margin-bottom: 3rem;
+            position: relative;
         }
 
         .title {
@@ -44,6 +45,30 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--light);
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--secondary);
+            color: var(--dark);
+            border-color: transparent;
         }
 
         .video-grid {
@@ -61,6 +86,7 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
+            position: relative;
         }
 
         .video-card:hover {
@@ -80,6 +106,7 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
+            loading: lazy;
         }
 
         .video-card:hover .thumbnail {
@@ -90,7 +117,7 @@
             padding: 1.2rem;
         }
 
-        .title {
+        .video-title {
             font-size: 1rem;
             font-weight: 600;
             line-height: 1.4;
@@ -122,6 +149,54 @@
             white-space: nowrap;
         }
 
+        .favorite-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .favorite-btn.active {
+            color: var(--primary);
+            background: rgba(255, 71, 87, 0.2);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .skeleton {
+            animation: shimmer 1.5s infinite linear;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.1) 25%,
+                rgba(255,255,255,0.15) 50%,
+                rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary);
+        }
+
+        .retry-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -147,8 +222,11 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">Premium Video Hub</h1>
-            <p class="tagline">Curated Collection of Exclusive Content</p>
+            <h1 class="title">Premium Video Hub+</h1>
+            <div class="controls">
+                <button class="filter-btn active" data-filter="all">All Content</button>
+                <button class="filter-btn" data-filter="favorites">Favorites</button>
+            </div>
         </div>
         <div class="video-grid" id="videoContainer"></div>
     </div>
@@ -156,59 +234,113 @@
     <script>
         const API_URL = 'https://api.zetsu.xyz/prn/home?apikey=625156d0d268e4633b97980c0dc859d0';
         const videoContainer = document.getElementById('videoContainer');
+        let allVideos = [];
+        let currentFilter = 'all';
 
         async function fetchVideos() {
             try {
+                // Show loading skeletons
+                videoContainer.innerHTML = Array(8).fill('<div class="video-card skeleton"></div>').join('');
+                
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
                 delete data.status;
                 delete data.author;
 
-                // Add Intersection Observer for scroll animation
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = 1;
-                        }
-                    });
-                }, { threshold: 0.1 });
-
-                Object.keys(data).forEach(key => {
-                    if (typeof data[key] === 'object') {
-                        const video = data[key];
-                        const card = document.createElement('div');
-                        card.className = 'video-card';
-                        
-                        card.innerHTML = `
-                            <a href="${video.video}" target="_blank" rel="noopener">
-                                <div class="thumbnail-container">
-                                    <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
-                                </div>
-                                <div class="video-info">
-                                    <h3 class="title">${video.title}</h3>
-                                    <div class="meta">
-                                        <span class="duration">${video.duration}</span>
-                                        <span class="uploader">${video.uploaderName}</span>
-                                    </div>
-                                </div>
-                            </a>
-                        `;
-
-                        videoContainer.appendChild(card);
-                        observer.observe(card);
-                    }
-                });
+                allVideos = Object.values(data).filter(item => typeof item === 'object');
+                renderVideos(allVideos);
+                setupFilters();
             } catch (error) {
                 console.error('Error fetching videos:', error);
-                videoContainer.innerHTML = `
-                    <div class="error-message">
-                        Failed to load content. Please try again later.
-                    </div>
-                `;
+                showError();
             }
         }
 
+        function renderVideos(videos) {
+            videoContainer.innerHTML = '';
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            
+            videos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                
+                card.innerHTML = `
+                    <button class="favorite-btn ${favorites.includes(video.video) ? 'active' : ''}" 
+                            data-video="${video.video}">♥</button>
+                    <a href="${video.video}" target="_blank" rel="noopener">
+                        <div class="thumbnail-container">
+                            <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}" loading="lazy">
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">${video.title}</h3>
+                            <div class="meta">
+                                <span class="duration">${video.duration}</span>
+                                <span class="uploader">${video.uploaderName}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+
+                videoContainer.appendChild(card);
+            });
+
+            // Add favorite functionality
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleFavorite(btn.dataset.video);
+                    btn.classList.toggle('active');
+                });
+            });
+        }
+
+        function toggleFavorite(videoUrl) {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const index = favorites.indexOf(videoUrl);
+            
+            if (index === -1) {
+                favorites.push(videoUrl);
+            } else {
+                favorites.splice(index, 1);
+            }
+            
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            
+            if (currentFilter === 'favorites') {
+                const filtered = allVideos.filter(v => favorites.includes(v.video));
+                renderVideos(filtered);
+            }
+        }
+
+        function setupFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    
+                    if (currentFilter === 'favorites') {
+                        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+                        const filtered = allVideos.filter(v => favorites.includes(v.video));
+                        renderVideos(filtered);
+                    } else {
+                        renderVideos(allVideos);
+                    }
+                });
+            });
+        }
+
+        function showError() {
+            videoContainer.innerHTML = `
+                <div class="error-message">
+                    <p>Failed to load content. Please try again later.</p>
+                    <button class="retry-btn" onclick="fetchVideos()">Retry</button>
+                </div>
+            `;
+        }
+
+        // Initial load
         fetchVideos();
     </script>
 </body>
