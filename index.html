@@ -1,330 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MCGI Youth UGONG - Bible Festival 2025 Champions</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #e67e22;
-            --light-bg: #f9f9f9;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MCGI Youth UGONG - Bible Festival 2025 Champions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --accent-color: #e67e22;
+      --light-bg: #f9f9f9;
+      --dark-bg: #1c1c1c;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
 
-        body {
-            line-height: 1.6;
-            background-color: var(--light-bg);
-        }
+    body {
+      background-color: var(--light-bg);
+      color: #333;
+      line-height: 1.6;
+    }
 
-        /* Mobile-First Styles */
-        .hero {
-            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)),
-                        url('https://surli.cc/jpfjkc') center/cover;
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            min-height: 60vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    header.hero {
+      background: linear-gradient(rgba(44, 62, 80, 0.85), rgba(44, 62, 80, 0.85)),
+        url('https://surli.cc/jpfjkc') center/cover no-repeat;
+      color: white;
+      padding: 3rem 1rem;
+      text-align: center;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
 
-        .hero h1 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
 
-        .section-title {
-            text-align: center;
-            padding: 1.5rem 1rem;
-            color: var(--primary-color);
-            font-size: 1.8rem;
-        }
+    .hero .subtitle {
+      font-size: 1.1rem;
+      margin: 0.5rem 0;
+    }
 
-        .achievements-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            padding: 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .hero h2 {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: #f39c12;
+    }
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            transition: transform 0.3s ease;
-            text-align: center;
-        }
+    nav {
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      padding: 1rem;
+      gap: 2rem;
+    }
 
-        .gallery {
-            columns: 1;
-            gap: 1rem;
-            padding: 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    nav a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
 
-        .gallery-item {
-            break-inside: avoid;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    nav a:hover {
+      color: var(--accent-color);
+    }
 
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            transition: transform 0.3s ease;
-        }
+    .section-title {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            touch-action: manipulation;
-        }
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        .modal-content {
-            max-width: 95%;
-            max-height: 95%;
-            border-radius: 8px;
-            user-select: none;
-        }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
 
-        .close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            color: white;
-            font-size: 2.5rem;
-            cursor: pointer;
-            z-index: 1001;
-        }
+    .card:hover {
+      transform: translateY(-5px);
+    }
 
-        .facebook-embed {
-            padding: 1rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
 
-        .glory-footer {
-            background: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 2rem;
-        }
+    .gallery {
+      columns: 1;
+      gap: 1rem;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        /* Tablet Styles */
-        @media (min-width: 600px) {
-            .hero {
-                padding: 4rem 2rem;
-                min-height: 70vh;
-            }
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-            .hero h1 {
-                font-size: 2rem;
-            }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
 
-            .section-title {
-                font-size: 2.2rem;
-            }
+    .gallery-item img:hover {
+      transform: scale(1.05);
+    }
 
-            .achievements-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-            }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
-            .gallery {
-                columns: 2;
-            }
-        }
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+    }
 
-        /* Desktop Styles */
-        @media (min-width: 900px) {
-            .hero {
-                padding: 6rem 2rem;
-                min-height: 80vh;
-            }
+    .close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2.5rem;
+      color: white;
+      cursor: pointer;
+    }
 
-            .hero h1 {
-                font-size: 2.5rem;
-            }
+    .facebook-embed {
+      padding: 2rem 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-            .section-title {
-                font-size: 2.5rem;
-                padding: 2rem;
-            }
+    .glory-footer {
+      background: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
 
-            .achievements-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 2rem;
-                padding: 2rem;
-            }
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 0.7rem 1rem;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
 
-            .gallery {
-                columns: 3;
-                padding: 2rem;
-            }
+    @media(min-width: 768px) {
+      .gallery {
+        columns: 2;
+      }
+    }
 
-            .card {
-                padding: 2rem;
-            }
-        }
-
-        /* Touch Optimization */
-        button, .card, .gallery-item {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .card:active {
-            transform: scale(0.98);
-        }
-    </style>
+    @media(min-width: 1024px) {
+      .gallery {
+        columns: 3;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class="hero">
-        <h1>"A new commandment I give unto you, That ye love one another"</h1>
-        <p class="subtitle">John 13:34 (KJV)</p>
-        <h2>Valenzuela Youth Bible Festival 2025 Champions</h2>
-    </header>
+  <nav>
+    <ul>
+      <li><a href="#achievements">Achievements</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#fb">Facebook Post</a></li>
+    </ul>
+  </nav>
 
-    <section class="achievements-section">
-        <h2 class="section-title">Our Triumphs</h2>
-        <div class="achievements-grid">
-            <div class="card champion">
-                <h3>🏆 Overall Champion</h3>
-                <p>MCGI Youth UGONG</p>
-                <img src="https://surl.lu/lltlil" alt="Overall Champion">
-            </div>
+  <header class="hero">
+    <h1>"A new commandment I give unto you, That ye love one another"</h1>
+    <p class="subtitle">John 13:34 (KJV)</p>
+    <h2>Valenzuela Youth Bible Festival 2025 Champions</h2>
+  </header>
 
-            <div class="card">
-                <h3>🎭 Kristiano Drama</h3>
-                <p>Champions</p>
-                <img src="https://surl.lu/huilzx" alt="Kristiano Drama">
-            </div>
-
-            <div class="card">
-                <h3>🎨 Mural Making</h3>
-                <p>2nd Runner Up</p>
-                <img src="https://surl.lu/ikosio" alt="Mural Making">
-            </div>
-
-            <div class="card">
-                <h3>📜 Tula Champion</h3>
-                <p>Sis. Eunice Manaras</p>
-                <img src="https://surl.li/bjpbqu" alt="Tula Champion">
-            </div>
-        </div>
-    </section>
-
-    <section class="gallery-section">
-        <h2 class="section-title">Victory Moments</h2>
-        <div class="gallery">
-            <div class="gallery-item">
-                <img src="https://surl.lu/bfhtgd" alt="Youth News Champions">
-            </div>
-            <div class="gallery-item">
-                <img src="https://surl.li/fodfqa" alt="Solo Singing">
-            </div>
-            <div class="gallery-item">
-                <img src="https://surli.cc/kixrke" alt="Digital Poster">
-            </div>
-            <div class="gallery-item">
-                <img src="https://surl.lu/xwtcub" alt="Traditional Poster">
-            </div>
-            <div class="gallery-item">
-                <img src="https://surli.cc/nndund" alt="Award Ceremony">
-            </div>
-            <div class="gallery-item">
-                <img src="https://surl.li/fwngaj" alt="Group Photo">
-            </div>
-        </div>
-    </section>
-
-    <section class="social-proof">
-        <div class="facebook-embed">
-            <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F100024531457377%2Fposts%2F1915138955980468%2F%3Fmibextid%3DrS40aB7S9Ucbxw6v&show_text=true" 
-                    width="100%" 
-                    height="500" 
-                    style="border:none;overflow:hidden" 
-                    scrolling="no" 
-                    frameborder="0" 
-                    allowfullscreen="true" 
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
-            </iframe>
-        </div>
-    </section>
-
-    <footer class="glory-footer">
-        <h3>To God Be All the Glory!</h3>
-        <p>© 2025 MCGI Youth UGONG. All glory to the Almighty.</p>
-    </footer>
-
-    <div class="modal" id="imageModal">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="modalImage" alt="Enlarged view">
+  <section id="achievements">
+    <h2 class="section-title">Our Triumphs</h2>
+    <div class="achievements-grid">
+      <div class="card">
+        <h3>🏆 Overall Champion</h3>
+        <p>MCGI Youth UGONG</p>
+        <img src="https://surl.lu/lltlil" alt="Overall Champion" />
+      </div>
+      <div class="card">
+        <h3>🎭 Kristiano Drama</h3>
+        <p>Champions</p>
+        <img src="https://surl.lu/huilzx" alt="Kristiano Drama" />
+      </div>
+      <div class="card">
+        <h3>🎨 Mural Making</h3>
+        <p>2nd Runner Up</p>
+        <img src="https://surl.lu/ikosio" alt="Mural Making" />
+      </div>
+      <div class="card">
+        <h3>📜 Tula Champion</h3>
+        <p>Sis. Eunice Manaras</p>
+        <img src="https://surl.li/bjpbqu" alt="Tula Champion" />
+      </div>
     </div>
+  </section>
 
-    <script>
-        // Image Modal functionality
-        const modal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImage');
-        const closeBtn = document.querySelector('.close');
+  <section id="gallery">
+    <h2 class="section-title">Victory Moments</h2>
+    <div class="gallery">
+      <div class="gallery-item"><img src="https://surl.lu/bfhtgd" alt="Youth News Champions" /></div>
+      <div class="gallery-item"><img src="https://surl.li/fodfqa" alt="Solo Singing" /></div>
+      <div class="gallery-item"><img src="https://surli.cc/kixrke" alt="Digital Poster" /></div>
+      <div class="gallery-item"><img src="https://surl.lu/xwtcub" alt="Traditional Poster" /></div>
+      <div class="gallery-item"><img src="https://surli.cc/nndund" alt="Award Ceremony" /></div>
+      <div class="gallery-item"><img src="https://surl.li/fwngaj" alt="Group Photo" /></div>
+    </div>
+  </section>
 
-        function openModal(src) {
-            modal.style.display = "flex";
-            modalImg.src = src;
-        }
+  <section class="social-proof" id="fb">
+    <h2 class="section-title">Official Facebook Post</h2>
+    <div class="facebook-embed">
+      <iframe
+        src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F100024531457377%2Fposts%2F1915138955980468%2F%3Fmibextid%3DrS40aB7S9Ucbxw6v&show_text=true"
+        width="100%" height="500" style="border:none;overflow:hidden"
+        scrolling="no" frameborder="0" allowfullscreen="true"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+      </iframe>
+    </div>
+  </section>
 
-        document.querySelectorAll('.gallery-item img, .card img').forEach(img => {
-            img.addEventListener('click', () => openModal(img.src));
-            img.addEventListener('touchstart', () => openModal(img.src), {passive: true});
-        });
+  <footer class="glory-footer">
+    <h3>To God Be All the Glory!</h3>
+    <p>© 2025 MCGI Youth UGONG. All glory to the Almighty.</p>
+  </footer>
 
-        closeBtn.addEventListener('click', () => modal.style.display = "none");
-        closeBtn.addEventListener('touchend', () => modal.style.display = "none"), {passive: true});
+  <div class="modal" id="imageModal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage" alt="Zoom View" />
+  </div>
 
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) modal.style.display = "none";
-        });
+  <button class="back-to-top" id="topBtn" title="Back to top"><i class="fas fa-chevron-up"></i></button>
 
-        window.addEventListener('touchend', (e) => {
-            if (e.target === modal) modal.style.display = "none";
-        }, {passive: true});
+  <script>
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImage");
+    const closeBtn = document.querySelector(".close");
+    const topBtn = document.getElementById("topBtn");
 
-        // Prevent zoom on double-tap
-        document.addEventListener('dblclick', e => e.preventDefault());
-        document.addEventListener('touchstart', e => {
-            if (e.touches.length > 1) e.preventDefault();
-        }, {passive: false});
-    </script>
+    document.querySelectorAll(".gallery-item img, .card img").forEach(img => {
+      img.addEventListener("click", () => {
+        modal.style.display = "flex";
+        modalImg.src = img.src;
+      });
+    });
+
+    closeBtn.addEventListener("click", () => modal.style.display = "none");
+
+    window.addEventListener("click", e => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+
+    window.onscroll = function () {
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        topBtn.style.display = "block";
+      } else {
+        topBtn.style.display = "none";
+      }
+    };
+
+    topBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
 </body>
 </html>
