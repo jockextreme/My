@@ -3,125 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRN Viewer</title>
+    <title>PRN Browser</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
             background-color: #1a1a1a;
             color: white;
+            padding: 20px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .search-box {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 30px;
         }
 
         input[type="text"] {
-            padding: 10px;
-            flex: 1;
-            border-radius: 5px;
-            border: 1px solid #444;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
             background-color: #333;
             color: white;
         }
 
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .grid {
+        .results {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
+            padding: 20px;
         }
 
-        .card {
-            background-color: #333;
-            border-radius: 8px;
+        .video-card {
+            background: #333;
+            border-radius: 10px;
             overflow: hidden;
         }
 
-        .card img {
+        .video-card img {
             width: 100%;
-            height: 300px;
+            height: 200px;
             object-fit: cover;
         }
 
-        .card-content {
+        .video-info {
             padding: 15px;
         }
 
-        .card-title {
-            font-weight: bold;
-            margin-bottom: 10px;
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <button onclick="searchContent()">Search</button>
+    <header>
+        <h1>PRN Browser</h1>
+        <div class="search-container">
+            <input type="text" placeholder="Search..." id="searchInput">
         </div>
-        <div id="content" class="grid"></div>
-    </div>
+    </header>
+
+    <div class="results" id="results"></div>
 
     <script>
-        const API_BASE = 'https://api.zetsu.xyz/prn';
-        const contentDiv = document.getElementById('content');
-        
-        // Load initial content
-        fetchContent(`${API_BASE}/home`);
+        const API = {
+            home: 'https://api.zetsu.xyz/prn/home',
+            search: 'https://api.zetsu.xyz/prn/search/',
+            download: 'https://api.zetsu.xyz/prn/download?url='
+        };
 
-        async function fetchContent(url) {
+        const searchInput = document.getElementById('searchInput');
+        const resultsContainer = document.getElementById('results');
+
+        // Load initial home content
+        fetchHomeContent();
+
+        // Search functionality
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const query = encodeURIComponent(searchInput.value);
+                fetchSearchResults(query);
+            }
+        });
+
+        async function fetchHomeContent() {
             try {
-                const response = await fetch(url);
+                const response = await fetch(API.home);
                 const data = await response.json();
-                displayContent(data);
+                displayResults(data);
             } catch (error) {
-                console.error('Error fetching content:', error);
+                console.error('Error fetching home content:', error);
             }
         }
 
-        function displayContent(items) {
-            contentDiv.innerHTML = '';
+        async function fetchSearchResults(query) {
+            try {
+                const response = await fetch(`${API.search}${query}`);
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            }
+        }
+
+        function displayResults(items) {
+            resultsContainer.innerHTML = '';
+            
             items.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = 'video-card';
+                
                 card.innerHTML = `
-                    <img src="${item.thumb}" alt="${item.title}">
-                    <div class="card-content">
-                        <div class="card-title">${item.title}</div>
-                        <button onclick="downloadVideo('${item.url}')">Download</button>
+                    <img src="${item.preview}" alt="${item.title}">
+                    <div class="video-info">
+                        <h3>${item.title}</h3>
+                        <a href="${API.download}${encodeURIComponent(item.url)}" 
+                           class="download-btn" 
+                           target="_blank">
+                            Download
+                        </a>
                     </div>
                 `;
-                contentDiv.appendChild(card);
+                
+                resultsContainer.appendChild(card);
             });
-        }
-
-        function searchContent() {
-            const query = document.getElementById('searchInput').value;
-            if (query) {
-                const encodedQuery = encodeURIComponent(query);
-                fetchContent(`${API_BASE}/search/${encodedQuery}`);
-            }
-        }
-
-        function downloadVideo(url) {
-            window.open(`${API_BASE}/download?url=${encodeURIComponent(url)}`, '_blank');
         }
     </script>
 </body>
