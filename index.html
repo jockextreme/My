@@ -3,70 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Gallery</title>
+    <title>Premium Video Hub</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --primary: #ff4757;
+            --secondary: #2ed573;
+            --dark: #0f0f0f;
+            --dark-alt: #1a1a1a;
+            --light: #ffffff;
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, var(--dark), var(--dark-alt));
+            color: var(--light);
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1440px;
             margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
         }
 
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
         }
 
         .video-card {
-            background: white;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
         }
 
         .video-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .thumbnail-container {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16/9;
         }
 
         .thumbnail {
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .thumbnail {
+            transform: scale(1.05);
         }
 
         .video-info {
-            padding: 15px;
+            padding: 1.2rem;
         }
 
         .title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .duration {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 500;
         }
 
         .uploader {
-            font-size: 12px;
-            color: #888;
+            color: var(--secondary);
+            font-weight: 500;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .video-card {
+            animation: fadeIn 0.6s ease forwards;
+            opacity: 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Video Gallery</h1>
+        <div class="header">
+            <h1 class="title">Premium Video Hub</h1>
+            <p class="tagline">Curated Collection of Exclusive Content</p>
+        </div>
         <div class="video-grid" id="videoContainer"></div>
     </div>
 
@@ -79,33 +162,50 @@
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
-                // Remove the status and author properties
                 delete data.status;
                 delete data.author;
 
-                for (const key in data) {
+                // Add Intersection Observer for scroll animation
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = 1;
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                Object.keys(data).forEach(key => {
                     if (typeof data[key] === 'object') {
                         const video = data[key];
-                        const videoCard = document.createElement('div');
-                        videoCard.className = 'video-card';
+                        const card = document.createElement('div');
+                        card.className = 'video-card';
                         
-                        videoCard.innerHTML = `
-                            <a href="${video.video}" target="_blank">
-                                <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                        card.innerHTML = `
+                            <a href="${video.video}" target="_blank" rel="noopener">
+                                <div class="thumbnail-container">
+                                    <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                                </div>
+                                <div class="video-info">
+                                    <h3 class="title">${video.title}</h3>
+                                    <div class="meta">
+                                        <span class="duration">${video.duration}</span>
+                                        <span class="uploader">${video.uploaderName}</span>
+                                    </div>
+                                </div>
                             </a>
-                            <div class="video-info">
-                                <div class="title">${video.title}</div>
-                                <div class="duration">${video.duration}</div>
-                                <div class="uploader">By: ${video.uploaderName}</div>
-                            </div>
                         `;
-                        
-                        videoContainer.appendChild(videoCard);
+
+                        videoContainer.appendChild(card);
+                        observer.observe(card);
                     }
-                }
+                });
             } catch (error) {
                 console.error('Error fetching videos:', error);
-                videoContainer.innerHTML = '<p>Error loading videos. Please try again later.</p>';
+                videoContainer.innerHTML = `
+                    <div class="error-message">
+                        Failed to load content. Please try again later.
+                    </div>
+                `;
             }
         }
 
