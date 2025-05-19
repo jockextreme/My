@@ -3,86 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MCGI Youth UGONG - Bible Festival 2025 Champions</title>
-  <meta name="description" content="Celebrating the achievements of MCGI Youth UGONG in the Valenzuela Youth Bible Festival 2025. See our champions, photos, and God-given victories.">
+  <meta name="description" content="MCGI Youth UGONG - Champions of Valenzuela Youth Bible Festival 2025" />
+  <title>MCGI Youth UGONG | Bible Festival 2025 Champions</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     :root {
-      --primary: #2c3e50;
-      --accent: #e67e22;
-      --light-bg: #f4f4f4;
-      --dark: #1c1c1c;
+      --primary-color: #2c3e50;
+      --accent-color: #e67e22;
+      --light-bg: #f9f9f9;
+      --dark-bg: #1a252f;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
       background-color: var(--light-bg);
       color: #333;
-      line-height: 1.6;
     }
 
     header {
-      background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://surli.cc/jpfjkc') center/cover no-repeat;
-      color: #fff;
+      background: linear-gradient(rgba(44, 62, 80, 0.85), rgba(44, 62, 80, 0.85)),
+      url('https://surli.cc/jpfjkc') center/cover no-repeat;
+      color: white;
+      padding: 5rem 1rem;
       text-align: center;
-      padding: 4rem 1rem;
     }
 
     header h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
 
-    header h2 {
-      font-size: 1.5rem;
-      margin-top: 1rem;
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
     }
 
     nav {
-      background: var(--primary);
+      background: var(--primary-color);
       padding: 1rem;
-      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      gap: 2rem;
     }
 
     nav a {
-      color: #fff;
+      color: white;
       text-decoration: none;
-      margin: 0 1rem;
       font-weight: bold;
     }
 
     .section {
-      padding: 2rem 1rem;
+      padding: 3rem 1rem;
       max-width: 1200px;
-      margin: auto;
+      margin: 0 auto;
     }
 
     .section-title {
       text-align: center;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: var(--primary);
+      font-size: 2.2rem;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
+    }
+
+    .about p {
+      text-align: center;
+      max-width: 800px;
+      margin: auto;
+      font-size: 1.1rem;
     }
 
     .achievements-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
 
     .card {
-      background: #fff;
+      background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
       padding: 1.5rem;
       transition: transform 0.3s ease;
-      text-align: center;
     }
 
     .card:hover {
@@ -97,26 +114,9 @@
       margin-top: 1rem;
     }
 
-    .card h3 {
-      color: var(--accent);
-    }
-
-    .card p {
-      margin-top: 0.5rem;
-    }
-
-    .description {
-      font-size: 0.95rem;
-      color: #555;
-      margin-top: 1rem;
-    }
-
     .gallery {
-      columns: 2;
+      columns: 1;
       gap: 1rem;
-      max-width: 1200px;
-      margin: auto;
-      padding: 1rem;
     }
 
     .gallery-item {
@@ -126,52 +126,102 @@
       overflow: hidden;
     }
 
-    .gallery-item img {
+    .gallery img {
       width: 100%;
-      height: auto;
+      display: block;
       transition: transform 0.3s ease;
+      cursor: pointer;
     }
 
-    .gallery-item:hover img {
-      transform: scale(1.03);
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
 
-    .facebook-embed {
-      text-align: center;
-      padding: 2rem 1rem;
-    }
-
-    iframe {
+    .modal-content {
+      max-width: 95%;
+      max-height: 95%;
       border-radius: 8px;
     }
 
+    .close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2.5rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    .facebook-embed iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      margin-top: 2rem;
+    }
+
+    .contact {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .contact label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+    }
+
+    .contact input,
+    .contact textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .contact button {
+      margin-top: 1rem;
+      padding: 0.8rem 2rem;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     footer {
-      background: var(--primary);
-      color: #fff;
+      background: var(--dark-bg);
+      color: white;
       text-align: center;
       padding: 2rem 1rem;
       margin-top: 3rem;
     }
 
-    .back-to-top {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      display: none;
-      z-index: 1000;
+    footer p {
+      margin-top: 0.5rem;
     }
 
-    @media (max-width: 768px) {
+    @media (min-width: 700px) {
       .gallery {
-        columns: 1;
+        columns: 2;
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .gallery {
+        columns: 3;
       }
     }
   </style>
@@ -179,9 +229,13 @@
 <body>
 
   <nav>
-    <a href="#achievements">Achievements</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#post">Facebook Post</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#achievements">Achievements</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#social">Social</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
   </nav>
 
   <header>
@@ -190,40 +244,38 @@
     <h2>Valenzuela Youth Bible Festival 2025 Champions</h2>
   </header>
 
-  <section id="achievements" class="section">
-    <h2 class="section-title">Our Triumphs</h2>
+  <section class="section about" id="about">
+    <h2 class="section-title">Who We Are</h2>
+    <p>We are MCGI Youth UGONG — a dedicated group of young believers, united in faith, creativity, and excellence. Through God’s guidance, we proudly emerged as champions in the 2025 Valenzuela Youth Bible Festival, bringing home various awards in drama, arts, music, and poetry.</p>
+  </section>
+
+  <section class="section" id="achievements">
+    <h2 class="section-title">Our Achievements</h2>
     <div class="achievements-grid">
       <div class="card">
         <h3>🏆 Overall Champion</h3>
         <p>MCGI Youth UGONG</p>
         <img src="https://surl.lu/lltlil" alt="Overall Champion">
-        <p class="description">Crowned as the overall champion in the 2025 Bible Festival—proof of unity, dedication, and divine inspiration.</p>
       </div>
-
       <div class="card">
         <h3>🎭 Kristiano Drama</h3>
-        <p>Champions</p>
+        <p>Champion</p>
         <img src="https://surl.lu/huilzx" alt="Kristiano Drama">
-        <p class="description">An emotional and faith-filled theatrical performance that touched hearts and earned the top award.</p>
       </div>
-
       <div class="card">
         <h3>🎨 Mural Making</h3>
         <p>2nd Runner-Up</p>
         <img src="https://surl.lu/ikosio" alt="Mural Making">
-        <p class="description">A collaborative artwork capturing our faith and unity through vibrant visual storytelling.</p>
       </div>
-
       <div class="card">
         <h3>📜 Tula Champion</h3>
         <p>Sis. Eunice Manaras</p>
         <img src="https://surl.li/bjpbqu" alt="Tula Champion">
-        <p class="description">An inspiring poem delivered with grace and passion, glorifying God through Filipino literature.</p>
       </div>
     </div>
   </section>
 
-  <section id="gallery" class="section">
+  <section class="section" id="gallery">
     <h2 class="section-title">Victory Moments</h2>
     <div class="gallery">
       <div class="gallery-item"><img src="https://surl.lu/bfhtgd" alt="Youth News Champions"></div>
@@ -235,27 +287,57 @@
     </div>
   </section>
 
-  <section id="post" class="section">
-    <h2 class="section-title">Featured Facebook Post</h2>
+  <section class="section" id="social">
+    <h2 class="section-title">Facebook Highlights</h2>
     <div class="facebook-embed">
       <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F100024531457377%2Fposts%2F1915138955980468%2F%3Fmibextid%3DrS40aB7S9Ucbxw6v&show_text=true"
-        width="100%" height="500" style="border:none;overflow:hidden" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-        allowfullscreen></iframe>
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              allowfullscreen="true"></iframe>
     </div>
+  </section>
+
+  <section class="section" id="contact">
+    <h2 class="section-title">Get In Touch</h2>
+    <form class="contact">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Your name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Your email" required>
+
+      <label for="message">Message</label>
+      <textarea id="message" rows="5" placeholder="Your message" required></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
   </section>
 
   <footer>
     <h3>To God Be All the Glory!</h3>
-    <p>© 2025 MCGI Youth UGONG. All rights reserved. Guided by faith, inspired by truth.</p>
+    <p>© 2025 MCGI Youth UGONG. All rights reserved.</p>
   </footer>
 
-  <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });" class="back-to-top" id="topBtn"><i class="fas fa-arrow-up"></i></button>
+  <div class="modal" id="imageModal">
+    <span class="close" id="modalClose">&times;</span>
+    <img class="modal-content" id="modalImage" alt="Enlarged">
+  </div>
 
   <script>
-    const topBtn = document.getElementById('topBtn');
-    window.onscroll = () => {
-      topBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
-    };
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('modalClose');
+
+    document.querySelectorAll('.gallery img').forEach(img => {
+      img.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        modalImg.src = img.src;
+      });
+    });
+
+    closeBtn.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
   </script>
 </body>
 </html>
