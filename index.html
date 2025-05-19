@@ -10,7 +10,8 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f0f0f0;
+            background-color: #1a1a1a;
+            color: #ffffff;
         }
 
         .container {
@@ -20,67 +21,140 @@
             margin-top: 20px;
         }
 
-        .item {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .card {
+            background: #2d2d2d;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            cursor: pointer;
         }
 
-        .item img {
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
             width: 100%;
-            height: auto;
-            border-radius: 4px;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #404040;
+        }
+
+        .card-content {
+            padding: 15px;
         }
 
         .loader {
             display: none;
             text-align: center;
             padding: 20px;
+            color: #888;
+        }
+
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            background: #333;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <h1>PRN Content Viewer</h1>
-    <div class="loader" id="loader">Loading...</div>
+    <input type="text" id="search" class="search-box" placeholder="Search content..." disabled>
+    <div class="loader" id="loader">Loading content...</div>
+    <div class="error-message" id="error"></div>
     <div class="container" id="container"></div>
 
     <script>
-        const API_URL = 'https://api.zetsu.xyz/prn/home';
+        const API_ENDPOINT = 'https://api.zetsu.xyz/prn/home';
         const API_KEY = '625156d0d268e4633b97980c0dc859d0';
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
         async function fetchData() {
             try {
-                document.getElementById('loader').style.display = 'block';
-                const response = await fetch(`${API_URL}?apikey=${API_KEY}`);
+                showLoader();
+                clearError();
+
+                const response = await fetch(`${CORS_PROXY}${API_ENDPOINT}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': API_KEY,
+                        'Content-Type': 'application/json',
+                        'Origin': window.location.origin
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
                 const data = await response.json();
-                displayData(data);
+                console.log('API Response:', data);
+                
+                if (data && data.status === 'success' && data.data) {
+                    displayContent(data.data);
+                } else {
+                    throw new Error('Invalid API response structure');
+                }
             } catch (error) {
-                console.error('Error fetching data:', error);
-                alert('Error loading content');
+                showError(`Failed to load content: ${error.message}`);
             } finally {
-                document.getElementById('loader').style.display = 'none';
+                hideLoader();
             }
         }
 
-        function displayData(items) {
+        function displayContent(items) {
             const container = document.getElementById('container');
             container.innerHTML = '';
 
             items.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'item';
+                const card = document.createElement('div');
+                card.className = 'card';
                 
                 const content = `
-                    <h3>${item.title || 'Untitled'}</h3>
-                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}
-                    ${item.video ? `<video controls src="${item.video}" style="width:100%"></video>` : ''}
-                    <p>${item.description || ''}</p>
+                    ${item.image ? `<img src="${item.image}" alt="${item.title || 'Content image'}">` : ''}
+                    <div class="card-content">
+                        <h3>${item.title || 'Untitled'}</h3>
+                        ${item.duration ? `<p>Duration: ${item.duration}</p>` : ''}
+                        ${item.views ? `<p>Views: ${item.views.toLocaleString()}</p>` : ''}
+                        ${item.video ? `<button onclick="playVideo('${item.video}')">Play Video</button>` : ''}
+                    </div>
                 `;
                 
-                itemDiv.innerHTML = content;
-                container.appendChild(itemDiv);
+                card.innerHTML = content;
+                container.appendChild(card);
             });
+        }
+
+        function playVideo(url) {
+            window.open(url, '_blank');
+        }
+
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        function showError(message) {
+            document.getElementById('error').textContent = message;
+        }
+
+        function clearError() {
+            document.getElementById('error').textContent = '';
         }
 
         // Initial load
