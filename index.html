@@ -167,6 +167,12 @@
             background: rgba(255, 71, 87, 0.2);
         }
 
+        .loader {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
@@ -207,7 +213,6 @@
             }
         }
 
-        /* Loading animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -229,19 +234,23 @@
             </div>
         </div>
         <div class="video-grid" id="videoContainer"></div>
+        <div class="loader" id="loader">Loading more content...</div>
     </div>
 
     <script>
         const API_URL = 'https://api.zetsu.xyz/prn/home?apikey=625156d0d268e4633b97980c0dc859d0';
         const videoContainer = document.getElementById('videoContainer');
+        const loader = document.getElementById('loader');
         let allVideos = [];
+        let currentVideos = [];
         let currentFilter = 'all';
+        let currentPage = 1;
+        const itemsPerPage = 12;
+        let isLoading = false;
 
         async function fetchVideos() {
             try {
-                // Show loading skeletons
-                videoContainer.innerHTML = Array(8).fill('<div class="video-card skeleton"></div>').join('');
-                
+                showLoader();
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
@@ -249,43 +258,46 @@
                 delete data.author;
 
                 allVideos = Object.values(data).filter(item => typeof item === 'object');
-                renderVideos(allVideos);
+                currentVideos = allVideos;
+                renderVideos();
                 setupFilters();
+                setupInfiniteScroll();
             } catch (error) {
                 console.error('Error fetching videos:', error);
                 showError();
+            } finally {
+                hideLoader();
             }
         }
 
-        function renderVideos(videos) {
-            videoContainer.innerHTML = '';
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-            
-            videos.forEach(video => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                
-                card.innerHTML = `
-                    <button class="favorite-btn ${favorites.includes(video.video) ? 'active' : ''}" 
-                            data-video="${video.video}">♥</button>
-                    <a href="${video.video}" target="_blank" rel="noopener">
-                        <div class="thumbnail-container">
-                            <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}" loading="lazy">
-                        </div>
-                        <div class="video-info">
-                            <h3 class="video-title">${video.title}</h3>
-                            <div class="meta">
-                                <span class="duration">${video.duration}</span>
-                                <span class="uploader">${video.uploaderName}</span>
+        function renderVideos() {
+            const startIndex = 0;
+            const endIndex = currentPage * itemsPerPage;
+            const videosToShow = currentVideos.slice(startIndex, endIndex);
+
+            videoContainer.innerHTML = videosToShow.map(video => {
+                const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(video.video);
+                return `
+                    <div class="video-card">
+                        <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
+                                data-video="${video.video}">♥</button>
+                        <a href="${video.video}" target="_blank" rel="noopener">
+                            <div class="thumbnail-container">
+                                <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}" loading="lazy">
                             </div>
-                        </div>
-                    </a>
+                            <div class="video-info">
+                                <h3 class="video-title">${video.title}</h3>
+                                <div class="meta">
+                                    <span class="duration">${video.duration}</span>
+                                    <span class="uploader">${video.uploaderName}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 `;
+            }).join('');
 
-                videoContainer.appendChild(card);
-            });
-
-            // Add favorite functionality
+            // Attach favorite handlers
             document.querySelectorAll('.favorite-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -296,7 +308,7 @@
         }
 
         function toggleFavorite(videoUrl) {
-            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const favorites = JSON.parse(localStorage.getItem('favorites') || []);
             const index = favorites.indexOf(videoUrl);
             
             if (index === -1) {
@@ -308,8 +320,9 @@
             localStorage.setItem('favorites', JSON.stringify(favorites));
             
             if (currentFilter === 'favorites') {
-                const filtered = allVideos.filter(v => favorites.includes(v.video));
-                renderVideos(filtered);
+                currentVideos = allVideos.filter(v => favorites.includes(v.video));
+                currentPage = 1;
+                renderVideos();
             }
         }
 
@@ -321,14 +334,64 @@
                     currentFilter = btn.dataset.filter;
                     
                     if (currentFilter === 'favorites') {
-                        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-                        const filtered = allVideos.filter(v => favorites.includes(v.video));
-                        renderVideos(filtered);
+                        const favorites = JSON.parse(localStorage.getItem('favorites') || []);
+                        currentVideos = allVideos.filter(v => favorites.includes(v.video));
                     } else {
-                        renderVideos(allVideos);
+                        currentVideos = allVideos;
                     }
+                    currentPage = 1;
+                    renderVideos();
                 });
             });
+        }
+
+        function setupInfiniteScroll() {
+            window.addEventListener('scroll', throttle(handleScroll, 300));
+        }
+
+        function handleScroll() {
+            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+            if (scrollTop + clientHeight >= scrollHeight - 500 && !isLoading) {
+                loadMore();
+            }
+        }
+
+        function loadMore() {
+            if (currentPage * itemsPerPage < currentVideos.length) {
+                isLoading = true;
+                currentPage++;
+                renderVideos();
+                isLoading = false;
+            }
+        }
+
+        function throttle(func, limit) {
+            let lastFunc;
+            let lastRan;
+            return function() {
+                const context = this;
+                const args = arguments;
+                if (!lastRan) {
+                    func.apply(context, args);
+                    lastRan = Date.now();
+                } else {
+                    clearTimeout(lastFunc);
+                    lastFunc = setTimeout(function() {
+                        if ((Date.now() - lastRan) >= limit) {
+                            func.apply(context, args);
+                            lastRan = Date.now();
+                        }
+                    }, limit - (Date.now() - lastRan));
+                }
+            }
+        }
+
+        function showLoader() {
+            loader.style.display = 'block';
+        }
+
+        function hideLoader() {
+            loader.style.display = 'none';
         }
 
         function showError() {
