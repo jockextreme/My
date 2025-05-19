@@ -1,238 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCGI Youth Ugong - Bible Festival 2025 Champions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #e67e22;
-            --accent-color: #3498db;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MCGI Youth Ugong – Valenzuela Youth Bible Festival 2025</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
 
-        body {
-            background-color: #f8f9fa;
-            line-height: 1.6;
-        }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
 
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), #1a252f);
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-        }
+    header .verse {
+      font-style: italic;
+      margin-top: 1rem;
+    }
 
-        .hero-section {
-            position: relative;
-            padding: 4rem 1rem;
-            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9));
-            color: white;
-            text-align: center;
-        }
+    section {
+      padding: 2rem 1rem;
+      max-width: 800px;
+      margin: auto;
+    }
 
-        .verse {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            font-style: italic;
-        }
+    .message, .awards, .gallery {
+      background: white;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .achievements-grid {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 1rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
+    .message h2, .awards h2, .gallery h2 {
+      color: #2c3e50;
+    }
 
-        .achievement-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
+    .awards ul {
+      list-style: none;
+      padding: 0;
+    }
 
-        .achievement-card:hover {
-            transform: translateY(-5px);
-        }
+    .awards li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
 
-        .card-image {
-            height: 250px;
-            overflow: hidden;
-        }
+    .gallery .photos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
 
-        .card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
+    .gallery .photos img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
 
-        .achievement-card:hover .card-image img {
-            transform: scale(1.1);
-        }
+    footer {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
 
-        .card-content {
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .awards-list {
-            max-width: 800px;
-            margin: 3rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .award-item {
-            padding: 1rem;
-            margin: 0.5rem 0;
-            background: #f8f9fa;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .gallery-grid {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 1rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        .gallery-item {
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            transition: transform 0.3s ease;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        footer {
-            background: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 3rem 1rem;
-            margin-top: 3rem;
-        }
-
-        .social-link {
-            color: white;
-            text-decoration: none;
-            margin: 0 1rem;
-            transition: color 0.3s ease;
-        }
-
-        .social-link:hover {
-            color: var(--secondary-color);
-        }
-    </style>
+    footer a {
+      color: #f1c40f;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <h1>MCGI Youth Ugong</h1>
-        <p>Valenzuela Youth Bible Festival 2025 Champions</p>
-    </header>
+  <header>
+    <h1>MCGI Youth Ugong</h1>
+    <p class="verse">“A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another.”<br><span>– John 13:34 (KJV)</span></p>
+  </header>
 
-    <section class="hero-section">
-        <div class="verse">
-            <p>"A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another."</p>
-            <p>- JOHN 13:34 (KJV)</p>
-        </div>
-        <h2>OVERALL CHAMPION</h2>
-        <h1 style="color: var(--secondary-color); margin-top: 1rem;">MCGI YOUTH UGONG</h1>
-    </section>
+  <section class="message">
+    <h2>Thanks Be to God!</h2>
+    <p>We are grateful for the first-ever experience God has given us to showcase the talents of MCGI Youth Ugong in the Valenzuela Youth Bible Festival 2025. Our hearts overflow with joy as we celebrate this success as one youth group bound by love and faith.</p>
+  </section>
 
-    <div class="achievements-grid">
-        <!-- Youth News Champion -->
-        <div class="achievement-card">
-            <div class="card-image">
-                <img src="https://example.com/youth-news.jpg" alt="Youth News Champion">
-            </div>
-            <div class="card-content">
-                <h3>Youth News</h3>
-                <p>Champion Division</p>
-                <p style="color: var(--secondary-color);">1st Place</p>
-            </div>
-        </div>
+  <section class="awards">
+    <h2>🏆 Awards</h2>
+    <ul>
+      <li><strong>Overall Champion</strong> – MCGI Youth Ugong</li>
+      <li><strong>Champion</strong> – Youth News</li>
+      <li><strong>Champion</strong> – Kristiano Drama</li>
+      <li><strong>Champion</strong> – Tula (Sis. Eunice Manaras)</li>
+      <li><strong>1st Runner Up</strong> – Bible Preaching English (You)</li>
+      <li><strong>2nd Runner Up</strong> – Mural Making</li>
+      <li><strong>2nd Runner Up</strong> – Solo Singing (Sis. Realyn Tampoc)</li>
+      <li><strong>3rd Runner Up</strong> – Solo Singing (Sis. Eliza Paranas)</li>
+      <li><strong>3rd Runner Up</strong> – Digital Poster Making (Bro. Renz Gallinera)</li>
+      <li><strong>3rd Runner Up</strong> – Traditional Poster Making (Sis. Mary Jane Francisco)</li>
+      <li><strong>4th Runner Up</strong> – Traditional Poster Making (Bro. Carl Nathaniel Azulis)</li>
+      <li><strong>5th Runner Up</strong> – Tula (Bro. Ruben Carlo Juan)</li>
+    </ul>
+  </section>
 
-        <!-- Kristiano Drama Champion -->
-        <div class="achievement-card">
-            <div class="card-image">
-                <img src="https://example.com/drama.jpg" alt="Kristiano Drama">
-            </div>
-            <div class="card-content">
-                <h3>Kristiano Drama</h3>
-                <p>Best Performance</p>
-                <p style="color: var(--secondary-color);">1st Place</p>
-            </div>
-        </div>
-
-        <!-- Tula Champion -->
-        <div class="achievement-card">
-            <div class="card-image">
-                <img src="https://example.com/tula.jpg" alt="Tula Champion">
-            </div>
-            <div class="card-content">
-                <h3>Tula Competition</h3>
-                <p>Sis. Eunice Manaras</p>
-                <p style="color: var(--secondary-color);">1st Place</p>
-            </div>
-        </div>
+  <section class="gallery">
+    <h2>📸 Photo Gallery</h2>
+    <div class="photos">
+      <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/492544019_1915139299313767_4035165346345772641_n.jpg" alt="Champions" />
+      <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/494380455_1915139149313782_8605801751133845475_n.jpg" alt="Champions 2" />
+      <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/498193932_1915139905980373_6499968892223031905_n.jpg" alt="Kristiano Drama" />
+      <img src="https://scontent.fmnl30-3.fna.fbcdn.net/v/t39.30808-6/492481247_1915139382647092_5833670047627711381_n.jpg" alt="Mural Making" />
+      <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/494907018_1915139239313773_3657407583600643203_n.jpg" alt="Sis. Eunice Manaras" />
     </div>
+  </section>
 
-    <div class="awards-list">
-        <h2 style="text-align: center; margin-bottom: 1.5rem;">Other Achievements</h2>
-        <div class="award-item">
-            <span>Bible Preaching English</span>
-            <span style="color: var(--accent-color);">1st Runner Up</span>
-        </div>
-        <div class="award-item">
-            <span>Mural Making</span>
-            <span style="color: var(--accent-color);">2nd Runner Up</span>
-        </div>
-        <!-- Add other awards following same pattern -->
-    </div>
-
-    <div class="gallery-grid">
-        <div class="gallery-item">
-            <img src="https://example.com/gallery1.jpg" alt="Event Photo">
-        </div>
-        <div class="gallery-item">
-            <img src="https://example.com/gallery2.jpg" alt="Event Photo">
-        </div>
-        <!-- Add more gallery items -->
-    </div>
-
-    <footer>
-        <h3>To God Be the Glory!</h3>
-        <div style="margin: 2rem 0;">
-            <a href="https://www.facebook.com/share/p/15HAmj9FTy/" class="social-link">Facebook Post</a>
-            <a href="#" class="social-link">Contact Us</a>
-        </div>
-        <p>&copy; 2024 MCGI Youth Ugong. All rights reserved.</p>
-    </footer>
+  <footer>
+    <p>To God be all the glory always!</p>
+    <p><a href="https://www.facebook.com/share/p/15HAmj9FTy/" target="_blank">View on Facebook</a></p>
+  </footer>
 </body>
 </html>
