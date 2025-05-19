@@ -1,197 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCGI Youth Ugong - Bible Festival 2025 Champions</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valenzuela Youth Bible Festival 2025</title>
+  <style>
+    /* RESET & BASE */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9fafb; color: #333; scroll-behavior: smooth; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
 
-        body {
-            background-color: #f8f9fa;
-            line-height: 1.6;
-        }
+    /* NAVBAR */
+    nav { background: #1f9d55; padding: 1rem; position: sticky; top: 0; z-index: 100; }
+    nav ul { display: flex; justify-content: center; gap: 2rem; list-style: none; }
+    nav a { color: #fff; font-weight: 600; }
 
-        .header {
-            background-color: #1a365d;
-            color: white;
-            text-align: center;
-            padding: 3rem 2rem;
-            margin-bottom: 2rem;
-        }
+    /* CONTAINER */
+    .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 2rem 0; }
 
-        .main-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    /* HEADER */
+    header { text-align: center; padding: 2rem 0; }
+    header h1 { font-size: 2.5rem; }
+    header p.quote { font-style: italic; margin: 0.5rem 0; color: #555; }
+    header p.sub { color: #1f9d55; font-weight: bold; }
 
-        .gallery-section {
-            margin: 3rem 0;
-        }
+    /* SEARCH */
+    .search-input { display: block; margin: 1rem auto; padding: 0.5rem; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 4px; }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
+    /* AWARDS GRID */
+    .awards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+    .award-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 1rem; transition: transform 0.3s ease; }
+    .award-card:hover { transform: translateY(-4px); }
+    .award-title { font-weight: bold; margin-bottom: 0.5rem; }
 
-        .gallery-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
+    /* GALLERY GRID & LIGHTBOX */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .gallery-item { overflow: hidden; border-radius: 8px; position: relative; cursor: pointer; }
+    .gallery-item img { transition: transform 0.3s ease; }
+    .gallery-item:hover img { transform: scale(1.05); }
+    .lightbox { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
+    .lightbox img { max-width: 90%; max-height: 80%; }
+    .lightbox:target { display: flex; }
 
-        .gallery-item:hover {
-            transform: translateY(-5px);
-        }
+    /* CONTACT FORM */
+    .contact-form { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 600px; margin: 2rem auto; }
+    .contact-form input, .contact-form textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; }
+    .contact-form button { background: #1f9d55; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; }
 
-        .gallery-img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
+    /* BACK TO TOP */
+    #backToTop { position: fixed; bottom: 2rem; right: 2rem; background: #1f9d55; color: #fff; padding: 0.75rem; border-radius: 50%; display: none; cursor: pointer; }
 
-        .category-title {
-            text-align: center;
-            color: #1a365d;
-            margin: 2rem 0;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid #1a365d;
-        }
+    /* FOOTER */
+    footer { text-align: center; padding: 2rem 0; }
+    footer p { color: #555; }
 
-        /* Rest of the CSS from previous version remains same */
-        /* ... (include all previous CSS styles here) ... */
-    </style>
+    @media (max-width: 600px) { header h1 { font-size: 2rem; } }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <h1>MCGI Youth Ugong</h1>
-        <p class="bible-verse">"A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another."<br>
-        - John 13:34 (KJV)</p>
-    </header>
+  <nav>
+    <ul>
+      <li><a href="#awardsSection">Awards</a></li>
+      <li><a href="#gallerySection">Gallery</a></li>
+      <li><a href="#contactSection">Contact</a></li>
+    </ul>
+  </nav>
 
-    <main class="main-content">
-        <section class="champions-section">
-            <!-- Competition Results List (keep previous content) -->
-            <!-- ... -->
+  <header class="container">
+    <h1>Valenzuela Youth Bible Festival 2025</h1>
+    <p class="quote">“A new commandment I give unto you, That ye love one another; as I have loved you...”</p>
+    <p class="sub">Thanks be to God for this first-ever showcase!</p>
+  </header>
 
-            <!-- Gallery Sections -->
-            <div class="gallery-section">
-                <h2 class="category-title">Champions Gallery</h2>
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/492544019_1915139299313767_4035165346345772641_n.jpg" 
-                             alt="MCGI Youth Ugong Champions" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/494380455_1915139149313782_8605801751133845475_n.jpg" 
-                             alt="Kristiano Drama Champions" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                </div>
-            </div>
+  <section id="awardsSection" class="container">
+    <h2>Awards & Rankings</h2>
+    <input type="text" id="search" class="search-input" placeholder="Search awards or names...">
+    <div class="awards-grid" id="awardsGrid"></div>
+  </section>
 
-            <div class="gallery-section">
-                <h2 class="category-title">Mural Making Entries</h2>
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-3.fna.fbcdn.net/v/t39.30808-6/492481247_1915139382647092_5833670047627711381_n.jpg" 
-                             alt="Mural Making Entry" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                </div>
-            </div>
+  <section id="gallerySection" class="container">
+    <h2>Gallery</h2>
+    <div class="gallery-grid">
+      <!-- each image links to its own lightbox -->
+      <div class="gallery-item"><a href="#img1"><img src="https://surl.lu/lltlil" alt="Champions Group"></a></div>
+      <!-- repeat for others with unique ids img2, img3... -->
+    </div>
+    <!-- Lightbox placeholders -->
+    <div id="img1" class="lightbox"><a href="#gallerySection"><img src="https://surl.lu/lltlil" alt="Champions Group"></a></div>
+    <!-- add additional lightbox divs for each image -->
+  </section>
 
-            <div class="gallery-section">
-                <h2 class="category-title">Tula Champion</h2>
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/494907018_1915139239313773_3657407583600643203_n.jpg" 
-                             alt="Sis. Eunice Manaras - Tula Champion" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                </div>
-            </div>
+  <section id="contactSection" class="container">
+    <h2>Contact Us</h2>
+    <form class="contact-form">
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea rows="5" placeholder="Message..." required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
 
-            <div class="gallery-section">
-                <h2 class="category-title">Event Highlights</h2>
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/494036001_1915139752647055_5511668199921628446_n.jpg" 
-                             alt="Event Photo 1" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/495042998_1915139272647103_4362475966006253756_n.jpg" 
-                             alt="Event Photo 2" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/499302434_1915139702647060_8901757514412539_n.jpg" 
-                             alt="Event Photo 3" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-3.fna.fbcdn.net/v/t39.30808-6/496933943_1915139515980412_6825647271730131044_n.jpg" 
-                             alt="Event Photo 4" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/492714230_1915139245980439_339228629513488071_n.jpg" 
-                             alt="Event Photo 5" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/498204646_1915139722647058_6416266397963547516_n.jpg" 
-                             alt="Event Photo 6" 
-                             class="gallery-img"
-                             loading="lazy">
-                    </div>
-                </div>
-            </div>
+  <div id="backToTop" onclick="scrollToTop()">↑</div>
 
-            <!-- Certificate Section -->
-            <div class="certificate-section">
-                <h2>Certificates of Achievement</h2>
-                <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/493534478_1915139392647091_1440635323281800332_n.jpg" 
-                     alt="Competition Certificates" 
-                     class="certificate-img" 
-                     loading="lazy">
-            </div>
+  <footer class="container">
+    <p>To God be all the glory always!</p>
+  </footer>
 
-            <!-- Facebook Link -->
-            <div class="facebook-post">
-                <a href="https://www.facebook.com/share/p/15HAmj9FTy/" 
-                   class="fb-link" 
-                   target="_blank" 
-                   rel="noopener">
-                   View Full Facebook Album
-                </a>
-            </div>
-        </section>
-    </main>
+  <script>
+    // Awards data and search
+    const awards = [ /* same array as before */ ];
+    const awardsGrid = document.getElementById('awardsGrid');
+    const searchInput = document.getElementById('search');
+    function displayAwards(filter = '') {
+      awardsGrid.innerHTML = '';
+      awards.filter(a => a.title.toLowerCase().includes(filter.toLowerCase()) || a.winner.toLowerCase().includes(filter.toLowerCase()))
+            .forEach(a => {
+              const card = document.createElement('div');
+              card.className = 'award-card';
+              card.innerHTML = `<div class='award-title'>${a.title}</div><div>${a.winner}</div>`;
+              awardsGrid.appendChild(card);
+            });
+    }
+    searchInput.addEventListener('input', e => displayAwards(e.target.value));
+    window.onload = () => displayAwards();
 
-    <footer class="footer">
-        <p>TO GOD BE ALL THE GLORY ALWAYS!</p>
-    </footer>
+    // Back to Top
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>
