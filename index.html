@@ -3,408 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Video Hub+</title>
+    <title>MCGI Youth Ugong Triumphs at Valenzuela Youth Bible Festival 2025</title>
     <style>
-        :root {
-            --primary: #ff4757;
-            --secondary: #2ed573;
-            --dark: #0f0f0f;
-            --dark-alt: #1a1a1a;
-            --light: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
         body {
-            background: linear-gradient(45deg, var(--dark), var(--dark-alt));
-            color: var(--light);
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
         }
-
-        .container {
-            max-width: 1440px;
+        .article-container {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 2rem;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-
-        .header {
+        h1 {
+            color: #2c3e50;
             text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
+            margin-bottom: 20px;
         }
-
-        .title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--light);
-            padding: 0.5rem 1.5rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn.active {
-            background: var(--secondary);
-            color: var(--dark);
-            border-color: transparent;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
-        }
-
-        .video-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .thumbnail-container {
-            position: relative;
-            overflow: hidden;
-            aspect-ratio: 16/9;
-        }
-
-        .thumbnail {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-            loading: lazy;
-        }
-
-        .video-card:hover .thumbnail {
-            transform: scale(1.05);
-        }
-
-        .video-info {
-            padding: 1.2rem;
-        }
-
-        .video-title {
-            font-size: 1rem;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 0.8rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .duration {
-            color: var(--primary);
-            font-weight: 500;
-        }
-
-        .uploader {
-            color: var(--secondary);
-            font-weight: 500;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .favorite-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            padding: 0.5rem;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .favorite-btn.active {
-            color: var(--primary);
-            background: rgba(255, 71, 87, 0.2);
-        }
-
-        .loader {
+        .bible-verse {
             text-align: center;
-            padding: 2rem;
-            display: none;
+            font-style: italic;
+            color: #666;
+            margin: 20px 0;
         }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        .achievements-list {
+            margin: 25px 0;
+            padding-left: 20px;
         }
-
-        .skeleton {
-            animation: shimmer 1.5s infinite linear;
-            background: linear-gradient(90deg, 
-                rgba(255,255,255,0.1) 25%,
-                rgba(255,255,255,0.15) 50%,
-                rgba(255,255,255,0.1) 75%);
-            background-size: 200% 100%;
+        .achievements-list li {
+            margin: 10px 0;
         }
-
-        .error-message {
+        .image-container {
             text-align: center;
-            padding: 2rem;
-            color: var(--primary);
+            margin: 25px 0;
         }
-
-        .retry-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 1rem;
+        img {
+            max-width: 100%;
+            border-radius: 8px;
         }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .video-card {
-            animation: fadeIn 0.6s ease forwards;
-            opacity: 0;
+        .credit {
+            text-align: right;
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="title">Premium Video Hub+</h1>
-            <div class="controls">
-                <button class="filter-btn active" data-filter="all">All Content</button>
-                <button class="filter-btn" data-filter="favorites">Favorites</button>
-            </div>
+    <div class="article-container">
+        <h1>Love in Action: MCGI Youth Ugong Crowned Overall Champion at Valenzuela Youth Bible Festival 2025</h1>
+        
+        <div class="bible-verse">
+            “A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another.”<br>
+            <strong>— John 13:34 (KJV)</strong>
         </div>
-        <div class="video-grid" id="videoContainer"></div>
-        <div class="loader" id="loader">Loading more content...</div>
+
+        <div class="image-container">
+            <img src="https://www.facebook.com/100024531457377/posts/pfbid02kJrGtqB3MK5FfgPmHFVPRbgktnEay3FtBtAKFBN9HsfTz79Ger7yjw95A8SvMmt3l/?app=fbl" 
+                 alt="MCGI Youth Ugong Celebration Photo">
+        </div>
+
+        <h2>A Historic Victory for God’s Glory</h2>
+        <p>In an extraordinary display of faith and unity, the MCGI Youth Ugong secured the title of <strong>Overall Champion</strong> at the Valenzuela Youth Bible Festival 2025. This first-ever participation became a testament to the power of Christ-centered fellowship and the verse that guided their journey: <em>“Love one another as I have loved you.”</em></p>
+
+        <h2>Celebrating God-Given Talents</h2>
+        <p>From soul-stirring performances to creative expressions of faith, the group’s achievements included:</p>
+        <ul class="achievements-list">
+            <li>🏆 <strong>OVERALL CHAMPION</strong> - MCGI Youth Ugong</li>
+            <li>🥇 <strong>Champion</strong> - Youth News, Kristiano Drama, Tula (Sis. Eunice Manaras)</li>
+            <li>🥈 <strong>1st Runner Up</strong> - Bible Preaching English</li>
+            <li>🥉 <strong>2nd & 3rd Runner Up</strong> - Mural Making, Solo Singing, Poster Making, and more!</li>
+        </ul>
+
+        <h2>Hearts United in Gratitude</h2>
+        <p>“Our joy overflows not because of the awards, but because we witnessed God’s love uniting us,” shared one member. The group extends heartfelt thanks to their mentors, families, and the entire MCGI community for their unwavering prayers and support.</p>
+
+        <h2>To God Be the Glory!</h2>
+        <p>As MCGI Youth Ugong rejoices in this milestone, they reaffirm their commitment to using their talents for God’s kingdom. This victory is not an end, but a beginning—a call to continue shining as lights in a world hungry for Christ’s love.</p>
+
+        <div class="credit">
+            <p>Posted by: MCGI Youth Ugong Valenzuela<br>
+            #LoveInAction #ToGodBeTheGlory</p>
+        </div>
     </div>
-
-    <script>
-        const API_URL = 'https://api.zetsu.xyz/prn/home?apikey=625156d0d268e4633b97980c0dc859d0';
-        const videoContainer = document.getElementById('videoContainer');
-        const loader = document.getElementById('loader');
-        let allVideos = [];
-        let currentVideos = [];
-        let currentFilter = 'all';
-        let currentPage = 1;
-        const itemsPerPage = 12;
-        let isLoading = false;
-
-        async function fetchVideos() {
-            try {
-                showLoader();
-                const response = await fetch(API_URL);
-                const data = await response.json();
-
-                delete data.status;
-                delete data.author;
-
-                allVideos = Object.values(data).filter(item => typeof item === 'object');
-                currentVideos = allVideos;
-                renderVideos();
-                setupFilters();
-                setupInfiniteScroll();
-            } catch (error) {
-                console.error('Error fetching videos:', error);
-                showError();
-            } finally {
-                hideLoader();
-            }
-        }
-
-        function renderVideos() {
-            const startIndex = 0;
-            const endIndex = currentPage * itemsPerPage;
-            const videosToShow = currentVideos.slice(startIndex, endIndex);
-
-            videoContainer.innerHTML = videosToShow.map(video => {
-                const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(video.video);
-                return `
-                    <div class="video-card">
-                        <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
-                                data-video="${video.video}">♥</button>
-                        <a href="${video.video}" target="_blank" rel="noopener">
-                            <div class="thumbnail-container">
-                                <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}" loading="lazy">
-                            </div>
-                            <div class="video-info">
-                                <h3 class="video-title">${video.title}</h3>
-                                <div class="meta">
-                                    <span class="duration">${video.duration}</span>
-                                    <span class="uploader">${video.uploaderName}</span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                `;
-            }).join('');
-
-            // Attach favorite handlers
-            document.querySelectorAll('.favorite-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    toggleFavorite(btn.dataset.video);
-                    btn.classList.toggle('active');
-                });
-            });
-        }
-
-        function toggleFavorite(videoUrl) {
-            const favorites = JSON.parse(localStorage.getItem('favorites') || []);
-            const index = favorites.indexOf(videoUrl);
-            
-            if (index === -1) {
-                favorites.push(videoUrl);
-            } else {
-                favorites.splice(index, 1);
-            }
-            
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            
-            if (currentFilter === 'favorites') {
-                currentVideos = allVideos.filter(v => favorites.includes(v.video));
-                currentPage = 1;
-                renderVideos();
-            }
-        }
-
-        function setupFilters() {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.dataset.filter;
-                    
-                    if (currentFilter === 'favorites') {
-                        const favorites = JSON.parse(localStorage.getItem('favorites') || []);
-                        currentVideos = allVideos.filter(v => favorites.includes(v.video));
-                    } else {
-                        currentVideos = allVideos;
-                    }
-                    currentPage = 1;
-                    renderVideos();
-                });
-            });
-        }
-
-        function setupInfiniteScroll() {
-            window.addEventListener('scroll', throttle(handleScroll, 300));
-        }
-
-        function handleScroll() {
-            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-            if (scrollTop + clientHeight >= scrollHeight - 500 && !isLoading) {
-                loadMore();
-            }
-        }
-
-        function loadMore() {
-            if (currentPage * itemsPerPage < currentVideos.length) {
-                isLoading = true;
-                currentPage++;
-                renderVideos();
-                isLoading = false;
-            }
-        }
-
-        function throttle(func, limit) {
-            let lastFunc;
-            let lastRan;
-            return function() {
-                const context = this;
-                const args = arguments;
-                if (!lastRan) {
-                    func.apply(context, args);
-                    lastRan = Date.now();
-                } else {
-                    clearTimeout(lastFunc);
-                    lastFunc = setTimeout(function() {
-                        if ((Date.now() - lastRan) >= limit) {
-                            func.apply(context, args);
-                            lastRan = Date.now();
-                        }
-                    }, limit - (Date.now() - lastRan));
-                }
-            }
-        }
-
-        function showLoader() {
-            loader.style.display = 'block';
-        }
-
-        function hideLoader() {
-            loader.style.display = 'none';
-        }
-
-        function showError() {
-            videoContainer.innerHTML = `
-                <div class="error-message">
-                    <p>Failed to load content. Please try again later.</p>
-                    <button class="retry-btn" onclick="fetchVideos()">Retry</button>
-                </div>
-            `;
-        }
-
-        // Initial load
-        fetchVideos();
-    </script>
 </body>
 </html>
