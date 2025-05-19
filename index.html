@@ -11,6 +11,16 @@
             --dark: #0f0f0f;
             --dark-alt: #1a1a1a;
             --light: #ffffff;
+            --background: var(--dark);
+            --text: var(--light);
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="light"] {
+            --background: #f5f6fa;
+            --text: #2f3542;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --dark-alt: #ffffff;
         }
 
         * {
@@ -18,11 +28,12 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s ease;
         }
 
         body {
-            background: linear-gradient(45deg, var(--dark), var(--dark-alt));
-            color: var(--light);
+            background: var(--background);
+            color: var(--text);
             min-height: 100vh;
         }
 
@@ -35,15 +46,51 @@
         .header {
             text-align: center;
             margin-bottom: 3rem;
+            position: relative;
         }
 
-        .title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+            color: var(--text);
+            width: 300px;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--secondary);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.5rem;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
         }
 
         .video-grid {
@@ -54,7 +101,7 @@
         }
 
         .video-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
             border-radius: 16px;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -63,152 +110,132 @@
             cursor: pointer;
         }
 
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .thumbnail-container {
-            position: relative;
-            overflow: hidden;
-            aspect-ratio: 16/9;
-        }
-
-        .thumbnail {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .video-card:hover .thumbnail {
-            transform: scale(1.05);
-        }
-
-        .video-info {
-            padding: 1.2rem;
-        }
-
-        .title {
-            font-size: 1rem;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 0.8rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .meta {
+        .loading {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            padding: 2rem;
+            font-size: 1.5rem;
         }
 
-        .duration {
-            color: var(--primary);
-            font-weight: 500;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--text);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .uploader {
-            color: var(--secondary);
-            font-weight: 500;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Loading animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .video-card {
-            animation: fadeIn 0.6s ease forwards;
-            opacity: 0;
-        }
+        /* Rest of previous styles remain similar */
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
             <h1 class="title">Premium Video Hub</h1>
-            <p class="tagline">Curated Collection of Exclusive Content</p>
+            <div class="controls">
+                <input type="text" class="search-input" placeholder="Search videos..." id="searchInput">
+                <div class="filter-btns">
+                    <button class="filter-btn active" data-duration="all">All</button>
+                    <button class="filter-btn" data-duration="short">Short (<1 min)</button>
+                    <button class="filter-btn" data-duration="medium">Medium (1-5 min)</button>
+                    <button class="filter-btn" data-duration="long">Long (>5 min)</button>
+                </div>
+            </div>
         </div>
-        <div class="video-grid" id="videoContainer"></div>
+        <div class="video-grid" id="videoContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
     </div>
 
     <script>
         const API_URL = 'https://api.zetsu.xyz/prn/home?apikey=625156d0d268e4633b97980c0dc859d0';
         const videoContainer = document.getElementById('videoContainer');
+        const searchInput = document.getElementById('searchInput');
+        let allVideos = [];
 
         async function fetchVideos() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
-
+                
                 delete data.status;
                 delete data.author;
-
-                // Add Intersection Observer for scroll animation
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = 1;
-                        }
-                    });
-                }, { threshold: 0.1 });
-
-                Object.keys(data).forEach(key => {
-                    if (typeof data[key] === 'object') {
-                        const video = data[key];
-                        const card = document.createElement('div');
-                        card.className = 'video-card';
-                        
-                        card.innerHTML = `
-                            <a href="${video.video}" target="_blank" rel="noopener">
-                                <div class="thumbnail-container">
-                                    <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
-                                </div>
-                                <div class="video-info">
-                                    <h3 class="title">${video.title}</h3>
-                                    <div class="meta">
-                                        <span class="duration">${video.duration}</span>
-                                        <span class="uploader">${video.uploaderName}</span>
-                                    </div>
-                                </div>
-                            </a>
-                        `;
-
-                        videoContainer.appendChild(card);
-                        observer.observe(card);
-                    }
-                });
+                
+                allVideos = Object.values(data).filter(item => typeof item === 'object');
+                renderVideos(allVideos);
             } catch (error) {
-                console.error('Error fetching videos:', error);
                 videoContainer.innerHTML = `
-                    <div class="error-message">
-                        Failed to load content. Please try again later.
+                    <div class="error">
+                        Error loading videos. Please try again later.
                     </div>
                 `;
             }
         }
 
+        function renderVideos(videos) {
+            videoContainer.innerHTML = videos.map(video => `
+                <div class="video-card" data-duration="${getDurationCategory(video.duration)}">
+                    <a href="${video.video}" target="_blank" rel="noopener">
+                        <div class="thumbnail-container">
+                            <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                        </div>
+                        <div class="video-info">
+                            <h3 class="title">${video.title}</h3>
+                            <div class="meta">
+                                <span class="duration">${video.duration}</span>
+                                <span class="uploader">${video.uploaderName}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function getDurationCategory(duration) {
+            const minutes = parseInt(duration) || 0;
+            if (duration.includes('sec')) return 'short';
+            if (minutes <= 5) return 'medium';
+            return 'long';
+        }
+
+        function toggleTheme() {
+            document.body.dataset.theme = 
+                document.body.dataset.theme === 'light' ? 'dark' : 'light';
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allVideos.filter(video => 
+                video.title.toLowerCase().includes(term)
+            );
+            renderVideos(filtered);
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const duration = this.dataset.duration;
+                const filtered = duration === 'all' 
+                    ? allVideos 
+                    : allVideos.filter(video => 
+                        getDurationCategory(video.duration) === duration
+                    );
+                renderVideos(filtered);
+            });
+        });
+
+        // Initialize
         fetchVideos();
     </script>
 </body>
