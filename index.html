@@ -1,234 +1,263 @@
 <!DOCTYPE html>
- <html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MCGI Youth Ugong - Champions</title>
-  <style>
-   /* Basic Reset and Typography */
-   body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-   }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCGI Youth UGONG - Valenzuela Youth Bible Festival 2025 Champions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e67e22;
+            --light-bg: #f9f9f9;
+        }
 
-   /* Header Styling */
-   header {
-    background-color: #007bff; /* Professional blue */
-    color: white;
-    padding: 2rem 0;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-   }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-   header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-   }
+        body {
+            line-height: 1.6;
+            background-color: var(--light-bg);
+        }
 
-   header p {
-    font-size: 1.1rem;
-    font-weight: 300;
-   }
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://i.ibb.co/0jQZ0Qz/hero-bg.jpg') center/cover;
+            color: white;
+            padding: 120px 20px;
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-   /* Navigation */
-   nav {
-    background-color: #343a40; /* Dark grey */
-    color: white;
-    padding: 1rem 0;
-    text-align: center;
-   }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-   nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-   }
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
 
-   nav ul li {
-    margin: 0 1.5rem;
-   }
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
-   nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: color 0.3s ease;
-   }
+        .gallery {
+            columns: 3 300px;
+            gap: 1rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-   nav a:hover {
-    color: #00b8ff; /* Light blue on hover */
-   }
+        .gallery img {
+            width: 100%;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
 
-   /* Main Content */
-   main {
-    padding: 2rem;
-   }
+        .gallery img:hover {
+            transform: scale(1.02);
+        }
 
-   section {
-    margin-bottom: 3rem;
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-   }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
 
-   section h2 {
-    color: #007bff;
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #dee2e6;
-    padding-bottom: 0.5rem;
-   }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
 
-   /* Gallery */
-   .gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: center;
-   }
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
 
-   .gallery img {
-    width: 250px;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-   }
+        section {
+            padding: 4rem 2rem;
+        }
 
-   .gallery img:hover {
-    transform: scale(1.05);
-   }
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
 
-   /* Achievements List */
-   #achievements ul {
-    list-style: none;
-    padding-left: 0;
-   }
+        .glory-footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
 
-   #achievements li {
-    margin-bottom: 0.75rem;
-    padding: 0.75rem 1rem;
-    background-color: #f8f9fa;
-    border-left: 4px solid #007bff;
-    border-radius: 4px;
-   }
+        .facebook-embed {
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-      /* Certificates Section */
-   #certificates {
-       display: flex;
-       flex-wrap: wrap;
-       gap: 1.5rem;
-       justify-content: center;
-   }
+        .champion-card {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+        }
 
-   #certificates img {
-       width: 300px; /* Adjust as needed */
-       height: auto;
-       border-radius: 8px;
-       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-       transition: transform 0.3s ease;
-   }
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px;
+            }
+            
+            .gallery {
+                columns: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>"A new commandment I give unto you, That ye love one another"</h1>
+        <p class="subtitle">John 13:34 (KJV)</p>
+        <h2>Valenzuela Youth Bible Festival 2025 Champions</h2>
+    </header>
 
-   #certificates img:hover {
-       transform: scale(1.05);
-   }
+    <section class="achievements-section">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Our Triumphs</h2>
+        <div class="achievements-grid">
+            <div class="card champion-card">
+                <h3>🏆 Overall Champion</h3>
+                <p>MCGI Youth UGONG</p>
+            </div>
 
-   /* Footer */
-   footer {
-    text-align: center;
-    padding: 1rem;
-    background-color: #343a40;
-    color: white;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-   }
-  </style>
- </head>
- <body>
-  <header>
-   <h1>MCGI Youth Ugong</h1>
-   <p>Valenzuela Youth Bible Festival 2025 - Overall Champions!</p>
-  </header>
+            <div class="card">
+                <h3>🥇 Youth News</h3>
+                <p>Champion</p>
+            </div>
 
-  <nav>
-   <ul>
-    <li><a href="#news">Youth News</a></li>
-    <li><a href="#drama">Kristiano Drama</a></li>
-    <li><a href="#tula">Tula Champion</a></li>
-    <li><a href="#gallery">Photo Gallery</a></li>
-    <li><a href="#achievements">Achievements</a></li>
-    <li><a href="#certificates">Certificates</a></li>
-    <li><a href="#contact">Contact</a></li>
-   </ul>
-  </nav>
+            <div class="card">
+                <h3>🥇 Kristiano Drama</h3>
+                <img src="https://surl.lu/huilzx" alt="Kristiano Drama" style="width: 100%; margin-top: 1rem;">
+            </div>
 
-  <main>
-   <section id="news">
-    <h2>Youth News - Champion!</h2>
-    <p>Details about the winning Youth News entry will go here. You can add more text and information here.</p>
-   </section>
+            <div class="card">
+                <h3>🥇 Tula</h3>
+                <p>Sis. Eunice Manaras</p>
+                <img src="https://surl.li/bjpbqu" alt="Sis. Eunice" style="width: 100%; margin-top: 1rem;">
+            </div>
 
-   <section id="drama">
-    <h2>Kristiano Drama - Champion!</h2>
-    <p>Information and perhaps photos/videos of the winning Kristiano Drama performance can be added here.</p>
-   </section>
+            <!-- Add other achievements following same pattern -->
+        </div>
+    </section>
 
-   <section id="tula">
-    <h2>Tula Champion: Sis. Eunice Manaras</h2>
-    <p>Congratulations to Sis. Eunice for her winning Tula! You might want to include the text of the Tula or a summary here.</p>
-   </section>
+    <section class="gallery-section">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Victory Moments</h2>
+        <div class="gallery">
+            <img src="https://surl.lu/lltlil" alt="Champions Photo 1">
+            <img src="https://surl.lu/bfhtgd" alt="Champions Photo 2">
+            <img src="https://surli.cc/jpfjkc" alt="Event Photo 1">
+            <img src="https://surli.cc/kixrke" alt="Event Photo 2">
+            <img src="https://surl.lu/xwtcub" alt="Mural Making">
+            <img src="https://surli.cc/nndund" alt="Group Photo">
+            <img src="https://surl.li/fwngaj" alt="Award Ceremony">
+        </div>
+    </section>
 
-   <section id="gallery">
-    <h2>Photo Gallery</h2>
-    <div class="gallery">
-     <img src="http://googleusercontent.com/image_collection/image_retrieval/8882341577979679644" alt="MCGI Youth Ugong champions">
-     <img src="http://googleusercontent.com/image_collection/image_retrieval/4772865584492521676" alt="MCGI Youth Ugong Kristiano Drama">
-     <img src="http://googleusercontent.com/image_collection/image_retrieval/10510489011574213754" alt="MCGI Youth Ugong mural making">
-     <img src="http://googleusercontent.com/image_collection/image_retrieval/10222952366309943213" alt="Sis. Eunice Manaras">
-     </div>
-   </section>
+    <section class="social-proof">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Celebrate With Us</h2>
+        <div class="facebook-embed">
+            <div id="fb-root"></div>
+            <script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2"></script>
+            <div class="fb-post" 
+                data-href="https://www.facebook.com/share/p/15HAmj9FTy/" 
+                data-width="500" 
+                data-show-text="true">
+            </div>
+        </div>
+    </section>
 
-   <section id="achievements">
-    <h2>Our Achievements</h2>
-    <ul>
-     <li><strong>Overall Champion</strong> - MCGI Youth Ugong</li>
-     <li><strong>Champion</strong> - Youth News</li>
-     <li><strong>Champion</strong> - Kristiano Drama</li>
-     <li><strong>Champion</strong> - Tula (Sis. Eunice Manaras)</li>
-     <li><strong>1st Runner Up</strong> - Bible Preaching English (You)</li>
-     <li><strong>2nd Runner Up</strong> - Mural Making</li>
-     <li><strong>2nd Runner Up</strong> - Solo Singing (Sis. Realyn Tampoc)</li>
-     <li><strong>3rd Runner Up</strong> - Solo Singing (Sis. Eliza Paranas)</li>
-     <li><strong>3rd Runner Up</strong> - Digital Poster Making (Bro. Renz Gallinera)</li>
-     <li><strong>3rd Runner Up</strong> - Traditional Poster Making (Sis. Mary Jane Francisco)</li>
-     <li><strong>4th Runner Up</strong> - Traditional Poster Making (Bro. Carl Nathaniel Azulis)</li>
-     <li><strong>5th Runner Up</strong> - Tula (Bro. Ruben Carlo Juan)</li>
-    </ul>
-   </section>
+    <section class="certificates-section">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Our Certificates</h2>
+        <div class="gallery">
+            <img src="https://surl.li/xndlak" alt="Certificates">
+        </div>
+    </section>
 
-      <section id="certificates">
-          <h2>Certificates</h2>
-          <div id="certificates">
-              <img src="https://surl.li/xndlak" alt="Certificates">
-              </div>
-      </section>
+    <footer class="glory-footer">
+        <h3>To God Be All the Glory!</h3>
+        <p>© 2025 MCGI Youth UGONG. All glory to the Almighty.</p>
+        <div style="margin-top: 1rem;">
+            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-facebook"></i></a>
+            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
 
-   <section id="contact">
-    <h2>Contact Us</h2>
-    <p>You can add contact information or a contact form here.</p>
-   </section>
-  </main>
+    <div class="modal" id="imageModal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
 
-  <footer>
-   <p>&copy; 2025 MCGI Youth Ugong</p>
-  </footer>
- </body>
- </html>
+    <script>
+        // Image Modal functionality
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.querySelector('.close');
+
+        document.querySelectorAll('.gallery img').forEach(img => {
+            img.addEventListener('click', () => {
+                modal.style.display = "flex";
+                modalImg.src = img.src;
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = "none";
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        // Facebook embed script
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId            : 'your-app-id',
+                autoLogAppEvents : true,
+                xfbml            : true,
+                version          : 'v18.0'
+            });
+        };
+    </script>
+</body>
+</html>
