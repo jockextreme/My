@@ -1,132 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MCGI Youth Ugong – Valenzuela Youth Bible Festival 2025</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      color: #333;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCGI Youth Ugong - Valenzuela Youth Bible Festival 2025 Champions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 2rem 1rem;
-      text-align: center;
-    }
+        body {
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
+        .header {
+            background-color: #1a365d;
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+        }
 
-    header .verse {
-      font-style: italic;
-      margin-top: 1rem;
-    }
+        .bible-verse {
+            font-style: italic;
+            margin: 1.5rem 0;
+            color: #cbd5e0;
+            font-size: 1.1rem;
+        }
 
-    section {
-      padding: 2rem 1rem;
-      max-width: 800px;
-      margin: auto;
-    }
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    .message, .awards, .gallery {
-      background: white;
-      margin-bottom: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+        .champions-section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
 
-    .message h2, .awards h2, .gallery h2 {
-      color: #2c3e50;
-    }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
 
-    .awards ul {
-      list-style: none;
-      padding: 0;
-    }
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
-    .awards li {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #eee;
-    }
+        .gallery img:hover {
+            transform: translateY(-5px);
+        }
 
-    .gallery .photos {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-    }
+        .results-list {
+            margin: 2.5rem 0;
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
 
-    .gallery .photos img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
+        .results-list h2 {
+            color: #1a365d;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
 
-    footer {
-      background: #2c3e50;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-    }
+        .results-list ul {
+            list-style-type: none;
+        }
 
-    footer a {
-      color: #f1c40f;
-      text-decoration: none;
-    }
-  </style>
+        .results-list li {
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .facebook-post {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .fb-link {
+            display: inline-block;
+            background-color: #1a365d;
+            color: white!important;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .fb-link:hover {
+            background-color: #0f2540;
+        }
+
+        .certificate-section {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .certificate-img {
+            max-width: 800px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .footer {
+            background-color: #1a365d;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            font-size: 1.1rem;
+        }
+
+        h1, h2, h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        p {
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>MCGI Youth Ugong</h1>
-    <p class="verse">“A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another.”<br><span>– John 13:34 (KJV)</span></p>
-  </header>
+    <header class="header">
+        <h1>MCGI Youth Ugong</h1>
+        <p class="bible-verse">"A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another."<br>
+        - John 13:34 (KJV)</p>
+    </header>
 
-  <section class="message">
-    <h2>Thanks Be to God!</h2>
-    <p>We are grateful for the first-ever experience God has given us to showcase the talents of MCGI Youth Ugong in the Valenzuela Youth Bible Festival 2025. Our hearts overflow with joy as we celebrate this success as one youth group bound by love and faith.</p>
-  </section>
+    <main class="main-content">
+        <section class="champions-section">
+            <h2>Valenzuela Youth Bible Festival 2025 Champions</h2>
+            <p>THANKS BE TO GOD for the first-ever experience that He has given to showcase the talents of MCGI YOUTH UGONG!</p>
+            <p>My heart is overflowing with joy as we gather this success as one Youth Group binded by love and faith.</p>
 
-  <section class="awards">
-    <h2>🏆 Awards</h2>
-    <ul>
-      <li><strong>Overall Champion</strong> – MCGI Youth Ugong</li>
-      <li><strong>Champion</strong> – Youth News</li>
-      <li><strong>Champion</strong> – Kristiano Drama</li>
-      <li><strong>Champion</strong> – Tula (Sis. Eunice Manaras)</li>
-      <li><strong>1st Runner Up</strong> – Bible Preaching English (You)</li>
-      <li><strong>2nd Runner Up</strong> – Mural Making</li>
-      <li><strong>2nd Runner Up</strong> – Solo Singing (Sis. Realyn Tampoc)</li>
-      <li><strong>3rd Runner Up</strong> – Solo Singing (Sis. Eliza Paranas)</li>
-      <li><strong>3rd Runner Up</strong> – Digital Poster Making (Bro. Renz Gallinera)</li>
-      <li><strong>3rd Runner Up</strong> – Traditional Poster Making (Sis. Mary Jane Francisco)</li>
-      <li><strong>4th Runner Up</strong> – Traditional Poster Making (Bro. Carl Nathaniel Azulis)</li>
-      <li><strong>5th Runner Up</strong> – Tula (Bro. Ruben Carlo Juan)</li>
-    </ul>
-  </section>
+            <div class="gallery">
+                <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/492544019_1915139299313767_4035165346345772641_n.jpg" alt="Champions Photo 1" loading="lazy">
+                <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/494380455_1915139149313782_8605801751133845475_n.jpg" alt="Champions Photo 2" loading="lazy">
+                <img src="https://scontent.fmnl30-3.fna.fbcdn.net/v/t39.30808-6/492481247_1915139382647092_5833670047627711381_n.jpg" alt="Mural Making" loading="lazy">
+                <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/494907018_1915139239313773_3657407583600643203_n.jpg" alt="Sis. Eunice Manaras" loading="lazy">
+                <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/494036001_1915139752647055_5511668199921628446_n.jpg" alt="Event Photo 1" loading="lazy">
+                <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/495042998_1915139272647103_4362475966006253756_n.jpg" alt="Event Photo 2" loading="lazy">
+                <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/499302434_1915139702647060_8901757514412539_n.jpg" alt="Event Photo 3" loading="lazy">
+                <img src="https://scontent.fmnl30-3.fna.fbcdn.net/v/t39.30808-6/496933943_1915139515980412_6825647271730131044_n.jpg" alt="Event Photo 4" loading="lazy">
+                <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/492714230_1915139245980439_339228629513488071_n.jpg" alt="Event Photo 5" loading="lazy">
+                <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/498204646_1915139722647058_6416266397963547516_n.jpg" alt="Event Photo 6" loading="lazy">
+            </div>
 
-  <section class="gallery">
-    <h2>📸 Photo Gallery</h2>
-    <div class="photos">
-      <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/492544019_1915139299313767_4035165346345772641_n.jpg" alt="Champions" />
-      <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/494380455_1915139149313782_8605801751133845475_n.jpg" alt="Champions 2" />
-      <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/498193932_1915139905980373_6499968892223031905_n.jpg" alt="Kristiano Drama" />
-      <img src="https://scontent.fmnl30-3.fna.fbcdn.net/v/t39.30808-6/492481247_1915139382647092_5833670047627711381_n.jpg" alt="Mural Making" />
-      <img src="https://scontent.fmnl30-1.fna.fbcdn.net/v/t39.30808-6/494907018_1915139239313773_3657407583600643203_n.jpg" alt="Sis. Eunice Manaras" />
-    </div>
-  </section>
+            <div class="results-list">
+                <h2>Competition Results</h2>
+                <ul>
+                    <li>🏆 OVERALL CHAMPION - MCGI YOUTH UGONG</li>
+                    <li>🏆 CHAMPION - Youth News</li>
+                    <li>🏆 CHAMPION - Kristiano Drama</li>
+                    <li>🏆 CHAMPION - Tula (Sis. Eunice Manaras)</li>
+                    <li>🥇 1st Runner Up - Bible Preaching English (Me)</li>
+                    <li>🥈 2nd Runner Up - Mural Making</li>
+                    <li>🥈 2nd Runner Up - Solo Singing (Sis. Realyn Tampoc)</li>
+                    <li>🥉 3rd Runner Up - Solo Singing (Sis. Eliza Paranas)</li>
+                    <li>🥉 3rd Runner Up - Digital Poster Making (Bro. Renz Gallinera)</li>
+                    <li>🥉 3rd Runner Up - Traditional Poster Making (Sis. Mary Jane Francisco)</li>
+                    <li>4️⃣ 4th Runner Up - Traditional Poster Making (Bro. Carl Nathaniel Azulis)</li>
+                    <li>5️⃣ 5th Runner Up - Tula (Bro. Ruben Carlo Juan)</li>
+                </ul>
+            </div>
 
-  <footer>
-    <p>To God be all the glory always!</p>
-    <p><a href="https://www.facebook.com/share/p/15HAmj9FTy/" target="_blank">View on Facebook</a></p>
-  </footer>
+            <div class="certificate-section">
+                <h2>Certificates of Achievement</h2>
+                <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/493534478_1915139392647091_1440635323281800332_n.jpg" alt="Certificates" class="certificate-img" loading="lazy">
+            </div>
+
+            <div class="facebook-post">
+                <a href="https://www.facebook.com/share/p/15HAmj9FTy/" class="fb-link" target="_blank" rel="noopener">
+                    View Full Facebook Post & Photos
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>TO GOD BE ALL THE GLORY ALWAYS!</p>
+    </footer>
 </body>
 </html>
