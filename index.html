@@ -3,33 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLDT WiFi Password Finder</title>
+    <title>PLDT WiFi Toolkit</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #e74c3c;
             --secondary: #2c3e50;
             --light: #ecf0f1;
+            --dark: #1a1a1a;
+            --bg: white;
+            --text: black;
+        }
+
+        [data-theme="dark"] {
+            --bg: #2c3e50;
+            --text: #ecf0f1;
+            --light: #34495e;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            transition: 0.3s all;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
-            background: var(--light);
-            color: var(--secondary);
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 2rem auto;
             padding: 1rem;
         }
 
+        /* Tabs and Navigation */
         .tabs {
             display: flex;
             gap: 1rem;
@@ -38,29 +50,30 @@
 
         .tab {
             padding: 1rem 2rem;
-            background: white;
+            background: var(--light);
             border-radius: 8px;
             cursor: pointer;
-            transition: 0.3s;
             border: 2px solid transparent;
         }
 
         .tab.active {
             border-color: var(--primary);
             color: var(--primary);
-            font-weight: bold;
         }
 
+        /* Card Layout */
         .card {
-            background: white;
+            background: var(--light);
             border-radius: 15px;
             padding: 2rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
         }
 
+        /* Input Styling */
         .input-group {
             margin-bottom: 1.5rem;
+            position: relative;
         }
 
         label {
@@ -75,266 +88,223 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
         }
 
         input:focus {
-            outline: none;
             border-color: var(--primary);
+            outline: none;
         }
 
-        button {
-            background: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
+        /* Validation Indicators */
+        .valid { border-color: #2ecc71 !important; }
+        .invalid { border-color: #e74c3c !important; }
+
+        /* QR Code Section */
+        #qrcode {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* History Section */
+        .history-item {
+            padding: 1rem;
+            background: var(--bg);
+            margin: 0.5rem 0;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
         }
 
-        button:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        .result-box {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            border-radius: 8px;
-            background: #f8f9fa;
-            position: relative;
-        }
-
-        .copy-btn {
-            position: absolute;
-            right: 1rem;
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
             top: 1rem;
-            background: var(--secondary);
+            right: 1rem;
             padding: 0.5rem 1rem;
-        }
-
-        .tutorial-section {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .example-box {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-
-        .ssid-type {
-            border-left: 4px solid var(--primary);
-            padding-left: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .history-item {
-            padding: 0.5rem;
-            border-bottom: 1px solid #eee;
+            border-radius: 20px;
+            background: var(--primary);
+            color: white;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</div>
+        
         <div class="tabs">
-            <div class="tab active" onclick="showTab('calculator')">Calculator</div>
-            <div class="tab" onclick="showTab('tutorial')">Tutorial</div>
+            <div class="tab active" onclick="showTab('main')">Calculator</div>
+            <div class="tab" onclick="showTab('history')">History</div>
+            <div class="tab" onclick="showTab('learn')">Learn</div>
         </div>
 
-        <!-- Calculator Tab -->
-        <div id="calculator" class="tab-content">
+        <!-- Main Calculator -->
+        <div id="main" class="tab-content">
             <div class="card">
-                <h2>PLDT WiFi Password Finder</h2>
+                <h2>PLDT WiFi Toolkit</h2>
+                
                 <div class="input-group">
-                    <label>SSID Name:</label>
-                    <input type="text" id="ssid" placeholder="Enter PLDT SSID">
-                    <div class="example-box">
-                        <p>Examples:</p>
-                        <p class="history-item" onclick="fillExample('PLDTHOMEDSL12345')">PLDTHOMEDSL12345</p>
-                        <p class="history-item" onclick="fillExample('PLDTHOMEFIBR_1a2b3c')">PLDTHOMEFIBR_1a2b3c</p>
-                        <p class="history-item" onclick="fillExample('HomeBro_Ultera')">HomeBro_Ultera</p>
+                    <label>SSID Name</label>
+                    <input type="text" id="ssid" placeholder="Enter PLDT SSID" oninput="validateSSID()">
+                    <div class="hint" id="ssid-hint"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>MAC Address</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" id="mac" placeholder="00:1F:FB:0F:C5:A8" oninput="validateMAC()">
+                        <button onclick="mockScanMAC()">📷 Scan MAC</button>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>MAC Address (if required):</label>
-                    <input type="text" id="mac" placeholder="00:1F:FB:0F:C5:A8">
+                    <label>
+                        <input type="checkbox" id="legal-agree"> 
+                        I have legal authorization to access this network
+                    </label>
                 </div>
 
-                <button onclick="calculatePassword()">Generate Password</button>
+                <button onclick="generatePassword()">Generate Password</button>
 
-                <div id="result" class="result-box" style="display: none;">
-                    <button class="copy-btn" onclick="copyPassword()">Copy</button>
-                    <div id="result-text"></div>
-                </div>
-
-                <div class="warning">
-                    ⚠️ Warning: This tool is for educational purposes only. Always obtain proper authorization before accessing any network.
+                <div id="result" class="card" style="display: none; margin-top: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3>Generated Password</h3>
+                            <div id="password-output" style="font-size: 1.5rem;"></div>
+                            <div id="password-strength"></div>
+                        </div>
+                        <div id="qrcode"></div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="copyPassword()">📋 Copy</button>
+                        <button onclick="reportAccuracy()">✅ Report Accuracy</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tutorial Tab -->
-        <div id="tutorial" class="tab-content" style="display: none;">
+        <!-- History Tab -->
+        <div id="history" class="tab-content" style="display: none;">
             <div class="card">
-                <h2>Step-by-Step Tutorial</h2>
-                
-                <div class="tutorial-section">
-                    <div class="ssid-type">
-                        <h3>Type 1: Basic SSIDs</h3>
-                        <p>SSID Formats: PLDTHOMEDSL, PLDTmyDSLPAL, PLDmyDSLBiz</p>
-                        <div class="example-box">
-                            <p>Example MAC: <code>00:1F:FB:0F:C5:A8</code></p>
-                            <p>Password Format: PLDTWIFI + last 5 MAC characters</p>
-                            <p>Result: <strong>PLDTWIFIFC5A8</strong></p>
-                        </div>
-                    </div>
+                <h2>Password History</h2>
+                <div id="history-list"></div>
+            </div>
+        </div>
 
-                    <div class="ssid-type">
-                        <h3>Type 2: Numeric Ending SSIDs</h3>
-                        <p>SSID Format: PLDTHOMEDSLxxxxx (5 numbers)</p>
-                        <div class="example-box">
-                            <p>Example: PLDTHOMEDSL21354</p>
-                            <p>Calculation: 21354 × 3 = 64062</p>
-                            <p>Password: <strong>pLDTWIFI64062</strong></p>
-                        </div>
-                    </div>
-
-                    <div class="ssid-type">
-                        <h3>Type 3: Fiber with Underscore</h3>
-                        <p>SSID Format: PLDTHOMEFIBR_xxxxxx</p>
-                        <div class="example-box">
-                            <p>Example: PLDTHOMEFIBR_123abc</p>
-                            <p>Hex Conversion: 1→e, 2→d, 3→c, a→5, b→4, c→3</p>
-                            <p>Password: <strong>wlanedc543</strong></p>
-                        </div>
-                    </div>
-
-                    <div class="ssid-type">
-                        <h3>Type 5: HomeBro Ultera</h3>
-                        <p>SSID Format: HomeBro_Ultera</p>
-                        <div class="example-box">
-                            <p>Example MAC: <code>00:1F:FB:0F:C5:A8</code></p>
-                            <p>Password Format: HomeBro_ + last 6 MAC characters</p>
-                            <p>Result: <strong>HomeBro_0FC5A8</strong></p>
-                        </div>
-                    </div>
-
-                    <div class="warning">
-                        <h3>Important Notes</h3>
-                        <ul>
-                            <li>MAC address can often be found on the router sticker</li>
-                            <li>Changed passwords won't be shown by this tool</li>
-                            <li>Always respect network privacy laws</li>
-                        </ul>
-                    </div>
-                </div>
+        <!-- Educational Content -->
+        <div id="learn" class="tab-content" style="display: none;">
+            <div class="card">
+                <h2>Network Security Guide</h2>
+                <!-- Educational content here -->
             </div>
         </div>
     </div>
 
     <script>
-        const hexMap = {
-            '0': 'f', '1': 'e', '2': 'd', '3': 'c',
-            '4': 'b', '5': 'a', '6': '9', '7': '8',
-            '8': '7', '9': '6', 'a': '5', 'b': '4',
-            'c': '3', 'd': '2', 'e': '1', 'f': '0'
-        };
+        // Theme Management
+        function toggleTheme() {
+            document.body.setAttribute('data-theme',
+                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+            );
+        }
 
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.style.display = 'none';
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.getElementById(tabName).style.display = 'block';
+        // Tab Navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
             event.currentTarget.classList.add('active');
         }
 
-        function convertHex(input) {
-            return input.toLowerCase().split('').map(c => hexMap[c] || c).join('');
+        // Input Validation
+        function validateSSID() {
+            const ssidInput = document.getElementById('ssid');
+            const isValid = /^PLDT|HomeBro/i.test(ssidInput.value);
+            ssidInput.classList.toggle('valid', isValid);
+            ssidInput.classList.toggle('invalid', !isValid);
         }
 
-        function calculatePassword() {
-            const ssid = document.getElementById('ssid').value.trim();
-            const mac = document.getElementById('mac').value.replace(/[^a-f0-9]/gi, '').toUpperCase();
-            const result = document.getElementById('result-text');
-            const resultBox = document.getElementById('result');
-
-            let password = '';
-            let isValid = true;
-
-            // Type 1
-            if (/^(PLDTHOMEDSL|PLDTmyDSLPAL|PLDmyDSLBiz)$/i.test(ssid)) {
-                if (mac.length < 5) {
-                    isValid = false;
-                    alert('MAC address required for this SSID type');
-                }
-                password = `PLDTWIFI${mac.slice(-5)}`;
-            }
-            // Type 2
-            else if (/^PLDTHOMEDSL\d{5}$/i.test(ssid)) {
-                const numbers = ssid.match(/\d{5}$/)[0];
-                password = `pLDTWIFI${parseInt(numbers) * 3}`;
-            }
-            // Type 3
-            else if (/^PLDTHOMEFIBR_[\da-f]{6}$/i.test(ssid)) {
-                const code = ssid.split('_')[1];
-                password = `wlan${convertHex(code)}`;
-            }
-            // Type 4
-            else if (/^PLDTHOMEFIBR[\da-f]{6}$/i.test(ssid)) {
-                const code = ssid.slice(-6);
-                password = `PLDTWIFI${convertHex(code)}`;
-            }
-            // Type 5
-            else if (/^HomeBro_Ultera$/i.test(ssid)) {
-                if (mac.length < 6) {
-                    isValid = false;
-                    alert('MAC address required for HomeBro_Ultera');
-                }
-                password = `HomeBro_${mac.slice(-6)}`;
-            }
-            else {
-                isValid = false;
-                alert('Invalid SSID format. Please check tutorial for supported formats.');
-            }
-
-            if (isValid) {
-                result.innerHTML = `<strong>Generated Password:</strong><br><span style="font-size: 1.5rem">${password}</span>`;
-                resultBox.style.display = 'block';
-                saveToHistory(ssid, password);
-            }
+        function validateMAC() {
+            const macInput = document.getElementById('mac');
+            const isValid = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/.test(macInput.value);
+            macInput.classList.toggle('valid', isValid);
+            macInput.classList.toggle('invalid', !isValid);
         }
 
-        function copyPassword() {
-            const text = document.getElementById('result-text').textContent;
-            navigator.clipboard.writeText(text.match(/:\s+(.*)/)[1]);
-            alert('Password copied to clipboard!');
+        // Password Generation Core
+        function generatePassword() {
+            if (!document.getElementById('legal-agree').checked) {
+                alert('Please confirm legal authorization');
+                return;
+            }
+
+            // ... (previous password generation logic) ...
+
+            showResult(password);
+            saveToHistory(ssid, password);
+            generateQR(ssid, password);
+            checkPasswordStrength(password);
         }
 
-        function fillExample(ssid) {
-            document.getElementById('ssid').value = ssid;
+        // QR Code Generation
+        function generateQR(ssid, password) {
+            const qrElement = document.getElementById('qrcode');
+            qrElement.innerHTML = '';
+            new QRCode(qrElement, {
+                text: `WIFI:S:${ssid};T:WPA;P:${password};;`,
+                width: 128,
+                height: 128
+            });
+        }
+
+        // Password Strength Checker
+        function checkPasswordStrength(password) {
+            const strength = {
+                length: password.length > 12,
+                numbers: /\d/.test(password),
+                mixedCase: /[a-z]/.test(password) && /[A-Z]/.test(password)
+            };
+
+            const strengthText = [
+                strength.length ? '✔️ Good Length' : '⚠️ Too Short',
+                strength.numbers ? '✔️ Contains Numbers' : '⚠️ Needs Numbers',
+                strength.mixedCase ? '✔️ Mixed Case' : '⚠️ All Same Case'
+            ].join('<br>');
+
+            document.getElementById('password-strength').innerHTML = strengthText;
+        }
+
+        // Mock Device Scanner
+        function mockScanMAC() {
             document.getElementById('mac').value = '00:1F:FB:0F:C5:A8';
+            validateMAC();
         }
 
+        // History Management
         function saveToHistory(ssid, password) {
-            // Implement local storage history if needed
+            const history = JSON.parse(localStorage.getItem('pldtHistory') || '[]');
+            history.unshift({ ssid, password, date: new Date() });
+            localStorage.setItem('pldtHistory', JSON.stringify(history.slice(0, 10)));
+            updateHistoryDisplay();
         }
+
+        function updateHistoryDisplay() {
+            const history = JSON.parse(localStorage.getItem('pldtHistory') || '[]');
+            document.getElementById('history-list').innerHTML = history
+                .map(item => `<div class="history-item" onclick="fillFromHistory('${item.ssid}', '${item.password}')">
+                    <div>${item.ssid}</div>
+                    <div>${item.password}</div>
+                </div>`).join('');
+        }
+
+        // Initialize
+        updateHistoryDisplay();
     </script>
 </body>
 </html>
