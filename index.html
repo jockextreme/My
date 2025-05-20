@@ -1,419 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLDT WiFi Toolkit - Complete Solution</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <style>
-        :root {
-            --primary: #e74c3c;
-            --secondary: #2c3e50;
-            --light: #ffffff;
-            --dark: #1a1a1a;
-            --background: #f0f0f0;
-            --text: #333333;
-        }
-
-        [data-theme="dark"] {
-            --primary: #ff6b6b;
-            --secondary: #f0f0f0;
-            --light: #2d2d2d;
-            --dark: #ffffff;
-            --background: #1a1a1a;
-            --text: #dddddd;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            line-height: 1.6;
-            background: var(--background);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            z-index: 1000;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 1rem 2rem;
-            background: var(--light);
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            font-weight: 500;
-        }
-
-        .tab.active {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .card {
-            background: var(--light);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            background: var(--light);
-            color: var(--text);
-        }
-
-        button {
-            background: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .result-box {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            border-radius: 8px;
-            background: var(--background);
-            position: relative;
-        }
-
-        .qr-container {
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .strength-meter {
-            height: 8px;
-            width: 100%;
-            background: #ddd;
-            border-radius: 4px;
-            margin: 1rem 0;
-            overflow: hidden;
-        }
-
-        .strength-fill {
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .hex-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .hex-pair {
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            background: var(--background);
-        }
-
-        .tutorial-step {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: var(--background);
-            border-radius: 10px;
-        }
-
-        .history-item {
-            padding: 1rem;
-            margin: 0.5rem 0;
-            background: var(--background);
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .warning {
-            padding: 1rem;
-            border-radius: 8px;
-            background: rgba(255, 0, 0, 0.1);
-            margin: 1rem 0;
-            border-left: 4px solid #e74c3c;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video Browser</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00ffcc;
+    }
+    .video-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .video-card {
+      background-color: #222;
+      padding: 10px;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    .video-card img {
+      width: 100%;
+      border-radius: 6px;
+    }
+    .video-card h3 {
+      font-size: 16px;
+      margin: 10px 0 5px;
+    }
+    .video-card a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    <div class="container">
-        <div class="card">
-            <div class="legal-gate">
-                <label>
-                    <input type="checkbox" id="legal-agree">
-                    I confirm I have authorization to access this network
-                </label>
-            </div>
 
-            <div class="tabs">
-                <div class="tab active" onclick="showTab('tool')">Password Generator</div>
-                <div class="tab" onclick="showTab('tutorial')">Tutorial Guide</div>
-                <div class="tab" onclick="showTab('converter')">HEX Converter</div>
-                <div class="tab" onclick="showTab('history')">Password History</div>
-            </div>
+  <h1>Video Browser</h1>
+  <div class="video-container" id="video-container">
+    <!-- Videos will be loaded here -->
+  </div>
 
-            <!-- Main Tool -->
-            <div id="tool" class="tab-content">
-                <div class="input-group">
-                    <label>SSID Name:</label>
-                    <input type="text" id="ssid" placeholder="Enter PLDT SSID">
-                </div>
-                <div class="input-group">
-                    <label>MAC Address:</label>
-                    <input type="text" id="mac" placeholder="00:1F:FB:0F:C5:A8">
-                </div>
-                <button onclick="calculatePassword()">Generate Password</button>
-                <div id="result" class="result-box" style="display: none;">
-                    <div class="qr-container" id="qrcode"></div>
-                    <div class="strength-meter">
-                        <div class="strength-fill"></div>
-                    </div>
-                    <button onclick="copyPassword()">Copy to Clipboard</button>
-                </div>
-            </div>
+  <script>
+    const apiUrl = "https://kaiz-apis.gleeze.com/api/xvideos?page=1&limit=3&apikey=0acad241-6a34-4516-bcc6-310a137e6357";
 
-            <!-- Tutorial Section -->
-            <div id="tutorial" class="tab-content" style="display: none;">
-                <div class="tutorial-step">
-                    <h2>Complete User Guide</h2>
-                    <div class="warning">
-                        ⚠️ Legal Notice: Only use on networks you own or have explicit permission to access
-                    </div>
-                </div>
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("video-container");
 
-                <div class="tutorial-step">
-                    <h3>Step 1: Identify Your Router Type</h3>
-                    <p>Locate your WiFi name (SSID) from these common PLDT formats:</p>
-                    <div class="hex-pair">
-                        <p>📶 PLDTHOMEDSL<br>📶 PLDTHOMEDSL12345<br>📶 PLDTHOMEFIBR_1a2b3c<br>📶 HomeBro_Ultera</p>
-                    </div>
-                </div>
-
-                <div class="tutorial-step">
-                    <h3>Step 2: Gather Required Information</h3>
-                    <p>For some SSID types, you'll need:</p>
-                    <div class="hex-pair">
-                        <p>🔍 MAC Address (found on router sticker)<br>📝 Last 6 digits of SSID</p>
-                    </div>
-                </div>
-
-                <div class="tutorial-step">
-                    <h3>Step 3: Generate Password</h3>
-                    <div class="hex-pair">
-                        <p>1. Check authorization box<br>2. Enter exact SSID name<br>3. Provide MAC if needed<br>4. Click Generate</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HEX Converter -->
-            <div id="converter" class="tab-content" style="display: none;">
-                <h3>HEX Conversion Guide</h3>
-                <div class="hex-grid" id="hexGrid"></div>
-            </div>
-
-            <!-- History Section -->
-            <div id="history" class="tab-content" style="display: none;">
-                <h3>Previous Passwords</h3>
-                <div id="historyList"></div>
-            </div>
-
-            <div class="warning">
-                ⚠️ Important: Default passwords may not work if the network owner has changed them. Always respect privacy laws.
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const hexMap = {
-            '0': 'f', '1': 'e', '2': 'd', '3': 'c',
-            '4': 'b', '5': 'a', '6': '9', '7': '8',
-            '8': '7', '9': '6', 'a': '5', 'b': '4',
-            'c': '3', 'd': '2', 'e': '1', 'f': '0'
-        };
-
-        let qrcode = null;
-        let history = JSON.parse(localStorage.getItem('pldtHistory') || '[]');
-
-        // Theme Management
-        function toggleTheme() {
-            const html = document.documentElement;
-            html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-        }
-
-        // Tab Management
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).style.display = 'block';
-            event.currentTarget.classList.add('active');
-            
-            if(tabName === 'history') updateHistory();
-            if(tabName === 'converter') initHexConverter();
-        }
-
-        // Password Calculation
-        function calculatePassword() {
-            if(!document.getElementById('legal-agree').checked) {
-                alert('Please confirm authorization first');
-                return;
-            }
-
-            const ssid = document.getElementById('ssid').value.trim();
-            const mac = document.getElementById('mac').value.replace(/[^a-f0-9]/gi, '').toUpperCase();
-            let password = '';
-
-            try {
-                if (/^(PLDTHOMEDSL|PLDTmyDSLPAL|PLDmyDSLBiz)$/i.test(ssid)) {
-                    password = `PLDTWIFI${mac.slice(-5)}`;
-                }
-                else if (/^PLDTHOMEDSL\d{5}$/i.test(ssid)) {
-                    password = `pLDTWIFI${parseInt(ssid.slice(-5)) * 3}`;
-                }
-                else if (/^PLDTHOMEFIBR_[\da-f]{6}$/i.test(ssid)) {
-                    password = `wlan${convertHex(ssid.split('_')[1])}`;
-                }
-                else if (/^PLDTHOMEFIBR[\da-f]{6}$/i.test(ssid)) {
-                    password = `PLDTWIFI${convertHex(ssid.slice(-6))}`;
-                }
-                else if (/^HomeBro_Ultera$/i.test(ssid)) {
-                    password = `HomeBro_${mac.slice(-6)}`;
-                }
-                else throw new Error('Invalid SSID format');
-
-                showResult(password);
-                updateStrength(password.length);
-                generateQR(ssid, password);
-                saveHistory(ssid, password);
-            } catch (error) {
-                alert(error.message);
-            }
-        }
-
-        // Helper Functions
-        function convertHex(input) {
-            return input.toLowerCase().split('').map(c => hexMap[c] || c).join('');
-        }
-
-        function initHexConverter() {
-            const hexGrid = document.getElementById('hexGrid');
-            hexGrid.innerHTML = Object.entries(hexMap).map(([orig, conv]) => `
-                <div class="hex-pair">
-                    <div>${orig.toUpperCase()}</div>
-                    <div>→</div>
-                    <div>${conv.toUpperCase()}</div>
-                </div>
-            `).join('');
-        }
-
-        // Result Display
-        function showResult(password) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `
-                <div class="qr-container" id="qrcode"></div>
-                <div class="strength-meter">
-                    <div class="strength-fill"></div>
-                </div>
-                <div class="password-display">${password}</div>
-                <button onclick="copyPassword()">Copy Password</button>
+        if (data?.data?.length > 0) {
+          data.data.forEach(video => {
+            const videoCard = document.createElement("div");
+            videoCard.className = "video-card";
+            videoCard.innerHTML = `
+              <img src="${video.thumbnail}" alt="Video Thumbnail">
+              <h3>${video.title}</h3>
+              <a href="${video.url}" target="_blank">Watch Video</a>
             `;
-            resultDiv.style.animation = 'fadeIn 0.3s';
+            container.appendChild(videoCard);
+          });
+        } else {
+          container.innerHTML = "<p>No videos found.</p>";
         }
+      })
+      .catch(error => {
+        console.error("API Error:", error);
+        document.getElementById("video-container").innerHTML = "<p>Failed to load videos.</p>";
+      });
+  </script>
 
-        // Additional Features
-        function generateQR(ssid, password) {
-            if(qrcode) qrcode.clear();
-            qrcode = new QRCode(document.getElementById('qrcode'), {
-                text: `WIFI:S:${ssid};T:WPA;P:${password};;`,
-                width: 160,
-                height: 160
-            });
-        }
-
-        function updateStrength(length) {
-            const strength = Math.min(length / 16 * 100, 100);
-            document.querySelector('.strength-fill').style.width = `${strength}%`;
-        }
-
-        function saveHistory(ssid, password) {
-            history.unshift({ ssid, password, date: new Date().toISOString() });
-            localStorage.setItem('pldtHistory', JSON.stringify(history));
-            updateHistory();
-        }
-
-        function updateHistory() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = history.map(entry => `
-                <div class="history-item">
-                    <div>${entry.ssid}</div>
-                    <div>${entry.password}</div>
-                    <small>${new Date(entry.date).toLocaleDateString()}</small>
-                </div>
-            `).join('');
-        }
-
-        function copyPassword() {
-            const password = document.querySelector('.password-display').textContent;
-            navigator.clipboard.writeText(password);
-            alert('Password copied to clipboard');
-        }
-
-        // Initialization
-        initHexConverter();
-    </script>
 </body>
 </html>
