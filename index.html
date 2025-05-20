@@ -1,83 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Video Browser</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #00ffcc;
-    }
-    .video-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-    .video-card {
-      background-color: #222;
-      padding: 10px;
-      border-radius: 8px;
-      width: 300px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    }
-    .video-card img {
-      width: 100%;
-      border-radius: 6px;
-    }
-    .video-card h3 {
-      font-size: 16px;
-      margin: 10px 0 5px;
-    }
-    .video-card a {
-      color: #00ffcc;
-      text-decoration: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaiz API Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .card img {
+            max-width: 200px;
+            border-radius: 4px;
+        }
+
+        .card-content {
+            flex-grow: 1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Kaiz API Data</h1>
+        <div class="pagination">
+            <button onclick="changePage(-1)">Previous</button>
+            <span id="pageNumber">Page 1</span>
+            <button onclick="changePage(1)">Next</button>
+        </div>
+        <div id="loading" class="loading">Loading...</div>
+        <div id="content"></div>
+    </div>
 
-  <h1>Video Browser</h1>
-  <div class="video-container" id="video-container">
-    <!-- Videos will be loaded here -->
-  </div>
+    <script>
+        let currentPage = 1;
+        const limit = 3;
+        const API_KEY = '0acad241-6a34-4516-bcc6-310a137e6357';
 
-  <script>
-    const apiUrl = "https://kaiz-apis.gleeze.com/api/xvideos?page=1&limit=3&apikey=0acad241-6a34-4516-bcc6-310a137e6357";
-
-    fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById("video-container");
-
-        if (data?.data?.length > 0) {
-          data.data.forEach(video => {
-            const videoCard = document.createElement("div");
-            videoCard.className = "video-card";
-            videoCard.innerHTML = `
-              <img src="${video.thumbnail}" alt="Video Thumbnail">
-              <h3>${video.title}</h3>
-              <a href="${video.url}" target="_blank">Watch Video</a>
-            `;
-            container.appendChild(videoCard);
-          });
-        } else {
-          container.innerHTML = "<p>No videos found.</p>";
+        function getApiUrl(page) {
+            return `https://kaiz-apis.gleeze.com/api/xvideos?page=${page}&limit=${limit}&apikey=${API_KEY}`;
         }
-      })
-      .catch(error => {
-        console.error("API Error:", error);
-        document.getElementById("video-container").innerHTML = "<p>Failed to load videos.</p>";
-      });
-  </script>
 
+        async function fetchData(page) {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                const response = await fetch(getApiUrl(page));
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayData(data);
+                document.getElementById('pageNumber').textContent = `Page ${currentPage}`;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('content').innerHTML = 
+                    `<div class="card error">Error loading data: ${error.message}</div>`;
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayData(data) {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = '';
+
+            // Adjust this based on your actual API response structure
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}
+                    <div class="card-content">
+                        <h3>${item.title || item.name}</h3>
+                        ${item.description ? `<p>${item.description}</p>` : ''}
+                        ${item.price ? `<p>Price: $${item.price}</p>` : ''}
+                        ${item.rating ? `<p>Rating: ${item.rating}/5</p>` : ''}
+                        ${item.category ? `<small>Category: ${item.category}</small>` : ''}
+                    </div>
+                `;
+                contentDiv.appendChild(card);
+            });
+        }
+
+        function changePage(offset) {
+            const newPage = currentPage + offset;
+            if (newPage > 0) { // Add maximum page check if your API provides total pages
+                currentPage = newPage;
+                fetchData(currentPage);
+            }
+        }
+
+        // Initial load
+        fetchData(currentPage);
+    </script>
 </body>
 </html>
