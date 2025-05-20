@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Academic Media Repository - Cultural Research Archive">
-    <title>Cultural Research Archive | Academic Media Database</title>
+    <title>Academic Media Archive | Cultural Research</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Design System */
         :root {
             --primary-dark: #0a192f;
             --secondary-dark: #172a45;
             --accent: #64ffda;
             --text-light: #ccd6f6;
-            --text-dark: #8892b0;
             --spacing-base: 16px;
             --border-radius: 8px;
             --transition: 0.25s cubic-bezier(0.645,0.045,0.355,1);
         }
 
-        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -31,111 +27,54 @@
             background: var(--primary-dark);
             color: var(--text-light);
             line-height: 1.6;
-            font-size: 1rem;
         }
 
-        @supports (font-variation-settings: normal) {
-            body { font-family: 'Inter var', system-ui; }
-        }
-
-        /* Utilities */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 var(--spacing-base);
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        /* Components */
         .disclaimer-banner {
             background: var(--secondary-dark);
             padding: 12px;
             text-align: center;
             font-size: 0.9rem;
-            border-bottom: 1px solid rgba(100,255,218,0.1);
+            border-bottom: 2px solid rgba(100,255,218,0.1);
         }
 
         .main-header {
             padding: 2rem 0;
-            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
             position: sticky;
             top: 0;
             z-index: 1000;
+            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
         }
 
         .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-base);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: color var(--transition);
-            position: relative;
-            padding: 8px 0;
-        }
-
-        .nav-link:hover {
-            color: var(--accent);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width var(--transition);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .hero-section {
-            padding: 4rem 0;
-            text-align: center;
-            border-bottom: 1px solid rgba(100,255,218,0.1);
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        .main-title {
+            font-size: 1.5rem;
             background: linear-gradient(45deg, var(--accent), #57cbff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .filters-bar {
-            display: flex;
-            gap: 1rem;
+        .video-archive {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 var(--spacing-base);
+        }
+
+        .search-bar {
             margin: 2rem 0;
-            flex-wrap: wrap;
+            position: relative;
         }
 
         .search-input {
-            flex: 1;
-            max-width: 400px;
-            padding: 0.8rem;
+            width: 100%;
+            padding: 1rem;
             background: var(--secondary-dark);
             border: 1px solid rgba(100,255,218,0.1);
             border-radius: var(--border-radius);
@@ -152,7 +91,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
-            padding: 2rem 0;
+            margin-top: 2rem;
         }
 
         .video-card {
@@ -160,7 +99,6 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             transition: transform var(--transition);
-            position: relative;
         }
 
         .video-card:hover {
@@ -183,22 +121,23 @@
             transition: opacity var(--transition);
         }
 
-        .video-card:hover .thumbnail {
-            opacity: 0.8;
-        }
-
-        .video-badge {
+        .play-overlay {
             position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(0,0,0,0.7);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            color: rgba(255,255,255,0.9);
+            opacity: 0.8;
+            transition: opacity var(--transition);
         }
 
-        .video-content {
-            padding: 1rem;
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .video-info {
+            padding: 1.5rem;
         }
 
         .video-title {
@@ -219,13 +158,12 @@
             height: 100%;
             background: rgba(10,25,47,0.95);
             z-index: 2000;
-            padding: 2rem;
         }
 
         .modal-content {
             position: relative;
             max-width: 1000px;
-            margin: 0 auto;
+            margin: 2rem auto;
             background: var(--secondary-dark);
             border-radius: var(--border-radius);
             padding: 2rem;
@@ -258,59 +196,43 @@
             color: var(--accent);
         }
 
-        /* Loading State */
-        .loading-skeleton {
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        .faq-section {
+            margin: 4rem 0;
         }
 
-        .skeleton-card {
+        .faq-item {
             background: var(--secondary-dark);
             border-radius: var(--border-radius);
+            margin: 1rem 0;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            max-height: 0;
             overflow: hidden;
-            height: 250px;
-            position: relative;
-            overflow: hidden;
+            transition: max-height var(--transition);
+            padding: 0 1.5rem;
         }
 
-        .skeleton-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            animation: skeletonLoading 1.5s infinite;
-        }
-
-        @keyframes skeletonLoading {
-            100% { left: 100%; }
-        }
-
-        /* Footer */
-        .main-footer {
-            border-top: 1px solid rgba(100,255,218,0.1);
-            margin-top: 4rem;
-            padding: 2rem 0;
-        }
-
-        .footer-content {
-            text-align: center;
-            color: var(--text-dark);
+        .faq-answer.active {
+            max-height: 500px;
+            padding: 1.5rem;
         }
 
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
                 gap: 1rem;
+                text-align: center;
             }
-
-            .hero-title {
-                font-size: 2rem;
-            }
-
+            
             .video-player {
                 height: 50vh;
             }
@@ -319,160 +241,146 @@
 </head>
 <body>
     <div class="disclaimer-banner">
-        <div class="container">
-            <i class="fas fa-microscope"></i>
-            Academic Research Archive - Strictly Educational Use
+        <div class="nav-container">
+            <i class="fas fa-university"></i>
+            Academic Research Archive - Educational Use Only
         </div>
     </div>
 
     <header class="main-header">
-        <nav class="container nav-container">
-            <h1>Cultural Archive</h1>
+        <nav class="nav-container">
+            <h1 class="main-title">Cultural Media Archive</h1>
             <div class="nav-links">
                 <a href="#collection" class="nav-link">Collection</a>
-                <a href="#research" class="nav-link">Research</a>
-                <a href="#methodology" class="nav-link">Methodology</a>
-                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#faq" class="nav-link">FAQ</a>
             </div>
         </nav>
     </header>
 
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="hero-title">Cultural Media Research Database</h1>
-            <p class="hero-description">Preserving media artifacts for academic analysis and historical documentation</p>
-        </div>
-    </section>
-
-    <main class="container">
+    <main class="video-archive">
         <section id="collection">
-            <div class="filters-bar">
-                <input type="text" class="search-input" placeholder="Search research materials...">
-                <select class="sort-select">
-                    <option>Sort by Title</option>
-                    <option>Sort by Date</option>
-                </select>
-            </div>
-
-            <div class="loading-skeleton" id="loadingState">
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search academic materials...">
             </div>
 
             <div class="video-grid" id="videoContainer"></div>
         </section>
 
-        <section class="research-section" id="research">
-            <!-- Research content -->
+        <section id="faq" class="faq-section">
+            <h2>Academic Use FAQ</h2>
+            <div class="faq-container"></div>
         </section>
     </main>
 
     <div class="video-modal" id="videoModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="App.closeModal()">&times;</span>
+            <span class="close-modal" onclick="Archive.closeModal()">&times;</span>
             <video controls class="video-player" id="videoPlayer"></video>
         </div>
     </div>
 
-    <footer class="main-footer">
-        <div class="container footer-content">
-            <p>&copy; 2024 Cultural Research Archive. Educational use only.</p>
-            <div class="footer-links">
-                <a href="#privacy">Privacy Policy</a>
-                <a href="#terms">Terms of Use</a>
-                <a href="#ethics">Research Ethics</a>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        class ResearchArchive {
+        class AcademicArchive {
             static config = {
-                apiEndpoint: 'https://kaiz-apis.gleeze.com/api/lootedpinay?limit=5&apikey=0acad241-6a34-4516-bcc6-310a137e6357',
-                selectors: {
-                    container: '#videoContainer',
-                    loading: '#loadingState',
-                    search: '.search-input',
-                    modal: '#videoModal',
-                    player: '#videoPlayer'
-                }
+                api: 'https://kaiz-apis.gleeze.com/api/lootedpinay?limit=5&apikey=0acad241-6a34-4516-bcc6-310a137e6357',
+                faq: [
+                    {
+                        question: "What qualifies as educational use?",
+                        answer: "Usage limited to academic research, classroom instruction, and scholarly analysis."
+                    },
+                    {
+                        question: "Who can access this archive?",
+                        answer: "Available to verified researchers and educational institutions."
+                    },
+                    {
+                        question: "How is content selected?",
+                        answer: "Materials undergo academic review for research relevance."
+                    }
+                ]
             };
 
             static init() {
-                this.loadData();
+                this.loadContent();
                 this.initSearch();
+                this.initFAQ();
                 this.initModal();
             }
 
-            static async loadData() {
+            static async loadContent() {
                 try {
-                    const response = await fetch(this.config.apiEndpoint);
-                    if (!response.ok) throw new Error('Failed to load research data');
-                    const data = await response.json();
-                    this.renderContent(data.videos);
+                    const response = await fetch(this.config.api);
+                    if (!response.ok) throw new Error('Data loading failed');
+                    const { videos } = await response.json();
+                    this.renderVideos(videos);
                 } catch (error) {
                     this.showError(error.message);
-                } finally {
-                    document.querySelector(this.config.selectors.loading).style.display = 'none';
                 }
             }
 
-            static renderContent(videos) {
-                const container = document.querySelector(this.config.selectors.container);
+            static renderVideos(videos) {
+                const container = document.getElementById('videoContainer');
                 container.innerHTML = videos.map(video => `
-                    <article class="video-card" role="article">
+                    <article class="video-card">
                         <div class="thumbnail-container" 
-                             role="button" 
+                             role="button"
                              aria-label="View ${video.title}"
                              tabindex="0"
                              data-video="${encodeURIComponent(video.mp4url)}">
                             <img src="${video.thumbnail}" 
-                                 alt="${video.title}" 
+                                 alt="${video.title}"
                                  class="thumbnail"
                                  loading="lazy">
-                            <div class="video-badge">Research Material</div>
+                            <div class="play-overlay"><i class="fas fa-play"></i></div>
                         </div>
-                        <div class="video-content">
+                        <div class="video-info">
                             <h3 class="video-title">${video.title}</h3>
-                            <div class="video-meta">
-                                <span class="video-duration">${video.duration || 'Duration: N/A'}</span>
-                            </div>
                         </div>
                     </article>
                 `).join('');
 
-                this.initVideoCards();
+                this.initVideoHandlers();
             }
 
-            static initVideoCards() {
-                document.querySelectorAll('.thumbnail-container').forEach(card => {
-                    card.addEventListener('click', () => this.playVideo(card.dataset.video));
-                    card.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') this.playVideo(card.dataset.video);
+            static initVideoHandlers() {
+                document.querySelectorAll('.thumbnail-container').forEach(thumb => {
+                    thumb.addEventListener('click', () => this.playVideo(thumb.dataset.video));
+                    thumb.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') this.playVideo(thumb.dataset.video);
                     });
                 });
             }
 
             static initSearch() {
-                const searchInput = document.querySelector(this.config.selectors.search);
-                searchInput.addEventListener('input', (e) => {
+                const search = document.querySelector('.search-input');
+                search.addEventListener('input', (e) => {
                     const term = e.target.value.toLowerCase();
-                    this.filterContent(term);
+                    document.querySelectorAll('.video-card').forEach(card => {
+                        const title = card.querySelector('.video-title').textContent.toLowerCase();
+                        card.style.display = title.includes(term) ? 'block' : 'none';
+                    });
                 });
             }
 
-            static filterContent(term) {
-                const cards = document.querySelectorAll('.video-card');
-                cards.forEach(card => {
-                    const title = card.querySelector('.video-title').textContent.toLowerCase();
-                    card.style.display = title.includes(term) ? 'block' : 'none';
-                });
+            static initFAQ() {
+                const container = document.querySelector('.faq-container');
+                container.innerHTML = this.config.faq.map(item => `
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="AcademicArchive.toggleFAQ(this)">
+                            <span>${item.question}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">${item.answer}</div>
+                    </div>
+                `).join('');
+            }
+
+            static toggleFAQ(element) {
+                element.nextElementSibling.classList.toggle('active');
             }
 
             static playVideo(url) {
-                const modal = document.querySelector(this.config.selectors.modal);
-                const player = document.querySelector(this.config.selectors.player);
+                const modal = document.getElementById('videoModal');
+                const player = document.getElementById('videoPlayer');
                 player.src = decodeURIComponent(url);
                 modal.style.display = 'block';
                 player.play();
@@ -480,8 +388,8 @@
             }
 
             static closeModal() {
-                const modal = document.querySelector(this.config.selectors.modal);
-                const player = document.querySelector(this.config.selectors.player);
+                const modal = document.getElementById('videoModal');
+                const player = document.getElementById('videoPlayer');
                 player.pause();
                 player.src = '';
                 modal.style.display = 'none';
@@ -504,7 +412,7 @@
                 const error = document.createElement('div');
                 error.className = 'error-banner';
                 error.innerHTML = `
-                    <i class="fas fa-exclamation-circle"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     ${message}
                 `;
                 document.body.prepend(error);
@@ -512,7 +420,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => ResearchArchive.init());
+        document.addEventListener('DOMContentLoaded', () => AcademicArchive.init());
     </script>
 </body>
 </html>
