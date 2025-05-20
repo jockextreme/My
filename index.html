@@ -1,47 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLDT WiFi Toolkit</title>
+    <title>PLDT WiFi Toolkit - Complete</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #e74c3c;
             --secondary: #2c3e50;
-            --light: #ecf0f1;
+            --light: #ffffff;
             --dark: #1a1a1a;
-            --bg: white;
-            --text: black;
+            --background: #f0f0f0;
+            --text: #333333;
         }
 
         [data-theme="dark"] {
-            --bg: #2c3e50;
-            --text: #ecf0f1;
-            --light: #34495e;
+            --primary: #ff6b6b;
+            --secondary: #f0f0f0;
+            --light: #2d2d2d;
+            --dark: #ffffff;
+            --background: #1a1a1a;
+            --text: #dddddd;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            transition: 0.3s all;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
             line-height: 1.6;
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 1rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
 
-        /* Tabs and Navigation */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+
+        .card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
         .tabs {
             display: flex;
             gap: 1rem;
@@ -54,6 +76,7 @@
             border-radius: 8px;
             cursor: pointer;
             border: 2px solid transparent;
+            color: var(--text);
         }
 
         .tab.active {
@@ -61,25 +84,15 @@
             color: var(--primary);
         }
 
-        /* Card Layout */
-        .card {
-            background: var(--light);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        /* Input Styling */
         .input-group {
             margin-bottom: 1.5rem;
-            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            color: var(--text);
         }
 
         input {
@@ -88,223 +101,264 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            background: var(--bg);
+            background: var(--light);
             color: var(--text);
         }
 
-        input:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        /* Validation Indicators */
-        .valid { border-color: #2ecc71 !important; }
-        .invalid { border-color: #e74c3c !important; }
-
-        /* QR Code Section */
-        #qrcode {
-            margin: 2rem 0;
-            padding: 1rem;
-            background: white;
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        /* History Section */
-        .history-item {
-            padding: 1rem;
-            background: var(--bg);
-            margin: 0.5rem 0;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+        button {
             background: var(--primary);
             color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .qr-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .strength-meter {
+            height: 5px;
+            width: 100%;
+            margin-top: 0.5rem;
+            background: #ddd;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .legal-gate {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 235, 186, 0.3);
+        }
+
+        .hex-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .hex-pair {
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            background: var(--background);
+        }
+
+        .history-item {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            background: var(--background);
+            cursor: pointer;
+        }
+
+        .warning {
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 0, 0, 0.1);
+            margin: 1rem 0;
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     <div class="container">
-        <div class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</div>
-        
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('main')">Calculator</div>
-            <div class="tab" onclick="showTab('history')">History</div>
-            <div class="tab" onclick="showTab('learn')">Learn</div>
-        </div>
+        <div class="card">
+            <div class="legal-gate">
+                <label>
+                    <input type="checkbox" id="legal-agree">
+                    I confirm I have authorization to access this network
+                </label>
+            </div>
 
-        <!-- Main Calculator -->
-        <div id="main" class="tab-content">
-            <div class="card">
-                <h2>PLDT WiFi Toolkit</h2>
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('main')">Main Tool</div>
+                <div class="tab" onclick="showTab('converter')">HEX Converter</div>
+                <div class="tab" onclick="showTab('history')">History</div>
+            </div>
+
+            <!-- Main Tool Tab -->
+            <div id="main" class="tab-content">
+                <h2>PLDT WiFi Password Finder</h2>
+                <div class="input-group">
+                    <label>SSID:</label>
+                    <input type="text" id="ssid" placeholder="Enter PLDT SSID">
+                </div>
+                <div class="input-group">
+                    <label>MAC Address:</label>
+                    <input type="text" id="mac" placeholder="00:1F:FB:0F:C5:A8">
+                </div>
+                <button onclick="calculatePassword()">Generate Password</button>
                 
-                <div class="input-group">
-                    <label>SSID Name</label>
-                    <input type="text" id="ssid" placeholder="Enter PLDT SSID" oninput="validateSSID()">
-                    <div class="hint" id="ssid-hint"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>MAC Address</label>
-                    <div style="display: flex; gap: 1rem;">
-                        <input type="text" id="mac" placeholder="00:1F:FB:0F:C5:A8" oninput="validateMAC()">
-                        <button onclick="mockScanMAC()">📷 Scan MAC</button>
+                <div id="result" class="result-box" style="display: none;">
+                    <div class="qr-container" id="qrcode"></div>
+                    <div class="strength-meter">
+                        <div class="strength-fill"></div>
                     </div>
-                </div>
-
-                <div class="input-group">
-                    <label>
-                        <input type="checkbox" id="legal-agree"> 
-                        I have legal authorization to access this network
-                    </label>
-                </div>
-
-                <button onclick="generatePassword()">Generate Password</button>
-
-                <div id="result" class="card" style="display: none; margin-top: 2rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h3>Generated Password</h3>
-                            <div id="password-output" style="font-size: 1.5rem;"></div>
-                            <div id="password-strength"></div>
-                        </div>
-                        <div id="qrcode"></div>
-                    </div>
-                    <div style="margin-top: 1rem;">
-                        <button onclick="copyPassword()">📋 Copy</button>
-                        <button onclick="reportAccuracy()">✅ Report Accuracy</button>
-                    </div>
+                    <button onclick="copyPassword()">Copy Password</button>
                 </div>
             </div>
-        </div>
 
-        <!-- History Tab -->
-        <div id="history" class="tab-content" style="display: none;">
-            <div class="card">
-                <h2>Password History</h2>
-                <div id="history-list"></div>
+            <!-- HEX Converter Tab -->
+            <div id="converter" class="tab-content" style="display: none;">
+                <h3>HEX Conversion Table</h3>
+                <div class="hex-grid" id="hexGrid"></div>
             </div>
-        </div>
 
-        <!-- Educational Content -->
-        <div id="learn" class="tab-content" style="display: none;">
-            <div class="card">
-                <h2>Network Security Guide</h2>
-                <!-- Educational content here -->
+            <!-- History Tab -->
+            <div id="history" class="tab-content" style="display: none;">
+                <h3>Previous Searches</h3>
+                <div id="historyList"></div>
+            </div>
+
+            <div class="warning">
+                ⚠️ WARNING: Unauthorized network access is illegal. This tool is for educational purposes only.
             </div>
         </div>
     </div>
 
     <script>
-        // Theme Management
+        const hexMap = {
+            '0': 'f', '1': 'e', '2': 'd', '3': 'c',
+            '4': 'b', '5': 'a', '6': '9', '7': '8',
+            '8': '7', '9': '6', 'a': '5', 'b': '4',
+            'c': '3', 'd': '2', 'e': '1', 'f': '0'
+        };
+
+        let qrcode = null;
+        let history = JSON.parse(localStorage.getItem('pldtHistory') || '[]');
+
         function toggleTheme() {
-            document.body.setAttribute('data-theme',
-                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
-            );
+            const html = document.documentElement;
+            html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
         }
 
-        // Tab Navigation
-        function showTab(tabId) {
+        function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabId).style.display = 'block';
+            document.getElementById(tabName).style.display = 'block';
             event.currentTarget.classList.add('active');
+            
+            if(tabName === 'history') updateHistoryDisplay();
+            if(tabName === 'converter') initHexConverter();
         }
 
-        // Input Validation
-        function validateSSID() {
-            const ssidInput = document.getElementById('ssid');
-            const isValid = /^PLDT|HomeBro/i.test(ssidInput.value);
-            ssidInput.classList.toggle('valid', isValid);
-            ssidInput.classList.toggle('invalid', !isValid);
-        }
-
-        function validateMAC() {
-            const macInput = document.getElementById('mac');
-            const isValid = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/.test(macInput.value);
-            macInput.classList.toggle('valid', isValid);
-            macInput.classList.toggle('invalid', !isValid);
-        }
-
-        // Password Generation Core
-        function generatePassword() {
-            if (!document.getElementById('legal-agree').checked) {
-                alert('Please confirm legal authorization');
+        function calculatePassword() {
+            if(!document.getElementById('legal-agree').checked) {
+                alert('Please confirm authorization first');
                 return;
             }
 
-            // ... (previous password generation logic) ...
+            const ssid = document.getElementById('ssid').value.trim();
+            const mac = document.getElementById('mac').value.replace(/[^a-f0-9]/gi, '').toUpperCase();
+            let password = '';
 
-            showResult(password);
-            saveToHistory(ssid, password);
-            generateQR(ssid, password);
-            checkPasswordStrength(password);
+            try {
+                if (/^(PLDTHOMEDSL|PLDTmyDSLPAL|PLDmyDSLBiz)$/i.test(ssid)) {
+                    password = `PLDTWIFI${mac.slice(-5)}`;
+                }
+                else if (/^PLDTHOMEDSL\d{5}$/i.test(ssid)) {
+                    password = `pLDTWIFI${parseInt(ssid.slice(-5)) * 3}`;
+                }
+                else if (/^PLDTHOMEFIBR_[\da-f]{6}$/i.test(ssid)) {
+                    password = `wlan${convertHex(ssid.split('_')[1])}`;
+                }
+                else if (/^PLDTHOMEFIBR[\da-f]{6}$/i.test(ssid)) {
+                    password = `PLDTWIFI${convertHex(ssid.slice(-6))}`;
+                }
+                else if (/^HomeBro_Ultera$/i.test(ssid)) {
+                    password = `HomeBro_${mac.slice(-6)}`;
+                }
+                else throw new Error('Invalid SSID format');
+
+                showResult(password);
+                updatePasswordStrength(password);
+                generateQR(ssid, password);
+                saveToHistory(ssid, password);
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
-        // QR Code Generation
+        function convertHex(input) {
+            return input.toLowerCase().split('').map(c => hexMap[c] || c).join('');
+        }
+
+        function initHexConverter() {
+            const hexGrid = document.getElementById('hexGrid');
+            hexGrid.innerHTML = Object.entries(hexMap).map(([original, converted]) => `
+                <div class="hex-pair">
+                    <div>${original.toUpperCase()}</div>
+                    <div>→</div>
+                    <div>${converted.toUpperCase()}</div>
+                </div>
+            `).join('');
+        }
+
         function generateQR(ssid, password) {
-            const qrElement = document.getElementById('qrcode');
-            qrElement.innerHTML = '';
-            new QRCode(qrElement, {
+            if(qrcode) qrcode.clear();
+            qrcode = new QRCode(document.getElementById('qrcode'), {
                 text: `WIFI:S:${ssid};T:WPA;P:${password};;`,
-                width: 128,
-                height: 128
+                width: 160,
+                height: 160
             });
         }
 
-        // Password Strength Checker
-        function checkPasswordStrength(password) {
-            const strength = {
-                length: password.length > 12,
-                numbers: /\d/.test(password),
-                mixedCase: /[a-z]/.test(password) && /[A-Z]/.test(password)
-            };
-
-            const strengthText = [
-                strength.length ? '✔️ Good Length' : '⚠️ Too Short',
-                strength.numbers ? '✔️ Contains Numbers' : '⚠️ Needs Numbers',
-                strength.mixedCase ? '✔️ Mixed Case' : '⚠️ All Same Case'
-            ].join('<br>');
-
-            document.getElementById('password-strength').innerHTML = strengthText;
+        function updatePasswordStrength(password) {
+            const strength = Math.min(password.length / 16 * 100, 100);
+            document.querySelector('.strength-fill').style.width = `${strength}%`;
         }
 
-        // Mock Device Scanner
-        function mockScanMAC() {
-            document.getElementById('mac').value = '00:1F:FB:0F:C5:A8';
-            validateMAC();
-        }
-
-        // History Management
         function saveToHistory(ssid, password) {
-            const history = JSON.parse(localStorage.getItem('pldtHistory') || '[]');
-            history.unshift({ ssid, password, date: new Date() });
-            localStorage.setItem('pldtHistory', JSON.stringify(history.slice(0, 10)));
-            updateHistoryDisplay();
+            history.unshift({ ssid, password, date: new Date().toISOString() });
+            localStorage.setItem('pldtHistory', JSON.stringify(history));
         }
 
         function updateHistoryDisplay() {
-            const history = JSON.parse(localStorage.getItem('pldtHistory') || '[]');
-            document.getElementById('history-list').innerHTML = history
-                .map(item => `<div class="history-item" onclick="fillFromHistory('${item.ssid}', '${item.password}')">
-                    <div>${item.ssid}</div>
-                    <div>${item.password}</div>
-                </div>`).join('');
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = history.map(entry => `
+                <div class="history-item">
+                    <div>${entry.ssid}</div>
+                    <div>${entry.password}</div>
+                    <small>${new Date(entry.date).toLocaleString()}</small>
+                </div>
+            `).join('');
+        }
+
+        function copyPassword() {
+            const password = document.querySelector('#result strong').textContent;
+            navigator.clipboard.writeText(password);
+            alert('Password copied to clipboard');
+        }
+
+        function showResult(password) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <strong>Generated Password:</strong><br>
+                <span style="font-size: 1.5rem">${password}</span>
+                <div class="qr-container" id="qrcode"></div>
+                <div class="strength-meter">
+                    <div class="strength-fill"></div>
+                </div>
+                <button onclick="copyPassword()">Copy Password</button>
+            `;
         }
 
         // Initialize
-        updateHistoryDisplay();
+        initHexConverter();
     </script>
 </body>
 </html>
