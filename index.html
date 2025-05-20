@@ -3,76 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLDT Default WiFi Password Calculator</title>
+    <title>PLDT WiFi Password Finder</title>
     <style>
+        :root {
+            --primary: #e74c3c;
+            --secondary: #2c3e50;
+            --light: #ecf0f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #f0f0f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            background: var(--light);
+            color: var(--secondary);
         }
 
         .container {
-            background-color: white;
-            padding: 20px;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: white;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         input {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         button {
-            background-color: #4CAF50;
+            background: var(--primary);
             color: white;
-            padding: 10px 20px;
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
         }
 
         button:hover {
-            background-color: #45a049;
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e8f5e9;
-            border-radius: 4px;
-            display: none;
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: var(--secondary);
+            padding: 0.5rem 1rem;
+        }
+
+        .tutorial-section {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .ssid-type {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .history-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>PLDT Default WiFi Password Calculator</h1>
-        <div class="input-group">
-            <label for="ssid">SSID:</label>
-            <input type="text" id="ssid" placeholder="Enter PLDT SSID">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('calculator')">Calculator</div>
+            <div class="tab" onclick="showTab('tutorial')">Tutorial</div>
         </div>
-        <div class="input-group">
-            <label for="mac">MAC Address (if needed):</label>
-            <input type="text" id="mac" placeholder="Enter MAC address (00:1F:FB:0F:C5:A8)">
+
+        <!-- Calculator Tab -->
+        <div id="calculator" class="tab-content">
+            <div class="card">
+                <h2>PLDT WiFi Password Finder</h2>
+                <div class="input-group">
+                    <label>SSID Name:</label>
+                    <input type="text" id="ssid" placeholder="Enter PLDT SSID">
+                    <div class="example-box">
+                        <p>Examples:</p>
+                        <p class="history-item" onclick="fillExample('PLDTHOMEDSL12345')">PLDTHOMEDSL12345</p>
+                        <p class="history-item" onclick="fillExample('PLDTHOMEFIBR_1a2b3c')">PLDTHOMEFIBR_1a2b3c</p>
+                        <p class="history-item" onclick="fillExample('HomeBro_Ultera')">HomeBro_Ultera</p>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>MAC Address (if required):</label>
+                    <input type="text" id="mac" placeholder="00:1F:FB:0F:C5:A8">
+                </div>
+
+                <button onclick="calculatePassword()">Generate Password</button>
+
+                <div id="result" class="result-box" style="display: none;">
+                    <button class="copy-btn" onclick="copyPassword()">Copy</button>
+                    <div id="result-text"></div>
+                </div>
+
+                <div class="warning">
+                    ⚠️ Warning: This tool is for educational purposes only. Always obtain proper authorization before accessing any network.
+                </div>
+            </div>
         </div>
-        <button onclick="calculatePassword()">Show Password</button>
-        <div id="result" class="result"></div>
+
+        <!-- Tutorial Tab -->
+        <div id="tutorial" class="tab-content" style="display: none;">
+            <div class="card">
+                <h2>Step-by-Step Tutorial</h2>
+                
+                <div class="tutorial-section">
+                    <div class="ssid-type">
+                        <h3>Type 1: Basic SSIDs</h3>
+                        <p>SSID Formats: PLDTHOMEDSL, PLDTmyDSLPAL, PLDmyDSLBiz</p>
+                        <div class="example-box">
+                            <p>Example MAC: <code>00:1F:FB:0F:C5:A8</code></p>
+                            <p>Password Format: PLDTWIFI + last 5 MAC characters</p>
+                            <p>Result: <strong>PLDTWIFIFC5A8</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="ssid-type">
+                        <h3>Type 2: Numeric Ending SSIDs</h3>
+                        <p>SSID Format: PLDTHOMEDSLxxxxx (5 numbers)</p>
+                        <div class="example-box">
+                            <p>Example: PLDTHOMEDSL21354</p>
+                            <p>Calculation: 21354 × 3 = 64062</p>
+                            <p>Password: <strong>pLDTWIFI64062</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="ssid-type">
+                        <h3>Type 3: Fiber with Underscore</h3>
+                        <p>SSID Format: PLDTHOMEFIBR_xxxxxx</p>
+                        <div class="example-box">
+                            <p>Example: PLDTHOMEFIBR_123abc</p>
+                            <p>Hex Conversion: 1→e, 2→d, 3→c, a→5, b→4, c→3</p>
+                            <p>Password: <strong>wlanedc543</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="ssid-type">
+                        <h3>Type 5: HomeBro Ultera</h3>
+                        <p>SSID Format: HomeBro_Ultera</p>
+                        <div class="example-box">
+                            <p>Example MAC: <code>00:1F:FB:0F:C5:A8</code></p>
+                            <p>Password Format: HomeBro_ + last 6 MAC characters</p>
+                            <p>Result: <strong>HomeBro_0FC5A8</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="warning">
+                        <h3>Important Notes</h3>
+                        <ul>
+                            <li>MAC address can often be found on the router sticker</li>
+                            <li>Changed passwords won't be shown by this tool</li>
+                            <li>Always respect network privacy laws</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -83,6 +254,17 @@
             'c': '3', 'd': '2', 'e': '1', 'f': '0'
         };
 
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.classList.add('active');
+        }
+
         function convertHex(input) {
             return input.toLowerCase().split('').map(c => hexMap[c] || c).join('');
         }
@@ -90,47 +272,68 @@
         function calculatePassword() {
             const ssid = document.getElementById('ssid').value.trim();
             const mac = document.getElementById('mac').value.replace(/[^a-f0-9]/gi, '').toUpperCase();
-            let result = document.getElementById('result');
+            const result = document.getElementById('result-text');
+            const resultBox = document.getElementById('result');
 
-            // Type 1: Basic SSIDs
+            let password = '';
+            let isValid = true;
+
+            // Type 1
             if (/^(PLDTHOMEDSL|PLDTmyDSLPAL|PLDmyDSLBiz)$/i.test(ssid)) {
-                const password = 'PLDTWIFI' + mac.slice(-5);
-                showResult(`Password: <strong>${password}</strong>`);
+                if (mac.length < 5) {
+                    isValid = false;
+                    alert('MAC address required for this SSID type');
+                }
+                password = `PLDTWIFI${mac.slice(-5)}`;
             }
-            // Type 2: PLDTHOMEDSL with numbers
+            // Type 2
             else if (/^PLDTHOMEDSL\d{5}$/i.test(ssid)) {
                 const numbers = ssid.match(/\d{5}$/)[0];
-                const calculated = parseInt(numbers) * 3;
-                const password = 'pLDTWIFI' + calculated;
-                showResult(`Password: <strong>${password}</strong>`);
+                password = `pLDTWIFI${parseInt(numbers) * 3}`;
             }
-            // Type 3: PLDTHOMEFIBR_xxxxxx
+            // Type 3
             else if (/^PLDTHOMEFIBR_[\da-f]{6}$/i.test(ssid)) {
                 const code = ssid.split('_')[1];
-                const converted = convertHex(code);
-                showResult(`Password: <strong>wlan${converted}</strong>`);
+                password = `wlan${convertHex(code)}`;
             }
-            // Type 4: PLDTHOMEFIBRxxxxx
+            // Type 4
             else if (/^PLDTHOMEFIBR[\da-f]{6}$/i.test(ssid)) {
                 const code = ssid.slice(-6);
-                const converted = convertHex(code);
-                showResult(`Password: <strong>PLDTWIFI${converted}</strong>`);
+                password = `PLDTWIFI${convertHex(code)}`;
             }
-            // Type 5: HomeBro_Ultera
+            // Type 5
             else if (/^HomeBro_Ultera$/i.test(ssid)) {
-                const password = 'HomeBro_' + mac.slice(-6);
-                showResult(`Password: <strong>${password}</strong>`);
+                if (mac.length < 6) {
+                    isValid = false;
+                    alert('MAC address required for HomeBro_Ultera');
+                }
+                password = `HomeBro_${mac.slice(-6)}`;
             }
             else {
-                showResult('Invalid SSID format or not supported', true);
+                isValid = false;
+                alert('Invalid SSID format. Please check tutorial for supported formats.');
+            }
+
+            if (isValid) {
+                result.innerHTML = `<strong>Generated Password:</strong><br><span style="font-size: 1.5rem">${password}</span>`;
+                resultBox.style.display = 'block';
+                saveToHistory(ssid, password);
             }
         }
 
-        function showResult(message, isError = false) {
-            const result = document.getElementById('result');
-            result.style.display = 'block';
-            result.innerHTML = message;
-            result.style.backgroundColor = isError ? '#ffebee' : '#e8f5e9';
+        function copyPassword() {
+            const text = document.getElementById('result-text').textContent;
+            navigator.clipboard.writeText(text.match(/:\s+(.*)/)[1]);
+            alert('Password copied to clipboard!');
+        }
+
+        function fillExample(ssid) {
+            document.getElementById('ssid').value = ssid;
+            document.getElementById('mac').value = '00:1F:FB:0F:C5:A8';
+        }
+
+        function saveToHistory(ssid, password) {
+            // Implement local storage history if needed
         }
     </script>
 </body>
