@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLDT WiFi Toolkit - Complete</title>
+    <title>PLDT WiFi Toolkit - Complete Solution</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         :root {
@@ -28,13 +28,13 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.3s ease;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             line-height: 1.6;
-            background-color: var(--background);
+            background: var(--background);
             color: var(--text);
             min-height: 100vh;
         }
@@ -53,7 +53,28 @@
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: var(--text);
+            z-index: 1000;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: var(--light);
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .card {
@@ -64,26 +85,6 @@
             margin-bottom: 2rem;
         }
 
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .tab {
-            padding: 1rem 2rem;
-            background: var(--light);
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            color: var(--text);
-        }
-
-        .tab.active {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
         .input-group {
             margin-bottom: 1.5rem;
         }
@@ -92,7 +93,6 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--text);
         }
 
         input {
@@ -115,17 +115,25 @@
             font-size: 1rem;
         }
 
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: var(--background);
+            position: relative;
+        }
+
         .qr-container {
             margin: 2rem 0;
             text-align: center;
         }
 
         .strength-meter {
-            height: 5px;
+            height: 8px;
             width: 100%;
-            margin-top: 0.5rem;
             background: #ddd;
-            border-radius: 3px;
+            border-radius: 4px;
+            margin: 1rem 0;
             overflow: hidden;
         }
 
@@ -133,13 +141,6 @@
             height: 100%;
             width: 0%;
             transition: width 0.3s;
-        }
-
-        .legal-gate {
-            margin: 1rem 0;
-            padding: 1rem;
-            border-radius: 8px;
-            background: rgba(255, 235, 186, 0.3);
         }
 
         .hex-grid {
@@ -156,12 +157,21 @@
             background: var(--background);
         }
 
-        .history-item {
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            border-radius: 8px;
+        .tutorial-step {
+            margin: 2rem 0;
+            padding: 1.5rem;
             background: var(--background);
-            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .history-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: var(--background);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .warning {
@@ -169,49 +179,12 @@
             border-radius: 8px;
             background: rgba(255, 0, 0, 0.1);
             margin: 1rem 0;
+            border-left: 4px solid #e74c3c;
         }
 
-        .password-note {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 8px;
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .password-note svg {
-            flex-shrink: 0;
-            width: 24px;
-            height: 24px;
-            fill: #856404;
-        }
-
-        .result-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .result-header svg {
-            width: 32px;
-            height: 32px;
-            fill: var(--primary);
-        }
-
-        .password-display {
-            font-size: 1.4rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            color: var(--primary);
-            padding: 1rem;
-            background: var(--background);
-            border-radius: 8px;
-            margin: 1rem 0;
-            border: 2px dashed var(--primary);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -227,16 +200,16 @@
             </div>
 
             <div class="tabs">
-                <div class="tab active" onclick="showTab('main')">Main Tool</div>
+                <div class="tab active" onclick="showTab('tool')">Password Generator</div>
+                <div class="tab" onclick="showTab('tutorial')">Tutorial Guide</div>
                 <div class="tab" onclick="showTab('converter')">HEX Converter</div>
-                <div class="tab" onclick="showTab('history')">History</div>
+                <div class="tab" onclick="showTab('history')">Password History</div>
             </div>
 
-            <!-- Main Tool Tab -->
-            <div id="main" class="tab-content">
-                <h2>PLDT WiFi Password Finder</h2>
+            <!-- Main Tool -->
+            <div id="tool" class="tab-content">
                 <div class="input-group">
-                    <label>SSID:</label>
+                    <label>SSID Name:</label>
                     <input type="text" id="ssid" placeholder="Enter PLDT SSID">
                 </div>
                 <div class="input-group">
@@ -244,30 +217,62 @@
                     <input type="text" id="mac" placeholder="00:1F:FB:0F:C5:A8">
                 </div>
                 <button onclick="calculatePassword()">Generate Password</button>
-                
                 <div id="result" class="result-box" style="display: none;">
                     <div class="qr-container" id="qrcode"></div>
                     <div class="strength-meter">
                         <div class="strength-fill"></div>
                     </div>
-                    <button onclick="copyPassword()">Copy Password</button>
+                    <button onclick="copyPassword()">Copy to Clipboard</button>
                 </div>
             </div>
 
-            <!-- HEX Converter Tab -->
+            <!-- Tutorial Section -->
+            <div id="tutorial" class="tab-content" style="display: none;">
+                <div class="tutorial-step">
+                    <h2>Complete User Guide</h2>
+                    <div class="warning">
+                        ⚠️ Legal Notice: Only use on networks you own or have explicit permission to access
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <h3>Step 1: Identify Your Router Type</h3>
+                    <p>Locate your WiFi name (SSID) from these common PLDT formats:</p>
+                    <div class="hex-pair">
+                        <p>📶 PLDTHOMEDSL<br>📶 PLDTHOMEDSL12345<br>📶 PLDTHOMEFIBR_1a2b3c<br>📶 HomeBro_Ultera</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <h3>Step 2: Gather Required Information</h3>
+                    <p>For some SSID types, you'll need:</p>
+                    <div class="hex-pair">
+                        <p>🔍 MAC Address (found on router sticker)<br>📝 Last 6 digits of SSID</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <h3>Step 3: Generate Password</h3>
+                    <div class="hex-pair">
+                        <p>1. Check authorization box<br>2. Enter exact SSID name<br>3. Provide MAC if needed<br>4. Click Generate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HEX Converter -->
             <div id="converter" class="tab-content" style="display: none;">
-                <h3>HEX Conversion Table</h3>
+                <h3>HEX Conversion Guide</h3>
                 <div class="hex-grid" id="hexGrid"></div>
             </div>
 
-            <!-- History Tab -->
+            <!-- History Section -->
             <div id="history" class="tab-content" style="display: none;">
-                <h3>Previous Searches</h3>
+                <h3>Previous Passwords</h3>
                 <div id="historyList"></div>
             </div>
 
             <div class="warning">
-                ⚠️ WARNING: Unauthorized network access is illegal. This tool is for educational purposes only.
+                ⚠️ Important: Default passwords may not work if the network owner has changed them. Always respect privacy laws.
             </div>
         </div>
     </div>
@@ -283,21 +288,24 @@
         let qrcode = null;
         let history = JSON.parse(localStorage.getItem('pldtHistory') || '[]');
 
+        // Theme Management
         function toggleTheme() {
             const html = document.documentElement;
             html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
         }
 
+        // Tab Management
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabName).style.display = 'block';
             event.currentTarget.classList.add('active');
             
-            if(tabName === 'history') updateHistoryDisplay();
+            if(tabName === 'history') updateHistory();
             if(tabName === 'converter') initHexConverter();
         }
 
+        // Password Calculation
         function calculatePassword() {
             if(!document.getElementById('legal-agree').checked) {
                 alert('Please confirm authorization first');
@@ -327,29 +335,46 @@
                 else throw new Error('Invalid SSID format');
 
                 showResult(password);
-                updatePasswordStrength(password);
+                updateStrength(password.length);
                 generateQR(ssid, password);
-                saveToHistory(ssid, password);
+                saveHistory(ssid, password);
             } catch (error) {
                 alert(error.message);
             }
         }
 
+        // Helper Functions
         function convertHex(input) {
             return input.toLowerCase().split('').map(c => hexMap[c] || c).join('');
         }
 
         function initHexConverter() {
             const hexGrid = document.getElementById('hexGrid');
-            hexGrid.innerHTML = Object.entries(hexMap).map(([original, converted]) => `
+            hexGrid.innerHTML = Object.entries(hexMap).map(([orig, conv]) => `
                 <div class="hex-pair">
-                    <div>${original.toUpperCase()}</div>
+                    <div>${orig.toUpperCase()}</div>
                     <div>→</div>
-                    <div>${converted.toUpperCase()}</div>
+                    <div>${conv.toUpperCase()}</div>
                 </div>
             `).join('');
         }
 
+        // Result Display
+        function showResult(password) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="qr-container" id="qrcode"></div>
+                <div class="strength-meter">
+                    <div class="strength-fill"></div>
+                </div>
+                <div class="password-display">${password}</div>
+                <button onclick="copyPassword()">Copy Password</button>
+            `;
+            resultDiv.style.animation = 'fadeIn 0.3s';
+        }
+
+        // Additional Features
         function generateQR(ssid, password) {
             if(qrcode) qrcode.clear();
             qrcode = new QRCode(document.getElementById('qrcode'), {
@@ -359,49 +384,36 @@
             });
         }
 
-        function updatePasswordStrength(password) {
-            const strength = Math.min(password.length / 16 * 100, 100);
+        function updateStrength(length) {
+            const strength = Math.min(length / 16 * 100, 100);
             document.querySelector('.strength-fill').style.width = `${strength}%`;
         }
 
-        function saveToHistory(ssid, password) {
+        function saveHistory(ssid, password) {
             history.unshift({ ssid, password, date: new Date().toISOString() });
             localStorage.setItem('pldtHistory', JSON.stringify(history));
+            updateHistory();
         }
 
-        function updateHistoryDisplay() {
+        function updateHistory() {
             const historyList = document.getElementById('historyList');
             historyList.innerHTML = history.map(entry => `
                 <div class="history-item">
                     <div>${entry.ssid}</div>
                     <div>${entry.password}</div>
-                    <small>${new Date(entry.date).toLocaleString()}</small>
+                    <small>${new Date(entry.date).toLocaleDateString()}</small>
                 </div>
             `).join('');
         }
 
         function copyPassword() {
-            const password = document.querySelector('#result strong').textContent;
+            const password = document.querySelector('.password-display').textContent;
             navigator.clipboard.writeText(password);
             alert('Password copied to clipboard');
         }
 
-        function showResult(password) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `
-                <strong>Generated Password:</strong><br>
-                <span style="font-size: 1.5rem">${password}</span>
-                <div class="qr-container" id="qrcode"></div>
-                <div class="strength-meter">
-                    <div class="strength-fill"></div>
-                </div>
-                <button onclick="copyPassword()">Copy Password</button>
-            `;
-        }
-
-        // Initialize
+        // Initialization
         initHexConverter();
     </script>
 </body>
-</html
+</html>
