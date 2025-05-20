@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Academic Research Archive - Cultural Media Studies">
-    <title>Cultural Media Archive | Academic Research Portal</title>
+    <meta name="description" content="Academic Media Repository - Cultural Research Archive">
+    <title>Cultural Research Archive | Academic Media Database</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Design System */
         :root {
-            --primary-dark: #1a1a1a;
-            --secondary-dark: #2d2d2d;
-            --accent-red: #e63946;
-            --text-light: #f1faee;
-            --blue-primary: #a8dadc;
-            --spacing-base: 1rem;
+            --primary-dark: #0a192f;
+            --secondary-dark: #172a45;
+            --accent: #64ffda;
+            --text-light: #ccd6f6;
+            --text-dark: #8892b0;
+            --spacing-base: 16px;
             --border-radius: 8px;
-            --transition-speed: 0.3s;
+            --transition: 0.25s cubic-bezier(0.645,0.045,0.355,1);
         }
 
         /* Base Styles */
@@ -24,16 +24,21 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
 
         body {
             background: var(--primary-dark);
             color: var(--text-light);
             line-height: 1.6;
+            font-size: 1rem;
         }
 
-        /* Utility Classes */
+        @supports (font-variation-settings: normal) {
+            body { font-family: 'Inter var', system-ui; }
+        }
+
+        /* Utilities */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -52,24 +57,20 @@
         }
 
         /* Components */
-        .disclaimer-alert {
-            background: var(--accent-red);
-            padding: 1rem;
+        .disclaimer-banner {
+            background: var(--secondary-dark);
+            padding: 12px;
             text-align: center;
             font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            border-bottom: 1px solid rgba(100,255,218,0.1);
         }
 
         .main-header {
-            background: var(--secondary-dark);
-            padding: 1.5rem 0;
+            padding: 2rem 0;
+            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .nav-container {
@@ -84,18 +85,72 @@
         }
 
         .nav-link {
-            color: var(--text-light);
+            color: var(--text-dark);
             text-decoration: none;
-            transition: color var(--transition-speed);
+            transition: color var(--transition);
+            position: relative;
+            padding: 8px 0;
         }
 
         .nav-link:hover {
-            color: var(--blue-primary);
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .hero-section {
+            padding: 4rem 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(100,255,218,0.1);
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent), #57cbff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .filters-bar {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            max-width: 400px;
+            padding: 0.8rem;
+            background: var(--secondary-dark);
+            border: 1px solid rgba(100,255,218,0.1);
+            border-radius: var(--border-radius);
+            color: var(--text-light);
+            transition: border-color var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
             padding: 2rem 0;
         }
@@ -104,8 +159,8 @@
             background: var(--secondary-dark);
             border-radius: var(--border-radius);
             overflow: hidden;
-            transition: transform var(--transition-speed);
-            cursor: pointer;
+            transition: transform var(--transition);
+            position: relative;
         }
 
         .video-card:hover {
@@ -115,7 +170,7 @@
         .thumbnail-container {
             position: relative;
             padding-top: 56.25%;
-            overflow: hidden;
+            background: #020c1b;
         }
 
         .thumbnail {
@@ -125,33 +180,36 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: opacity var(--transition);
         }
 
-        .play-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.9);
+        .video-card:hover .thumbnail {
             opacity: 0.8;
-            transition: opacity var(--transition-speed);
         }
 
-        .video-card:hover .play-icon {
-            opacity: 1;
+        .video-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
         }
 
-        .video-info {
+        .video-content {
             padding: 1rem;
         }
 
         .video-title {
             font-size: 1rem;
             margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        /* Modal Styles */
         .video-modal {
             display: none;
             position: fixed;
@@ -159,7 +217,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(10,25,47,0.95);
             z-index: 2000;
             padding: 2rem;
         }
@@ -170,65 +228,77 @@
             margin: 0 auto;
             background: var(--secondary-dark);
             border-radius: var(--border-radius);
-            padding: 1.5rem;
+            padding: 2rem;
+            animation: modalEnter 0.3s ease;
+        }
+
+        @keyframes modalEnter {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .video-player {
             width: 100%;
             height: 60vh;
             border-radius: var(--border-radius);
+            background: #000;
         }
 
         .close-modal {
             position: absolute;
             top: -40px;
             right: 0;
-            color: white;
-            font-size: 2rem;
+            color: var(--text-light);
+            font-size: 1.5rem;
             cursor: pointer;
+            transition: color var(--transition);
         }
 
-        /* FAQ Section */
-        .faq-section {
-            margin: 4rem 0;
+        .close-modal:hover {
+            color: var(--accent);
         }
 
-        .faq-item {
+        /* Loading State */
+        .loading-skeleton {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .skeleton-card {
             background: var(--secondary-dark);
             border-radius: var(--border-radius);
-            margin: 1rem 0;
-        }
-
-        .faq-question {
-            padding: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .faq-answer {
-            max-height: 0;
             overflow: hidden;
-            transition: max-height var(--transition-speed);
-            padding: 0 1.5rem;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .faq-answer.active {
-            max-height: 500px;
-            padding: 1.5rem;
+        .skeleton-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            animation: skeletonLoading 1.5s infinite;
+        }
+
+        @keyframes skeletonLoading {
+            100% { left: 100%; }
         }
 
         /* Footer */
         .main-footer {
-            background: var(--secondary-dark);
-            padding: 2rem 0;
+            border-top: 1px solid rgba(100,255,218,0.1);
             margin-top: 4rem;
+            padding: 2rem 0;
         }
 
         .footer-content {
             text-align: center;
-            padding: 1rem;
+            color: var(--text-dark);
         }
 
         @media (max-width: 768px) {
@@ -237,205 +307,212 @@
                 gap: 1rem;
             }
 
-            .video-player {
-                height: 40vh;
+            .hero-title {
+                font-size: 2rem;
             }
 
-            .modal-content {
-                padding: 1rem;
+            .video-player {
+                height: 50vh;
             }
         }
     </style>
 </head>
 <body>
-    <div class="disclaimer-alert">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span>STRICTLY FOR ACADEMIC RESEARCH - FAIR USE COMPLIANT CONTENT</span>
+    <div class="disclaimer-banner">
+        <div class="container">
+            <i class="fas fa-microscope"></i>
+            Academic Research Archive - Strictly Educational Use
+        </div>
     </div>
 
     <header class="main-header">
         <nav class="container nav-container">
-            <h1>Cultural Research Archive</h1>
+            <h1>Cultural Archive</h1>
             <div class="nav-links">
-                <a href="#about" class="nav-link">About</a>
                 <a href="#collection" class="nav-link">Collection</a>
-                <a href="#faq" class="nav-link">FAQ</a>
+                <a href="#research" class="nav-link">Research</a>
+                <a href="#methodology" class="nav-link">Methodology</a>
+                <a href="#contact" class="nav-link">Contact</a>
             </div>
         </nav>
     </header>
 
-    <main class="container">
-        <section id="about" class="section">
-            <h2 class="section-title">Research Purpose</h2>
-            <div class="content-box">
-                <p>This archive serves academic researchers studying:</p>
-                <ul>
-                    <li>Cultural anthropology</li>
-                    <li>Media representation</li>
-                    <li>Sociological patterns</li>
-                    <li>Digital ethnography</li>
-                </ul>
-                <p>All materials preserved for historical documentation and analysis.</p>
-            </div>
-        </section>
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Cultural Media Research Database</h1>
+            <p class="hero-description">Preserving media artifacts for academic analysis and historical documentation</p>
+        </div>
+    </section>
 
+    <main class="container">
         <section id="collection">
-            <h2 class="section-title">Research Materials</h2>
+            <div class="filters-bar">
+                <input type="text" class="search-input" placeholder="Search research materials...">
+                <select class="sort-select">
+                    <option>Sort by Title</option>
+                    <option>Sort by Date</option>
+                </select>
+            </div>
+
+            <div class="loading-skeleton" id="loadingState">
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            </div>
+
             <div class="video-grid" id="videoContainer"></div>
         </section>
 
-        <section id="faq" class="faq-section">
-            <h2 class="section-title">Research FAQs</h2>
-            <div class="faq-container">
-                <!-- FAQ items populated by JS -->
-            </div>
+        <section class="research-section" id="research">
+            <!-- Research content -->
         </section>
     </main>
 
     <div class="video-modal" id="videoModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <video controls class="video-player" id="videoPlayer">
-                Your browser does not support HTML5 video
-            </video>
+            <span class="close-modal" onclick="App.closeModal()">&times;</span>
+            <video controls class="video-player" id="videoPlayer"></video>
         </div>
     </div>
 
     <footer class="main-footer">
-        <div class="footer-content">
-            <p>&copy; 2024 Academic Research Archive. Educational use only.</p>
-            <div class="legal-links">
+        <div class="container footer-content">
+            <p>&copy; 2024 Cultural Research Archive. Educational use only.</p>
+            <div class="footer-links">
                 <a href="#privacy">Privacy Policy</a>
                 <a href="#terms">Terms of Use</a>
-                <a href="#contact">Research Contact</a>
+                <a href="#ethics">Research Ethics</a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Configuration
-        const API_ENDPOINT = 'https://kaiz-apis.gleeze.com/api/lootedpinay?limit=5&apikey=0acad241-6a34-4516-bcc6-310a137e6357';
-        const FAQ_DATA = [
-            {
-                question: "What is the purpose of this archive?",
-                answer: "This platform serves as a digital repository for academic research in cultural studies and media analysis."
-            },
-            {
-                question: "Who can access these materials?",
-                answer: "Available to verified researchers and academic institutions for educational purposes."
-            },
-            {
-                question: "How is content curated?",
-                answer: "Materials undergo rigorous academic review before inclusion."
-            }
-        ];
+        class ResearchArchive {
+            static config = {
+                apiEndpoint: 'https://kaiz-apis.gleeze.com/api/lootedpinay?limit=5&apikey=0acad241-6a34-4516-bcc6-310a137e6357',
+                selectors: {
+                    container: '#videoContainer',
+                    loading: '#loadingState',
+                    search: '.search-input',
+                    modal: '#videoModal',
+                    player: '#videoPlayer'
+                }
+            };
 
-        // Core Functions
-        class App {
-            static async init() {
+            static init() {
+                this.loadData();
+                this.initSearch();
+                this.initModal();
+            }
+
+            static async loadData() {
                 try {
-                    const data = await this.fetchData(API_ENDPOINT);
-                    this.renderVideos(data.videos);
-                    this.initFAQ();
-                    this.setupEventListeners();
+                    const response = await fetch(this.config.apiEndpoint);
+                    if (!response.ok) throw new Error('Failed to load research data');
+                    const data = await response.json();
+                    this.renderContent(data.videos);
                 } catch (error) {
                     this.showError(error.message);
+                } finally {
+                    document.querySelector(this.config.selectors.loading).style.display = 'none';
                 }
             }
 
-            static async fetchData(url) {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Failed to load research materials');
-                return await response.json();
-            }
-
-            static renderVideos(videos) {
-                const container = document.getElementById('videoContainer');
+            static renderContent(videos) {
+                const container = document.querySelector(this.config.selectors.container);
                 container.innerHTML = videos.map(video => `
-                    <article class="video-card">
+                    <article class="video-card" role="article">
                         <div class="thumbnail-container" 
                              role="button" 
-                             aria-label="Play ${video.title}"
+                             aria-label="View ${video.title}"
                              tabindex="0"
                              data-video="${encodeURIComponent(video.mp4url)}">
                             <img src="${video.thumbnail}" 
                                  alt="${video.title}" 
                                  class="thumbnail"
                                  loading="lazy">
-                            <i class="fas fa-play play-icon"></i>
+                            <div class="video-badge">Research Material</div>
                         </div>
-                        <div class="video-info">
+                        <div class="video-content">
                             <h3 class="video-title">${video.title}</h3>
+                            <div class="video-meta">
+                                <span class="video-duration">${video.duration || 'Duration: N/A'}</span>
+                            </div>
                         </div>
                     </article>
                 `).join('');
+
+                this.initVideoCards();
             }
 
-            static initFAQ() {
-                const container = document.querySelector('.faq-container');
-                container.innerHTML = FAQ_DATA.map(faq => `
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="App.toggleFAQ(this)">
-                            <span>${faq.question}</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="faq-answer">${faq.answer}</div>
-                    </div>
-                `).join('');
-            }
-
-            static toggleFAQ(element) {
-                const answer = element.nextElementSibling;
-                answer.classList.toggle('active');
-            }
-
-            static setupEventListeners() {
-                // Video click handlers
-                document.querySelectorAll('.thumbnail-container').forEach(thumb => {
-                    thumb.addEventListener('click', () => this.playVideo(thumb.dataset.video));
-                    thumb.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') this.playVideo(thumb.dataset.video);
+            static initVideoCards() {
+                document.querySelectorAll('.thumbnail-container').forEach(card => {
+                    card.addEventListener('click', () => this.playVideo(card.dataset.video));
+                    card.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') this.playVideo(card.dataset.video);
                     });
                 });
+            }
 
-                // Modal close
+            static initSearch() {
+                const searchInput = document.querySelector(this.config.selectors.search);
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    this.filterContent(term);
+                });
+            }
+
+            static filterContent(term) {
+                const cards = document.querySelectorAll('.video-card');
+                cards.forEach(card => {
+                    const title = card.querySelector('.video-title').textContent.toLowerCase();
+                    card.style.display = title.includes(term) ? 'block' : 'none';
+                });
+            }
+
+            static playVideo(url) {
+                const modal = document.querySelector(this.config.selectors.modal);
+                const player = document.querySelector(this.config.selectors.player);
+                player.src = decodeURIComponent(url);
+                modal.style.display = 'block';
+                player.play();
+                document.body.style.overflow = 'hidden';
+            }
+
+            static closeModal() {
+                const modal = document.querySelector(this.config.selectors.modal);
+                const player = document.querySelector(this.config.selectors.player);
+                player.pause();
+                player.src = '';
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            static initModal() {
                 window.addEventListener('click', (e) => {
                     if (e.target.classList.contains('video-modal')) {
                         this.closeModal();
                     }
                 });
-            }
 
-            static playVideo(url) {
-                const modal = document.getElementById('videoModal');
-                const player = document.getElementById('videoPlayer');
-                player.src = decodeURIComponent(url);
-                modal.style.display = 'block';
-                player.play();
-            }
-
-            static closeModal() {
-                const modal = document.getElementById('videoModal');
-                const player = document.getElementById('videoPlayer');
-                player.pause();
-                player.src = '';
-                modal.style.display = 'none';
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.closeModal();
+                });
             }
 
             static showError(message) {
-                const errorAlert = document.createElement('div');
-                errorAlert.className = 'error-alert';
-                errorAlert.innerHTML = `
+                const error = document.createElement('div');
+                error.className = 'error-banner';
+                error.innerHTML = `
                     <i class="fas fa-exclamation-circle"></i>
                     ${message}
                 `;
-                document.body.prepend(errorAlert);
-                setTimeout(() => errorAlert.remove(), 5000);
+                document.body.prepend(error);
+                setTimeout(() => error.remove(), 5000);
             }
         }
 
-        // Initialize Application
-        document.addEventListener('DOMContentLoaded', () => App.init());
+        document.addEventListener('DOMContentLoaded', () => ResearchArchive.init());
     </script>
 </body>
 </html>
