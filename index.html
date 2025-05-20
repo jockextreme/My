@@ -67,26 +67,6 @@
             padding: 0 var(--spacing-base);
         }
 
-        .search-bar {
-            margin: 2rem 0;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1rem;
-            background: var(--secondary-dark);
-            border: 1px solid rgba(100,255,218,0.1);
-            border-radius: var(--border-radius);
-            color: var(--text-light);
-            transition: border-color var(--transition);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -149,6 +129,62 @@
             overflow: hidden;
         }
 
+        .video-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .like-btn.liked {
+            color: var(--accent);
+        }
+
+        .comments-section {
+            margin-top: 1rem;
+            border-top: 1px solid rgba(100,255,218,0.1);
+            padding-top: 1rem;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--secondary-dark);
+            border: 1px solid rgba(100,255,218,0.1);
+            color: var(--text-light);
+            border-radius: 4px;
+        }
+
+        .comment-list {
+            margin-top: 1rem;
+            list-style: none;
+        }
+
+        .comment-item {
+            background: rgba(100,255,218,0.1);
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .video-modal {
             display: none;
             position: fixed;
@@ -196,36 +232,6 @@
             color: var(--accent);
         }
 
-        .faq-section {
-            margin: 4rem 0;
-        }
-
-        .faq-item {
-            background: var(--secondary-dark);
-            border-radius: var(--border-radius);
-            margin: 1rem 0;
-        }
-
-        .faq-question {
-            padding: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height var(--transition);
-            padding: 0 1.5rem;
-        }
-
-        .faq-answer.active {
-            max-height: 500px;
-            padding: 1.5rem;
-        }
-
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -250,31 +256,16 @@
     <header class="main-header">
         <nav class="nav-container">
             <h1 class="main-title">Cultural Media Archive</h1>
-            <div class="nav-links">
-                <a href="#collection" class="nav-link">Collection</a>
-                <a href="#faq" class="nav-link">FAQ</a>
-            </div>
         </nav>
     </header>
 
     <main class="video-archive">
-        <section id="collection">
-            <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search academic materials...">
-            </div>
-
-            <div class="video-grid" id="videoContainer"></div>
-        </section>
-
-        <section id="faq" class="faq-section">
-            <h2>Academic Use FAQ</h2>
-            <div class="faq-container"></div>
-        </section>
+        <div class="video-grid" id="videoContainer"></div>
     </main>
 
     <div class="video-modal" id="videoModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="Archive.closeModal()">&times;</span>
+            <span class="close-modal" onclick="AcademicArchive.closeModal()">&times;</span>
             <video controls class="video-player" id="videoPlayer"></video>
         </div>
     </div>
@@ -283,27 +274,27 @@
         class AcademicArchive {
             static config = {
                 api: 'https://kaiz-apis.gleeze.com/api/lootedpinay?limit=5&apikey=0acad241-6a34-4516-bcc6-310a137e6357',
-                faq: [
-                    {
-                        question: "What qualifies as educational use?",
-                        answer: "Usage limited to academic research, classroom instruction, and scholarly analysis."
-                    },
-                    {
-                        question: "Who can access this archive?",
-                        answer: "Available to verified researchers and educational institutions."
-                    },
-                    {
-                        question: "How is content selected?",
-                        answer: "Materials undergo academic review for research relevance."
-                    }
-                ]
+                storageKey: 'academicArchiveData'
             };
 
             static init() {
+                this.initStorage();
                 this.loadContent();
-                this.initSearch();
-                this.initFAQ();
                 this.initModal();
+            }
+
+            static initStorage() {
+                if (!localStorage.getItem(this.config.storageKey)) {
+                    localStorage.setItem(this.config.storageKey, JSON.stringify({}));
+                }
+            }
+
+            static getStorage() {
+                return JSON.parse(localStorage.getItem(this.config.storageKey));
+            }
+
+            static updateStorage(data) {
+                localStorage.setItem(this.config.storageKey, JSON.stringify(data));
             }
 
             static async loadContent() {
@@ -311,6 +302,7 @@
                     const response = await fetch(this.config.api);
                     if (!response.ok) throw new Error('Data loading failed');
                     const { videos } = await response.json();
+                    this.currentVideos = videos;
                     this.renderVideos(videos);
                 } catch (error) {
                     this.showError(error.message);
@@ -319,24 +311,55 @@
 
             static renderVideos(videos) {
                 const container = document.getElementById('videoContainer');
-                container.innerHTML = videos.map(video => `
-                    <article class="video-card">
-                        <div class="thumbnail-container" 
-                             role="button"
-                             aria-label="View ${video.title}"
-                             tabindex="0"
-                             data-video="${encodeURIComponent(video.mp4url)}">
-                            <img src="${video.thumbnail}" 
-                                 alt="${video.title}"
-                                 class="thumbnail"
-                                 loading="lazy">
-                            <div class="play-overlay"><i class="fas fa-play"></i></div>
-                        </div>
-                        <div class="video-info">
-                            <h3 class="video-title">${video.title}</h3>
-                        </div>
-                    </article>
-                `).join('');
+                const storage = this.getStorage();
+                
+                container.innerHTML = videos.map(video => {
+                    const videoKey = btoa(video.mp4url);
+                    const videoData = storage[videoKey] || { likes: 0, comments: [] };
+                    
+                    return `
+                        <article class="video-card">
+                            <div class="thumbnail-container" 
+                                 role="button"
+                                 aria-label="View ${video.title}"
+                                 tabindex="0"
+                                 data-video="${encodeURIComponent(video.mp4url)}">
+                                <img src="${video.thumbnail}" 
+                                     alt="${video.title}"
+                                     class="thumbnail"
+                                     loading="lazy">
+                                <div class="play-overlay"><i class="fas fa-play"></i></div>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">${video.title}</h3>
+                                <div class="video-actions">
+                                    <button class="like-btn ${videoData.likes > 0 ? 'liked' : ''}" 
+                                            onclick="AcademicArchive.toggleLike('${videoKey}')">
+                                        <i class="fas fa-heart"></i>
+                                        <span>${videoData.likes}</span>
+                                    </button>
+                                </div>
+                                <div class="comments-section">
+                                    <form class="comment-form" onsubmit="return AcademicArchive.addComment('${videoKey}', this)">
+                                        <input type="text" class="comment-input" placeholder="Add academic note..." required>
+                                        <button type="submit" class="nav-link">Post</button>
+                                    </form>
+                                    <ul class="comment-list">
+                                        ${videoData.comments.map(comment => `
+                                            <li class="comment-item">
+                                                ${comment.text}
+                                                <button onclick="AcademicArchive.deleteComment('${videoKey}', ${comment.id})" 
+                                                        class="nav-link">
+                                                    ×
+                                                </button>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
 
                 this.initVideoHandlers();
             }
@@ -350,32 +373,43 @@
                 });
             }
 
-            static initSearch() {
-                const search = document.querySelector('.search-input');
-                search.addEventListener('input', (e) => {
-                    const term = e.target.value.toLowerCase();
-                    document.querySelectorAll('.video-card').forEach(card => {
-                        const title = card.querySelector('.video-title').textContent.toLowerCase();
-                        card.style.display = title.includes(term) ? 'block' : 'none';
-                    });
+            static toggleLike(videoKey) {
+                const storage = this.getStorage();
+                const videoData = storage[videoKey] || { likes: 0, comments: [] };
+                videoData.likes = videoData.likes ? 0 : 1;
+                storage[videoKey] = videoData;
+                this.updateStorage(storage);
+                this.renderVideos(this.currentVideos);
+            }
+
+            static addComment(videoKey, form) {
+                const input = form.querySelector('.comment-input');
+                const text = input.value.trim();
+                if (!text) return false;
+
+                const storage = this.getStorage();
+                const videoData = storage[videoKey] || { likes: 0, comments: [] };
+                videoData.comments.push({
+                    id: Date.now(),
+                    text: text,
+                    timestamp: new Date().toISOString()
                 });
+                storage[videoKey] = videoData;
+                this.updateStorage(storage);
+                input.value = '';
+                this.renderVideos(this.currentVideos);
+                return false;
             }
 
-            static initFAQ() {
-                const container = document.querySelector('.faq-container');
-                container.innerHTML = this.config.faq.map(item => `
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="AcademicArchive.toggleFAQ(this)">
-                            <span>${item.question}</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="faq-answer">${item.answer}</div>
-                    </div>
-                `).join('');
-            }
-
-            static toggleFAQ(element) {
-                element.nextElementSibling.classList.toggle('active');
+            static deleteComment(videoKey, commentId) {
+                const storage = this.getStorage();
+                const videoData = storage[videoKey];
+                if (videoData) {
+                    videoData.comments = videoData.comments.filter(c => c.id !== commentId);
+                    storage[videoKey] = videoData;
+                    this.updateStorage(storage);
+                    this.renderVideos(this.currentVideos);
+                }
             }
 
             static playVideo(url) {
