@@ -3,140 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaiz API Demo</title>
+    <title>Free IPTV Channels</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 20px;
             background-color: #f0f0f0;
         }
-
         .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .channel-list {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        .card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 4px;
-            display: flex;
-            gap: 15px;
+        .channel {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
         }
-
-        .card img {
-            max-width: 200px;
-            border-radius: 4px;
-        }
-
-        .card-content {
-            flex-grow: 1;
-        }
-
-        .loading {
+        h1 {
+            color: #333;
             text-align: center;
-            padding: 20px;
-        }
-
-        .pagination {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            padding: 8px 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Kaiz API Data</h1>
-        <div class="pagination">
-            <button onclick="changePage(-1)">Previous</button>
-            <span id="pageNumber">Page 1</span>
-            <button onclick="changePage(1)">Next</button>
+        <h1>Free IPTV Channels</h1>
+        <div class="channel-list">
+            <!-- Channels will be dynamically inserted here -->
         </div>
-        <div id="loading" class="loading">Loading...</div>
-        <div id="content"></div>
     </div>
 
     <script>
-        let currentPage = 1;
-        const limit = 3;
-        const API_KEY = '0acad241-6a34-4516-bcc6-310a137e6357';
+        const playlist = `
+            #EXTM3U
+            #EXTINF:-1 tvg-id="A2Z.ph",A2Z (360p) [Not 24/7]
+            https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5.m3u8
+            #EXTINF:-1 tvg-id="ANC.ph",ANC (720p)
+            https://ancglobal-abscbn-ono.amagi.tv/playlist720_p.m3u8
+            #EXTINF:-1 tvg-id="CCTN47.ph",CCTN 47 (1080p) [Not 24/7]
+            http://122.55.252.134:8443/live/bba5b536faeacb9b56a3239f1ee8e3b3/1.m3u8
+            #EXTINF:-1 tvg-id="CineMo.ph",Cine Mo! (720p)
+            https://cinemo-abscbn-ono.amagi.tv/playlist.m3u8
+            #EXTINF:-1 tvg-id="CinemaOne.ph",Cinema One (1080p)
+            https://cinemaone-abscbn-ono.amagi.tv/index.m3u8
+            #EXTINF:-1 tvg-id="CLTV36.ph",CLTV 36 (720p) [Not 24/7]
+            https://live.cltv36.tv:5443/LiveApp/streams/cltvlive.m3u8
+            #EXTINF:-1 tvg-id="DepEdTV.ph",DepEd TV (480p) [Geo-blocked]
+            https://d3cbe0gidjd4k2.cloudfront.net/channel_7/channel7/playlist.m3u8
+            #EXTINF:-1 tvg-id="GreatCommissionTV.ph",Great Commission TV (468p)
+            http://45.32.115.103/live/livestream/index.m3u8
+            #EXTINF:-1 tvg-id="INCTV.ph",INC TV (720p) (720p) [Geo-blocked]
+            https://199211.global.ssl.fastly.net/643cc12aa824db4374021c8c/live_95f6ac80dd6511ed9d08b12be56ae55e/index.m3u8
+            #EXTINF:-1 tvg-id="Myx.ph",Myx (720p)
+            https://myxnola-abscbn-ono.amagi.tv/index.m3u8
+            #EXTINF:-1 tvg-id="DZBBDT1.ph",Super Radyo DZBB (720p) [Not 24/7]
+            https://stream.gmanews.tv/ioslive/livestream/playlist.m3u8
+            #EXTINF:-1 tvg-id="TeleRadyo.ph",Teleradyo Serbisyo (720p) [Not 24/7]
+            https://teleradyo-abscbn-ono.amagi.tv/playlist720_p.m3u8
+        `;
 
-        function getApiUrl(page) {
-            return `https://kaiz-apis.gleeze.com/api/xvideos?page=${page}&limit=${limit}&apikey=${API_KEY}`;
-        }
-
-        async function fetchData(page) {
-            try {
-                document.getElementById('loading').style.display = 'block';
-                const response = await fetch(getApiUrl(page));
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+        function parseM3U(content) {
+            const channels = [];
+            const lines = content.split('\n');
+            
+            for(let i = 0; i < lines.length; i++) {
+                if(lines[i].startsWith('#EXTINF')) {
+                    const channel = {
+                        info: lines[i],
+                        url: lines[++i]
+                    };
+                    channels.push(channel);
                 }
-                
-                const data = await response.json();
-                displayData(data);
-                document.getElementById('pageNumber').textContent = `Page ${currentPage}`;
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('content').innerHTML = 
-                    `<div class="card error">Error loading data: ${error.message}</div>`;
-            } finally {
-                document.getElementById('loading').style.display = 'none';
             }
+            return channels;
         }
 
-        function displayData(data) {
-            const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = '';
+        function displayChannels() {
+            const container = document.querySelector('.channel-list');
+            const channels = parseM3U(playlist);
 
-            // Adjust this based on your actual API response structure
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}
-                    <div class="card-content">
-                        <h3>${item.title || item.name}</h3>
-                        ${item.description ? `<p>${item.description}</p>` : ''}
-                        ${item.price ? `<p>Price: $${item.price}</p>` : ''}
-                        ${item.rating ? `<p>Rating: ${item.rating}/5</p>` : ''}
-                        ${item.category ? `<small>Category: ${item.category}</small>` : ''}
-                    </div>
+            channels.forEach(channel => {
+                const div = document.createElement('div');
+                div.className = 'channel';
+                div.innerHTML = `
+                    <h3>${channel.info.split('tvg-id="')[1].split('"')[0]}</h3>
+                    <p>${channel.info.split(',')[1]}</p>
+                    <a href="${channel.url}" target="_blank">Play Stream</a>
                 `;
-                contentDiv.appendChild(card);
+                container.appendChild(div);
             });
         }
 
-        function changePage(offset) {
-            const newPage = currentPage + offset;
-            if (newPage > 0) { // Add maximum page check if your API provides total pages
-                currentPage = newPage;
-                fetchData(currentPage);
-            }
-        }
-
-        // Initial load
-        fetchData(currentPage);
+        displayChannels();
     </script>
 </body>
 </html>
