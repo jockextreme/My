@@ -1,28 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Academic Media Archive - Educational Resource">
-    <title>Cultural Research Archive | Educational Materials</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+    <meta name="description" content="Secure Academic Research Portal">
+    <title>Privacy-First Media Archive</title>
     <style>
         :root {
             --primary-dark: #0a192f;
             --secondary-dark: #172a45;
-            --accent: #64ffda;
             --text-light: #ccd6f6;
-            --text-dark: #8892b0;
             --spacing-base: 16px;
             --border-radius: 8px;
-            --transition: 0.25s cubic-bezier(0.645,0.045,0.355,1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: system-ui, sans-serif;
         }
 
         body {
@@ -32,28 +29,10 @@
         }
 
         .disclaimer-banner {
-            background: var(--secondary-dark);
-            padding: 12px;
+            background: #1a1a1a;
+            padding: 1rem;
             text-align: center;
-            font-size: 0.9rem;
-            border-bottom: 1px solid rgba(100,255,218,0.1);
-        }
-
-        .main-header {
-            padding: 2rem 0;
-            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 var(--spacing-base);
+            border-bottom: 1px solid #2d2d2d;
         }
 
         .video-grid {
@@ -69,13 +48,11 @@
             background: var(--secondary-dark);
             border-radius: var(--border-radius);
             overflow: hidden;
-            transition: transform var(--transition);
         }
 
         .thumbnail-container {
             position: relative;
             padding-top: 56.25%;
-            background: #020c1b;
         }
 
         .thumbnail {
@@ -87,10 +64,6 @@
             object-fit: cover;
         }
 
-        .video-content {
-            padding: 1rem;
-        }
-
         .video-modal {
             display: none;
             position: fixed;
@@ -98,32 +71,24 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10,25,47,0.95);
-            z-index: 2000;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
         }
 
         .modal-content {
             position: relative;
-            max-width: 1000px;
+            width: 90%;
+            max-width: 800px;
             margin: 2rem auto;
-            background: var(--secondary-dark);
-            border-radius: var(--border-radius);
-            padding: 2rem;
         }
 
         .video-player {
             width: 100%;
             height: 60vh;
-            border-radius: var(--border-radius);
         }
 
         @media (max-width: 768px) {
             .video-grid {
-                padding: 1rem;
-            }
-            
-            .modal-content {
-                margin: 1rem;
                 padding: 1rem;
             }
         }
@@ -131,15 +96,8 @@
 </head>
 <body>
     <div class="disclaimer-banner">
-        <i class="fas fa-exclamation-triangle"></i>
-        WARNING: Contains sensitive academic material - For educational analysis only
+        <strong>Secure Research Portal:</strong> This service operates with maximum privacy protections - No tracking, no cookies, no storage
     </div>
-
-    <header class="main-header">
-        <nav class="nav-container">
-            <h1>Academic Archive</h1>
-        </nav>
-    </header>
 
     <main>
         <div class="video-grid" id="videoContainer"></div>
@@ -152,54 +110,75 @@
     </div>
 
     <script>
-        class AcademicArchive {
-            static API_ENDPOINT = 'https://kaiz-apis.gleeze.com/api/lootedpinay?limit=5&apikey=0acad241-6a34-4516-bcc6-310a137e6357';
+        // Privacy Protection Measures
+        Object.defineProperty(window, 'localStorage', { get: () => null });
+        Object.defineProperty(window, 'sessionStorage', { get: () => null });
+        Object.defineProperty(document, 'cookie', { get: () => '' });
+        navigator.sendBeacon = null;
+        
+        // API Configuration
+        const API_ENDPOINT = 'https://kaiz-apis.gleeze.com/api/lootedpinay?limit=5';
+        const API_KEY = '0acad241-6a34-4516-bcc6-310a137e6357';
 
-            static init() {
-                this.loadContent();
-                this.initModal();
-            }
-
-            static async loadContent() {
+        class SecureMediaArchive {
+            static async init() {
                 try {
-                    const response = await fetch(this.API_ENDPOINT);
-                    if (!response.ok) throw new Error('Data loading failed');
-                    const data = await response.json();
-                    this.renderVideos(data.videos);
+                    const data = await this.fetchData();
+                    this.renderContent(data.videos);
+                    this.initModal();
                 } catch (error) {
-                    this.showError('Content unavailable - Educational resources temporarily inaccessible');
+                    this.showError('Research materials currently unavailable');
                 }
             }
 
-            static renderVideos(videos) {
+            static async fetchData() {
+                const salt = Date.now() % 100000;
+                const url = `${API_ENDPOINT}&salt=${salt}&apikey=${API_KEY}`;
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Sec-Fetch-Dest': 'empty',
+                        'Sec-Fetch-Mode': 'no-cors',
+                        'Sec-Fetch-Site': 'cross-site',
+                        'Referrer-Policy': 'no-referrer'
+                    },
+                    credentials: 'omit'
+                });
+
+                if (!response.ok) throw new Error('Secure fetch failed');
+                return response.json();
+            }
+
+            static renderContent(videos) {
                 const container = document.getElementById('videoContainer');
                 container.innerHTML = videos.map(video => `
                     <article class="video-card">
                         <div class="thumbnail-container" 
-                             onclick="AcademicArchive.playVideo('${encodeURIComponent(video.mp4url)}')">
-                            <img src="${video.thumbnail}" 
-                                 alt="Educational content preview: ${video.title}" 
+                             onclick="SecureMediaArchive.playVideo('${this.sanitize(video.mp4url)}')">
+                            <img src="${this.sanitize(video.thumbnail)}" 
+                                 alt="Research content: ${this.sanitize(video.title)}"
                                  class="thumbnail"
                                  loading="lazy">
-                        </div>
-                        <div class="video-content">
-                            <h3>${video.title}</h3>
                         </div>
                     </article>
                 `).join('');
             }
 
+            static sanitize(str) {
+                return String(str).replace(/[^a-z0-9-._~:/?#[\]@!$&'()*+,;=]/gi, '');
+            }
+
             static playVideo(url) {
                 const modal = document.getElementById('videoModal');
                 const player = document.getElementById('videoPlayer');
-                player.src = decodeURIComponent(url);
+                player.src = url;
                 modal.style.display = 'block';
                 player.play();
             }
 
             static initModal() {
-                window.onclick = (event) => {
-                    if (event.target === document.getElementById('videoModal')) {
+                window.onclick = (e) => {
+                    if (e.target.classList.contains('video-modal')) {
                         this.closeModal();
                     }
                 };
@@ -219,23 +198,31 @@
 
             static showError(message) {
                 const error = document.createElement('div');
-                error.style.position = 'fixed';
-                error.style.bottom = '20px';
-                error.style.left = '20px';
-                error.style.padding = '1rem';
-                error.style.background = '#e63946';
-                error.style.color = 'white';
-                error.style.borderRadius = '8px';
+                error.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    padding: 12px;
+                    background: #e63946;
+                    color: white;
+                    border-radius: 8px;
+                    max-width: 300px;
+                `;
                 error.textContent = message;
                 document.body.appendChild(error);
                 
-                setTimeout(() => {
-                    document.body.removeChild(error);
-                }, 5000);
+                setTimeout(() => error.remove(), 5000);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => AcademicArchive.init());
+        // Initialize after DOM load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Add noise to timing precision
+            const start = Date.now();
+            while(Date.now() - start < Math.random() * 100) {}
+            
+            SecureMediaArchive.init();
+        });
     </script>
 </body>
 </html>
