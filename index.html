@@ -3,263 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCGI Youth Ugong - Bible Festival 2025 Champions</title>
+    <title>Bcen Habil Bulawan | Professional Portfolio</title>
+    <meta name="description" content="Official website of Bcen Habil Bulawan - Professional Portfolio showcasing skills, experience, and achievements.">
+    <meta name="keywords" content="bcen habil bulawan, bulawan, habil bulawan, professional portfolio">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
             --primary-color: #2c3e50;
-            --accent-color: #e67e22;
-            --text-dark: #2c3e50;
-            --text-light: #ecf0f1;
+            --secondary-color: #3498db;
+            --light-bg: #f9f9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: var(--text-dark);
-            background: #f8f9fa;
+            color: #333;
         }
 
-        .hero-section {
-            background: linear-gradient(rgba(44,62,80,0.9), rgba(44,62,80,0.9)),
-                        url('https://tinyurl.com/3wr7tv9y');
-            background-size: cover;
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--text-light);
-        }
-
-        .awards-container {
+        .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .award-category {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-            margin: 2rem 0;
-            overflow: hidden;
-        }
-
-        .category-header {
+        /* Header Styles */
+        header {
             background: var(--primary-color);
             color: white;
-            padding: 1rem;
-            font-size: 1.25rem;
-        }
-
-        .winner-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem;
-        }
-
-        .winner-card {
+            padding: 2rem 0;
             text-align: center;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
         }
 
-        .winner-card:hover {
-            transform: translateY(-5px);
+        /* Professional Section */
+        .professional-section {
+            padding: 4rem 0;
+            background: var(--light-bg);
         }
 
-        .winner-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 3px solid var(--accent-color);
-        }
-
-        .winner-info {
-            padding: 1rem;
-        }
-
-        .rank-badge {
-            background: var(--accent-color);
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 0.5rem 0;
-            font-size: 0.9rem;
-        }
-
-        footer {
-            background: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-        }
-
-        .overall-champions {
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            padding: 2rem;
+            margin-top: 2rem;
         }
 
-        @media (max-width: 768px) {
-            .winner-grid {
-                grid-template-columns: 1fr;
-            }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-item {
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        /* Social Media */
+        .social-links {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <section class="hero-section">
-        <h1>MCGI Youth Ugong Bible Festival 2025 Champions</h1>
-        <p class="bible-verse">"A new commandment I give unto you, That ye love one another; as I have loved you..." John 13:34 (KJV)</p>
+    <header>
+        <div class="container">
+            <h1>Bcen Habil Bulawan</h1>
+            <p>Professional [Your Profession/Title]</p>
+        </div>
+    </header>
+
+    <section class="professional-section">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Professional Summary</h3>
+                    <p>Seasoned professional with X+ years of experience in [your field]. Specialized in [key skills]. Committed to delivering excellence in [your industry].</p>
+                </div>
+                <div class="card">
+                    <h3>Education</h3>
+                    <p>• [Degree] in [Field] - [University]<br>
+                       • [Certification] - [Institution]</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <div class="awards-container">
-        <!-- Overall Champion -->
-        <div class="award-category">
-            <div class="category-header">Overall Champions</div>
-            <div class="overall-champions">
-                <div class="winner-card">
-                    <img src="https://surl.lu/lltlil" alt="MCGI Youth Ugong Team" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">OVERALL CHAMPION</div>
-                        <h3>MCGI Youth Ugong</h3>
-                        <p>Demonstrated excellence across multiple categories including Bible Preaching, Drama, and Creative Arts</p>
-                    </div>
+    <section class="container" style="padding: 4rem 0;">
+        <h2>Core Skills</h2>
+        <div class="skills-grid">
+            <span class="skill-item">Leadership</span>
+            <span class="skill-item">Project Management</span>
+            <span class="skill-item">[Skill 3]</span>
+            <span class="skill-item">[Skill 4]</span>
+        </div>
+    </section>
+
+    <section class="professional-section">
+        <div class="container">
+            <h2>Career Highlights</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Recent Achievement</h3>
+                    <p>• Successfully [describe achievement]<br>
+                       • Recognized for [award/recognition]</p>
                 </div>
-                <div class="winner-card">
-                    <img src="https://surl.lu/bfhtgd" alt="Youth News Team" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">YOUTH NEWS CHAMPION</div>
-                        <h3>Youth News Team</h3>
-                        <p>Excellence in faith-based journalism and reporting</p>
-                    </div>
+                <div class="card">
+                    <h3>Current Role</h3>
+                    <p>Currently working as [Position] at [Company], focusing on [key responsibilities].</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Performing Arts -->
-        <div class="award-category">
-            <div class="category-header">Performing Arts</div>
-            <div class="winner-grid">
-                <div class="winner-card">
-                    <img src="https://surl.lu/huilzx" alt="Kristiano Drama" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">DRAMA CHAMPION</div>
-                        <h3>Kristiano Drama Group</h3>
-                        <p>Powerful portrayal of Christian values through theater</p>
-                    </div>
-                </div>
-
-                <div class="winner-card">
-                    <img src="https://tinyurl.com/2s4xejsv" alt="Sis. Realyn Tampoc" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">SOLO SINGING 2ND RUNNER UP</div>
-                        <h3>Sis. Realyn Tampoc</h3>
-                        <p>Moving musical interpretation of faith</p>
-                    </div>
-                </div>
-
-                <div class="winner-card">
-                    <img src="https://tinyurl.com/z7cdeeey" alt="Sis. Eliza Paranas" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">SOLO SINGING 3RD RUNNER UP</div>
-                        <h3>Sis. Eliza Paranas</h3>
-                        <p>Inspirational vocal performance</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Literary Arts -->
-        <div class="award-category">
-            <div class="category-header">Literary Arts</div>
-            <div class="winner-grid">
-                <div class="winner-card">
-                    <img src="https://surl.li/bjpbqu" alt="Sis. Eunice Manaras" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">TULA CHAMPION</div>
-                        <h3>Sis. Eunice Manaras</h3>
-                        <p>Poetic mastery expressing spiritual devotion</p>
-                    </div>
-                </div>
-
-                <div class="winner-card">
-                    <img src="https://tinyurl.com/3uypparm" alt="Bro. Ruben Carlo Juan" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">TULA 5TH RUNNER UP</div>
-                        <h3>Bro. Ruben Carlo Juan</h3>
-                        <p>Creative poetic interpretation</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Visual Arts -->
-        <div class="award-category">
-            <div class="category-header">Visual Arts</div>
-            <div class="winner-grid">
-                <div class="winner-card">
-                    <img src="https://surl.lu/ikosio" alt="Mural Making" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">MURAL 2ND RUNNER UP</div>
-                        <h3>Mural Art Team</h3>
-                        <p>Collaborative biblical storytelling through art</p>
-                    </div>
-                </div>
-
-                <div class="winner-card">
-                    <img src="https://tinyurl.com/wrpvac2e" alt="Bro. Renz Gallinera" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">DIGITAL POSTER 3RD RUNNER UP</div>
-                        <h3>Bro. Renz Gallinera</h3>
-                        <p>Innovative digital design</p>
-                    </div>
-                </div>
-
-                <div class="winner-card">
-                    <img src="https://tinyurl.com/3wr7tv9y" alt="Sis. Mary Jane Francisco" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">TRADITIONAL POSTER 3RD RUNNER UP</div>
-                        <h3>Sis. Mary Jane Francisco</h3>
-                        <p>Handcrafted artistic excellence</p>
-                    </div>
-                </div>
-
-                <div class="winner-card">
-                    <img src="https://tinyurl.com/2rvbaddx" alt="Bro. Carl Nathaniel Azulis" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">TRADITIONAL POSTER 4TH RUNNER UP</div>
-                        <h3>Bro. Carl Nathaniel Azulis</h3>
-                        <p>Traditional art with modern message</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bible Preaching -->
-        <div class="award-category">
-            <div class="category-header">Bible Exposition</div>
-            <div class="winner-grid">
-                <div class="winner-card">
-                    <img src="INSERT_YOUR_IMAGE_URL_HERE" alt="Bible Preaching" class="winner-image">
-                    <div class="winner-info">
-                        <div class="rank-badge">BIBLE PREACHING 1ST RUNNER UP</div>
-                        <h3>[Your Name]</h3>
-                        <p>Compelling exposition of biblical truths</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="social-links">
+        <a href="https://facebook.com/Official.bulawanbcenhabil" target="_blank" aria-label="Facebook">
+            <i class="fab fa-facebook"></i>
+        </a>
+        <!-- Add more social links as needed -->
     </div>
 
-    <footer>
-        <p>"To God Be All The Glory Always!"</p>
-        <p>Connect with MCGI Youth: [Social Media Links] | Contact: info@mcgi.org</p>
-        <p>© 2025 MCGI Youth Ugong. All rights reserved.</p>
-    </footer>
+    <section class="container" style="padding-bottom: 4rem;">
+        <h2>Contact Me</h2>
+        <form class="contact-form">
+            <input type="text" placeholder="Name" required>
+            <input type="email" placeholder="Email" required>
+            <textarea rows="5" placeholder="Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
 </body>
 </html>
