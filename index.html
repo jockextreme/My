@@ -6,192 +6,295 @@
     <title>MCGI Youth Ugong - Bible Festival 2025 Champions</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #e67e22;
+            --primary-blue: #2c3e50;
+            --accent-orange: #e67e22;
             --text-dark: #2c3e50;
             --text-light: #ecf0f1;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            color: var(--text-dark);
             background: #f8f9fa;
         }
 
-        .hero-section {
+        .hero-banner {
             background: linear-gradient(rgba(44,62,80,0.9), rgba(44,62,80,0.9)),
                         url('https://tinyurl.com/3wr7tv9y');
             background-size: cover;
             padding: 4rem 2rem;
             text-align: center;
             color: var(--text-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .awards-container {
+        .hero-title {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .bible-verse {
+            font-size: 1.2rem;
+            font-style: italic;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: 3rem auto;
+            padding: 0 20px;
         }
 
-        .award-category {
+        .category-section {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
             margin: 2rem 0;
-            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
         }
 
         .category-header {
-            background: var(--primary-color);
+            background: var(--primary-blue);
             color: white;
-            padding: 1rem;
-            font-size: 1.25rem;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            border-radius: 15px 15px 0 0;
         }
 
-        .winner-grid {
+        .winners-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem;
+            gap: 2rem;
+            padding: 2rem;
         }
 
         .winner-card {
-            text-align: center;
-            border: 1px solid #eee;
-            border-radius: 8px;
+            background: #fff;
+            border-radius: 10px;
             overflow: hidden;
             transition: transform 0.3s ease;
+            border: 1px solid #eee;
         }
 
         .winner-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .winner-image {
             width: 100%;
-            height: 200px;
+            height: 250px;
             object-fit: cover;
-            border-bottom: 3px solid var(--accent-color);
+            border-bottom: 3px solid var(--accent-orange);
         }
 
-        .winner-info {
-            padding: 1rem;
+        .winner-details {
+            padding: 1.5rem;
+            text-align: center;
         }
 
         .rank-badge {
-            background: var(--accent-color);
+            background: var(--accent-orange);
             color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
             display: inline-block;
-            margin: 0.5rem 0;
+            margin-bottom: 1rem;
             font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .winner-name {
+            color: var(--primary-blue);
+            margin: 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .category-name {
+            color: #666;
+            font-size: 0.95rem;
         }
 
         footer {
-            background: var(--primary-color);
+            background: var(--primary-blue);
             color: white;
             text-align: center;
             padding: 2rem;
-            margin-top: 3rem;
+            margin-top: 4rem;
+        }
+
+        .glory-text {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         @media (max-width: 768px) {
-            .winner-grid {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .winners-grid {
                 grid-template-columns: 1fr;
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <section class="hero-section">
-        <h1>MCGI Youth Ugong Bible Festival 2025 Champions</h1>
+    <header class="hero-banner">
+        <h1 class="hero-title">MCGI Youth Ugong 2025 Champions</h1>
         <p class="bible-verse">"A new commandment I give unto you, That ye love one another; as I have loved you..." John 13:34 (KJV)</p>
-    </section>
+    </header>
 
-    <div class="awards-container">
-        <!-- Overall Champion -->
-        <div class="award-category">
+    <main class="main-container">
+        <!-- Overall Champion Section -->
+        <section class="category-section">
             <div class="category-header">Overall Champion</div>
-            <div class="winner-grid">
+            <div class="winners-grid">
                 <div class="winner-card">
-                    <img src="https://surl.lu/lltlil" alt="MCGI Youth Ugong Team" class="winner-image">
-                    <div class="winner-info">
+                    <img src="https://surl.lu/lltlil" alt="MCGI Youth Ugong" class="winner-image">
+                    <div class="winner-details">
                         <div class="rank-badge">OVERALL CHAMPION</div>
-                        <h3>MCGI Youth Ugong</h3>
-                        <p>Demonstrated excellence across multiple categories including Bible Preaching, Drama, and Creative Arts</p>
+                        <h3 class="winner-name">MCGI Youth Ugong</h3>
+                        <p class="category-name">Valenzuela Youth Bible Festival 2025</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Category Champions -->
-        <div class="award-category">
+        <section class="category-section">
             <div class="category-header">Category Champions</div>
-            <div class="winner-grid">
+            <div class="winners-grid">
+                <!-- Youth News -->
                 <div class="winner-card">
                     <img src="https://surl.lu/bfhtgd" alt="Youth News" class="winner-image">
-                    <div class="winner-info">
+                    <div class="winner-details">
                         <div class="rank-badge">CHAMPION</div>
-                        <h3>Youth News Team</h3>
-                        <p>Outstanding reporting on faith-based community initiatives</p>
+                        <h3 class="winner-name">Youth News Team</h3>
+                        <p class="category-name">Best News Reporting</p>
                     </div>
                 </div>
 
+                <!-- Kristiano Drama -->
                 <div class="winner-card">
                     <img src="https://surl.lu/huilzx" alt="Kristiano Drama" class="winner-image">
-                    <div class="winner-info">
+                    <div class="winner-details">
                         <div class="rank-badge">CHAMPION</div>
-                        <h3>Kristiano Drama Group</h3>
-                        <p>Powerful portrayal of biblical principles in modern context</p>
+                        <h3 class="winner-name">Kristiano Drama Group</h3>
+                        <p class="category-name">Best Theatrical Performance</p>
                     </div>
                 </div>
 
+                <!-- Tula Champion -->
                 <div class="winner-card">
                     <img src="https://surl.li/bjpbqu" alt="Sis. Eunice Manaras" class="winner-image">
-                    <div class="winner-info">
+                    <div class="winner-details">
                         <div class="rank-badge">CHAMPION</div>
-                        <h3>Sis. Eunice Manaras</h3>
-                        <p>Tula (Poetry) Category - "Soul-stirring verses on Christian devotion"</p>
+                        <h3 class="winner-name">Sis. Eunice Manaras</h3>
+                        <p class="category-name">Tula (Poetry Recitation)</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Runners-Up Section -->
-        <div class="award-category">
-            <div class="category-header">Category Achievers</div>
-            <div class="winner-grid">
+        <section class="category-section">
+            <div class="category-header">Award Winners</div>
+            <div class="winners-grid">
                 <!-- Bible Preaching -->
                 <div class="winner-card">
                     <img src="your-image-url" alt="Bible Preaching" class="winner-image">
-                    <div class="winner-info">
+                    <div class="winner-details">
                         <div class="rank-badge">1ST RUNNER UP</div>
-                        <h3>Bible Preaching English</h3>
-                        <p>Bro. Paul Villasencio - Compelling exposition of biblical truths</p>
+                        <h3 class="winner-name">[Your Name]</h3>
+                        <p class="category-name">Bible Preaching (English)</p>
                     </div>
                 </div>
 
                 <!-- Mural Making -->
                 <div class="winner-card">
                     <img src="https://surl.lu/ikosio" alt="Mural Making" class="winner-image">
-                    <div class="winner-info">
+                    <div class="winner-details">
                         <div class="rank-badge">2ND RUNNER UP</div>
-                        <h3>Mural Making Team</h3>
-                        <p>Visual narrative of faith journey through collaborative art</p>
+                        <h3 class="winner-name">Mural Art Team</h3>
+                        <p class="category-name">Collaborative Mural Painting</p>
                     </div>
                 </div>
 
-                <!-- Additional winners can be added following the same pattern -->
+                <!-- Solo Singing 2nd Runner Up -->
+                <div class="winner-card">
+                    <img src="https://tinyurl.com/2s4xejsv" alt="Sis. Realyn Tampoc" class="winner-image">
+                    <div class="winner-details">
+                        <div class="rank-badge">2ND RUNNER UP</div>
+                        <h3 class="winner-name">Sis. Realyn Tampoc</h3>
+                        <p class="category-name">Solo Singing Competition</p>
+                    </div>
+                </div>
+
+                <!-- Solo Singing 3rd Runner Up -->
+                <div class="winner-card">
+                    <img src="https://tinyurl.com/z7cdeeey" alt="Sis. Eliza Paranas" class="winner-image">
+                    <div class="winner-details">
+                        <div class="rank-badge">3RD RUNNER UP</div>
+                        <h3 class="winner-name">Sis. Eliza Paranas</h3>
+                        <p class="category-name">Solo Singing Competition</p>
+                    </div>
+                </div>
+
+                <!-- Digital Poster Making -->
+                <div class="winner-card">
+                    <img src="https://tinyurl.com/wrpvac2e" alt="Bro. Renz Gallinera" class="winner-image">
+                    <div class="winner-details">
+                        <div class="rank-badge">3RD RUNNER UP</div>
+                        <h3 class="winner-name">Bro. Renz Gallinera</h3>
+                        <p class="category-name">Digital Poster Making</p>
+                    </div>
+                </div>
+
+                <!-- Traditional Poster Making -->
+                <div class="winner-card">
+                    <img src="https://tinyurl.com/3wr7tv9y" alt="Sis. Mary Jane Francisco" class="winner-image">
+                    <div class="winner-details">
+                        <div class="rank-badge">3RD RUNNER UP</div>
+                        <h3 class="winner-name">Sis. Mary Jane Francisco</h3>
+                        <p class="category-name">Traditional Poster Making</p>
+                    </div>
+                </div>
+
+                <div class="winner-card">
+                    <img src="https://tinyurl.com/2rvbaddx" alt="Bro. Carl Nathaniel Azulis" class="winner-image">
+                    <div class="winner-details">
+                        <div class="rank-badge">4TH RUNNER UP</div>
+                        <h3 class="winner-name">Bro. Carl Nathaniel Azulis</h3>
+                        <p class="category-name">Traditional Poster Making</p>
+                    </div>
+                </div>
+
+                <div class="winner-card">
+                    <img src="https://tinyurl.com/3uypparm" alt="Bro. Ruben Carlo Juan" class="winner-image">
+                    <div class="winner-details">
+                        <div class="rank-badge">5TH RUNNER UP</div>
+                        <h3 class="winner-name">Bro. Ruben Carlo Juan</h3>
+                        <p class="category-name">Tula (Poetry Recitation)</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <footer>
-        <p>"To God Be All The Glory Always!"</p>
-        <p>Connect with MCGI Youth: [Social Media Links] | Contact: info@mcgi.org</p>
-        <p>© 2025 MCGI Youth Ugong. All rights reserved.</p>
+        <p class="glory-text">TO GOD BE ALL THE GLORY ALWAYS!</p>
+        <p>MCGI Youth Ugong Valenzuela Chapter<br>
+        Connect with us: [Social Media Icons] | Email: youth@mcgiugong.ph</p>
+        <p style="margin-top: 1rem;">© 2025 MCGI Youth Bible Festival. All rights reserved.</p>
     </footer>
 </body>
 </html>
