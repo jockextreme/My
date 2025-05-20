@@ -169,8 +169,8 @@
             border-radius: 8px;
             background: rgba(255, 0, 0, 0.1);
             margin: 1rem 0;
+        }
 
-            /* Add these new styles */
         .password-note {
             margin-top: 1rem;
             padding: 1rem;
@@ -386,4 +386,22 @@
             alert('Password copied to clipboard');
         }
 
-        
+        function showResult(password) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <strong>Generated Password:</strong><br>
+                <span style="font-size: 1.5rem">${password}</span>
+                <div class="qr-container" id="qrcode"></div>
+                <div class="strength-meter">
+                    <div class="strength-fill"></div>
+                </div>
+                <button onclick="copyPassword()">Copy Password</button>
+            `;
+        }
+
+        // Initialize
+        initHexConverter();
+    </script>
+</body>
+</html
