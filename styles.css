@@ -46,6 +46,13 @@ body {
     align-items: center;
 }
 
+.main-title {
+    font-size: 1.5rem;
+    background: linear-gradient(45deg, var(--accent), #57cbff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .video-archive {
     max-width: 1200px;
     margin: 2rem auto;
@@ -227,6 +234,23 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
+.watch-history {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--secondary-dark);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    max-width: 300px;
+}
+
+.history-item {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(100,255,218,0.1);
+    border-radius: 4px;
+}
+
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
@@ -237,4 +261,4 @@ body {
     .video-player {
         height: 50vh;
     }
-  }
+}
