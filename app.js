@@ -15,10 +15,8 @@ class AcademicArchive {
 
     static init() {
         this.initStorage();
-        this.loadPreferences();
         this.loadContent();
         this.initModal();
-        this.renderHistory();
     }
 
     static initStorage() {
@@ -47,20 +45,30 @@ class AcademicArchive {
         }
     }
 
+    static getVideoData(videoKey) {
+        const storage = this.getStorage();
+        return storage.videos[videoKey] || {
+            likes: 0,
+            comments: [],
+            views: 0,
+            lastViewed: null,
+            bookmarked: false
+        };
+    }
+
+    static updateVideoData(videoKey, updateFn) {
+        const storage = this.getStorage();
+        storage.videos[videoKey] = updateFn(this.getVideoData(videoKey));
+        this.updateStorage(storage);
+    }
+
     static renderVideos(videos) {
         const container = document.getElementById('videoContainer');
         const storage = this.getStorage();
         
-        container.className = `video-${storage.preferences.layoutMode}`;
         container.innerHTML = videos.map(video => {
             const videoKey = btoa(video.mp4url);
-            const videoData = storage.videos[videoKey] || { 
-                likes: 0, 
-                comments: [],
-                views: 0,
-                lastViewed: null,
-                bookmarked: false
-            };
+            const videoData = this.getVideoData(videoKey);
             
             return `
                 <article class="video-card">
@@ -76,22 +84,7 @@ class AcademicArchive {
                         <div class="play-overlay"><i class="fas fa-play"></i></div>
                     </div>
                     <div class="video-info">
-                        <div class="video-header">
-                            <h3 class="video-title">${video.title}</h3>
-                            <button class="bookmark-btn ${videoData.bookmarked ? 'bookmarked' : ''}" 
-                                    onclick="AcademicArchive.toggleBookmark('${videoKey}')">
-                                <i class="fas fa-bookmark"></i>
-                            </button>
-                        </div>
-                        <div class="video-meta">
-                            <span class="view-count">
-                                <i class="fas fa-eye"></i> ${videoData.views} views
-                            </span>
-                            ${videoData.lastViewed ? `
-                            <span class="last-viewed">
-                                Last viewed: ${new Date(videoData.lastViewed).toLocaleDateString()}
-                            </span>` : ''}
-                        </div>
+                        <h3 class="video-title">${video.title}</h3>
                         <div class="video-actions">
                             <button class="like-btn ${videoData.likes > 0 ? 'liked' : ''}" 
                                     onclick="AcademicArchive.toggleLike('${videoKey}')">
@@ -134,10 +127,10 @@ class AcademicArchive {
     }
 
     static toggleLike(videoKey) {
-        const storage = this.getStorage();
-        storage.videos[videoKey] = storage.videos[videoKey] || { likes: 0 };
-        storage.videos[videoKey].likes = storage.videos[videoKey].likes ? 0 : 1;
-        this.updateStorage(storage);
+        this.updateVideoData(videoKey, data => ({
+            ...data,
+            likes: data.likes ? 0 : 1
+        }));
         this.renderVideos(this.currentVideos);
     }
 
@@ -146,33 +139,27 @@ class AcademicArchive {
         const text = input.value.trim();
         if (!text) return false;
 
-        const storage = this.getStorage();
-        storage.videos[videoKey] = storage.videos[videoKey] || { comments: [] };
-        storage.videos[videoKey].comments.push({
-            id: Date.now(),
-            text: text,
-            timestamp: new Date().toISOString()
-        });
-        this.updateStorage(storage);
+        this.updateVideoData(videoKey, data => ({
+            ...data,
+            comments: [
+                ...data.comments,
+                {
+                    id: Date.now(),
+                    text: text,
+                    timestamp: new Date().toISOString()
+                }
+            ]
+        }));
         input.value = '';
         this.renderVideos(this.currentVideos);
         return false;
     }
 
     static deleteComment(videoKey, commentId) {
-        const storage = this.getStorage();
-        if (storage.videos[videoKey]) {
-            storage.videos[videoKey].comments = storage.videos[videoKey].comments.filter(c => c.id !== commentId);
-            this.updateStorage(storage);
-            this.renderVideos(this.currentVideos);
-        }
-    }
-
-    static toggleBookmark(videoKey) {
-        const storage = this.getStorage();
-        storage.videos[videoKey] = storage.videos[videoKey] || { bookmarked: false };
-        storage.videos[videoKey].bookmarked = !storage.videos[videoKey].bookmarked;
-        this.updateStorage(storage);
+        this.updateVideoData(videoKey, data => ({
+            ...data,
+            comments: data.comments.filter(c => c.id !== commentId)
+        }));
         this.renderVideos(this.currentVideos);
     }
 
@@ -189,13 +176,17 @@ class AcademicArchive {
 
     static trackView(videoKey) {
         const storage = this.getStorage();
-        storage.videos[videoKey] = storage.videos[videoKey] || { views: 0 };
-        storage.videos[videoKey].views++;
-        storage.videos[videoKey].lastViewed = new Date().toISOString();
+        const videoData = this.getVideoData(videoKey);
         
+        this.updateVideoData(videoKey, data => ({
+            ...data,
+            views: data.views + 1,
+            lastViewed: new Date().toISOString()
+        }));
+
         storage.history = storage.history
             .filter(h => h.videoKey !== videoKey)
-            .slice(0, 4);
+            .slice(0, 5);
         storage.history.unshift({
             videoKey,
             title: this.currentVideos.find(v => btoa(v.mp4url) === videoKey).title,
@@ -203,21 +194,6 @@ class AcademicArchive {
         });
         
         this.updateStorage(storage);
-        this.renderHistory();
-    }
-
-    static renderHistory() {
-        const history = this.getStorage().history;
-        const container = document.getElementById('watchHistory');
-        container.innerHTML = `
-            <h3>Recent Views (${history.length})</h3>
-            ${history.map(item => `
-                <div class="history-item">
-                    ${item.title}<br>
-                    <small>${new Date(item.timestamp).toLocaleString()}</small>
-                </div>
-            `).join('')}
-        `;
     }
 
     static closeModal() {
@@ -239,21 +215,6 @@ class AcademicArchive {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this.closeModal();
         });
-    }
-
-    static toggleLayout() {
-        const storage = this.getStorage();
-        storage.preferences.layoutMode = storage.preferences.layoutMode === 'grid' ? 'list' : 'grid';
-        this.updateStorage(storage);
-        this.renderVideos(this.currentVideos);
-    }
-
-    static loadPreferences() {
-        const storage = this.getStorage();
-        if (!storage.preferences) {
-            storage.preferences = this.config.defaultStorage.preferences;
-            this.updateStorage(storage);
-        }
     }
 
     static showError(message) {
