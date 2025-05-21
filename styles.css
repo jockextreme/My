@@ -224,33 +224,6 @@ body {
     color: var(--accent);
 }
 
-.user-preferences {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--secondary-dark);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.watch-history {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--secondary-dark);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    max-width: 300px;
-}
-
-.history-item {
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    background: rgba(100,255,218,0.1);
-    border-radius: 4px;
-}
-
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
