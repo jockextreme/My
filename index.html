@@ -3,180 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Video Platform</title>
+    <title>Next-Gen Video Platform</title>
     <style>
         :root {
-            --primary: #FF4D4D;
+            --primary: #FF6B6B;
             --secondary: #2C3E50;
             --accent: #4ECDC4;
-            --background: #0A0A0F;
+            --background: #0F0F12;
             --text: #FFFFFF;
             --glass: rgba(255, 255, 255, 0.05);
-            --success: #2ECC71;
         }
 
-        /* Advanced Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem;
+            background: var(--secondary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Video Card */
         .video-card {
-            /* ... previous styles ... */
-            perspective: 1000px;
+            background: var(--glass);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(0);
+            cursor: pointer;
+            position: relative;
         }
 
-        .video-card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .video-card:hover .video-card-inner {
-            transform: rotateY(10deg) rotateX(-5deg);
+        /* Thumbnail */
+        .thumbnail {
+            height: 200px;
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+            position: relative;
         }
 
-        /* Advanced Video Controls */
-        .custom-controls {
+        .play-icon {
             position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            padding: 1rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             opacity: 0;
+            width: 48px;
+            height: 48px;
+            fill: white;
             transition: opacity 0.3s;
         }
 
-        .video-modal:hover .custom-controls {
+        .video-card:hover .play-icon {
             opacity: 1;
         }
 
-        /* 3D Effects */
-        .parallax-container {
-            transform-style: preserve-3d;
+        /* Video Info */
+        .video-info {
+            padding: 1.5rem;
         }
 
-        .parallax-layer {
-            position: absolute;
-            transform: translateZ(var(--parallax-depth));
+        .video-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        /* Dynamic Background */
-        .dynamic-bg {
+        .meta-data {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Video Player Modal */
+        .video-modal {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            z-index: 2000;
+        }
+
+        .video-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1200px;
+            background: var(--background);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #main-video {
             width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at var(--x) var(--y), 
-                        var(--primary) 0%, 
-                        var(--background) 70%);
+            height: 70vh;
+            border-radius: 16px 16px 0 0;
+        }
+
+        /* Custom Controls */
+        .custom-controls {
+            padding: 1rem;
+            background: var(--secondary);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Theme Switcher */
+        .theme-btn {
+            background: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 24px;
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="dynamic-bg"></div>
-    
-    <!-- Advanced Video Player -->
+    <header class="header">
+        <h1>🎥 VideoHub</h1>
+        <button class="theme-btn" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    </header>
+
+    <div class="video-grid" id="video-container"></div>
+    <div class="loading" id="loading"></div>
+
+    <!-- Video Player -->
     <div class="video-modal" id="video-modal">
         <div class="modal-content">
             <video id="main-video" controls></video>
             <div class="custom-controls">
+                <button class="control-btn" onclick="togglePlay()">⏯️</button>
                 <input type="range" class="timeline" min="0" max="100" value="0">
-                <div class="control-bar">
-                    <button class="pip-btn">🎦</button>
-                    <input type="range" class="volume" min="0" max="1" step="0.1">
-                    <button class="speed-btn">1x</button>
-                    <button class="theater-btn">🎭</button>
-                    <button class="subtitle-btn">📜</button>
-                </div>
+                <button class="control-btn" onclick="togglePip()">🎦 PiP</button>
+                <select class="control-btn" onchange="changeSpeed(this.value)">
+                    <option value="0.5">0.5x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+                <button class="control-btn" onclick="closeVideo()">✖ Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Advanced Mouse Interaction
-        document.addEventListener('mousemove', (e) => {
-            document.documentElement.style.setProperty('--x', `${e.clientX}px`);
-            document.documentElement.style.setProperty('--y', `${e.clientY}px`);
+        let currentPage = 1;
+        let isLoading = false;
+        const videoElement = document.getElementById('main-video');
+        let currentTheme = 'dark';
+
+        // Theme Management
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        }
+
+        // Video Controls
+        function togglePlay() {
+            videoElement.paused ? videoElement.play() : videoElement.pause();
+        }
+
+        function togglePip() {
+            if (document.pictureInPictureElement) {
+                document.exitPictureInPicture();
+            } else if (document.pictureInPictureEnabled) {
+                videoElement.requestPictureInPicture();
+            }
+        }
+
+        function changeSpeed(speed) {
+            videoElement.playbackRate = parseFloat(speed);
+        }
+
+        // Video Player Management
+        function openVideo(url) {
+            videoElement.src = url;
+            document.getElementById('video-modal').classList.add('active');
+            videoElement.play();
+        }
+
+        function closeVideo() {
+            videoElement.pause();
+            videoElement.removeAttribute('src');
+            document.getElementById('video-modal').classList.remove('active');
+        }
+
+        // Infinite Scroll
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !isLoading) {
+                loadMoreVideos();
+            }
+        }, { threshold: 0.5 });
+
+        async function loadMoreVideos() {
+            isLoading = true;
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const response = await fetch(
+                    `https://kaiz-apis.gleeze.com/api/youjizz?limit=3&page=${currentPage}&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876`
+                );
+                const data = await response.json();
+                
+                data.videos.forEach(video => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="thumbnail">
+                            <svg class="play-icon" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">${video.title || 'Untitled Video'}</h3>
+                            <div class="meta-data">
+                                <span>👁 ${video.views?.toLocaleString() || '0'}</span>
+                                <span>★ ${video.rating || 'N/A'}</span>
+                                <span>⏱ ${video.duration || '--:--'}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => video.videoUrl && openVideo(video.videoUrl));
+                    document.getElementById('video-container').appendChild(card);
+                });
+
+                currentPage++;
+            } catch (error) {
+                console.error('Error loading videos:', error);
+            } finally {
+                isLoading = false;
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Initial Load
+        loadMoreVideos();
+        observer.observe(document.getElementById('loading'));
+
+        // Close video on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeVideo();
         });
-
-        // Theater Mode
-        function toggleTheaterMode() {
-            document.body.classList.toggle('theater-mode');
-        }
-
-        // Playback Speed Control
-        const speedBtn = document.querySelector('.speed-btn');
-        const speeds = [0.5, 1, 1.5, 2];
-        let speedIndex = 1;
-        
-        speedBtn.addEventListener('click', () => {
-            speedIndex = (speedIndex + 1) % speeds.length;
-            videoElement.playbackRate = speeds[speedIndex];
-            speedBtn.textContent = `${speeds[speedIndex]}x`;
-        });
-
-        // Advanced Analytics
-        const videoMetrics = {
-            startTracking() {
-                setInterval(() => {
-                    if (!videoElement.paused) {
-                        const data = {
-                            timestamp: Date.now(),
-                            currentTime: videoElement.currentTime,
-                            playbackRate: videoElement.playbackRate
-                        };
-                        // Send to analytics endpoint
-                    }
-                }, 5000);
-            }
-        };
-
-        // AI Recommendations
-        class VideoRecommender {
-            constructor() {
-                this.model = ml5.neuralNetwork({ task: 'recommendation' });
-                // Load pre-trained model
-            }
-
-            predictNextVideo(currentVideo) {
-                // Implementation using machine learning
-            }
-        }
-
-        // WebGL Effects
-        function initWebGL() {
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl');
-            // Implement shaders and effects
-        }
 
         // Voice Commands
         const commands = {
             'play': () => videoElement.play(),
             'pause': () => videoElement.pause(),
-            'skip (\\d+)': (seconds) => videoElement.currentTime += parseInt(seconds)
+            'skip (\\d+)': (sec) => videoElement.currentTime += parseInt(sec)
         };
 
-        const recognition = new webkitSpeechRecognition();
-        recognition.onresult = (event) => {
-            const command = event.results[0][0].transcript.toLowerCase();
-            Object.entries(commands).forEach(([pattern, action]) => {
-                const match = command.match(new RegExp(pattern));
-                if (match) action(...match.slice(1));
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true;
+        recognition.onresult = (e) => {
+            const transcript = e.results[e.results.length-1][0].transcript.toLowerCase();
+            Object.entries(commands).forEach(([pattern, fn]) => {
+                const match = transcript.match(new RegExp(pattern));
+                if (match) fn(...match.slice(1));
             });
         };
-
-        // Initialize all components
-        function init() {
-            initWebGL();
-            videoMetrics.startTracking();
-            new VideoRecommender();
-            recognition.start();
-        }
-
-        window.onload = init;
+        recognition.start();
     </script>
 </body>
 </html>
