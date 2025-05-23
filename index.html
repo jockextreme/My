@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeoStream - Modern Video Platform</title>
+    <title>Video Streaming Platform</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -11,33 +11,27 @@
         :root {
             --primary: #FF6B6B;
             --secondary: #2C3E50;
-            --accent: #4ECDC4;
             --background: #0F0F12;
             --surface: #1A1A1F;
             --text: #FFFFFF;
-            --text-secondary: rgba(255,255,255,0.7);
-            --gradient: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
             background: var(--background);
             color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            min-height: 100vh;
         }
 
-        .app-container {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            min-height: 100vh;
-            gap: 2rem;
+        .main-content {
             padding: 2rem;
         }
 
@@ -45,223 +39,65 @@
             display: grid;
             gap: 2rem;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            align-content: start;
         }
 
         .video-card {
             background: var(--surface);
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            transition: transform 0.2s;
         }
 
         .video-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
         }
 
         .thumbnail {
             aspect-ratio: 16/9;
-            background: rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
+            background: #000;
         }
 
-        .thumbnail img {
+        .thumbnail video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .video-card:hover .thumbnail img {
-            transform: scale(1.05);
-        }
-
-        .video-info {
-            padding: 1.5rem;
-        }
-
-        .video-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
         }
 
         .sidebar {
             background: var(--surface);
-            border-radius: 16px;
             padding: 2rem;
-            height: calc(100vh - 4rem);
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            position: sticky;
-            top: 2rem;
-        }
-
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
         }
 
         .chat-messages {
-            flex: 1;
+            height: 300px;
             overflow-y: auto;
             margin-bottom: 1rem;
-            padding-right: 0.5rem;
         }
 
         .chat-message {
             background: rgba(255,255,255,0.05);
             padding: 1rem;
-            border-radius: 12px;
             margin-bottom: 1rem;
-            animation: messageIn 0.3s ease;
-        }
-
-        @keyframes messageIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .chat-input {
-            background: rgba(255,255,255,0.05);
-            border: none;
-            padding: 1rem;
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 1rem;
-            transition: background 0.3s;
-        }
-
-        .recommendations {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 1.5rem;
-        }
-
-        .recommended-video {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .recommended-thumbnail {
-            width: 80px;
-            height: 45px;
             border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--surface);
-            border-radius: 12px;
-            margin-bottom: 2rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-
-        .video-player-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .video-player-overlay.active {
-            display: flex;
-            animation: overlayIn 0.3s ease;
-        }
-
-        .video-player {
-            width: 90%;
-            max-width: 1200px;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <main>
-            <div class="user-profile">
-                <div class="user-avatar">G</div>
-                <div>
-                    <h3>Guest User</h3>
-                    <p>Watched <span id="watched-count">0</span> videos</p>
-                </div>
-            </div>
+    <main class="main-content">
+        <div class="video-grid" id="video-container"></div>
+    </main>
 
-            <div class="video-grid" id="video-container">
-                <div class="loading"></div>
-            </div>
-        </main>
-
-        <aside class="sidebar">
-            <div class="chat-container">
-                <h2>Global Chat</h2>
-                <div class="chat-messages" id="chat-messages"></div>
-                <input type="text" class="chat-input" id="chat-input" placeholder="Type a message...">
-            </div>
-
-            <div class="recommendations">
-                <h3>Recommended for You</h3>
-                <div id="recommendations-container"></div>
-            </div>
-        </aside>
-    </div>
-
-    <div class="video-player-overlay" id="video-player">
-        <video controls class="video-player" id="main-video"></video>
-    </div>
+    <aside class="sidebar">
+        <div class="chat">
+            <h2>Global Chat</h2>
+            <div class="chat-messages" id="chat-messages"></div>
+            <input type="text" id="chat-input" placeholder="Type message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </aside>
 
     <script>
         const firebaseConfig = {
@@ -274,150 +110,92 @@
             measurementId: "G-64BFKTK0BG"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
         let currentUser = null;
-        let isLoading = false;
 
-        // Initialize Application
+        // Initialize App
         async function initApp() {
             try {
-                // Initialize anonymous user
+                // Anonymous login
                 const { user } = await auth.signInAnonymously();
                 currentUser = user;
                 
-                // Create/update user profile
-                const userRef = db.collection('users').doc(currentUser.uid);
-                await userRef.set({
-                    watchedVideos: [],
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-
-                // Listen for user updates
-                userRef.onSnapshot(doc => {
-                    const data = doc.data();
-                    document.getElementById('watched-count').textContent = data.watchedVideos.length;
+                // Load videos
+                const videosSnapshot = await db.collection('videos').get();
+                videosSnapshot.forEach(doc => {
+                    const video = doc.data();
+                    createVideoCard(video);
                 });
 
-                // Load initial content
-                loadVideos();
-                setupChat();
-                updateRecommendations();
-
-            } catch (error) {
-                console.error('Initialization error:', error);
-                alert('Failed to initialize application. Please refresh the page.');
-            }
-        }
-
-        // Video System
-        async function loadVideos() {
-            try {
-                isLoading = true;
-                const snapshot = await db.collection('videos')
-                    .orderBy('views', 'desc')
-                    .limit(10)
-                    .get();
-
-                const container = document.getElementById('video-container');
-                container.innerHTML = '';
-
-                snapshot.forEach(doc => {
-                    const video = { id: doc.id, ...doc.data() };
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.innerHTML = `
-                        <div class="thumbnail">
-                            ${video.thumbnail ? 
-                                `<img src="${video.thumbnail}" alt="${video.title}">` : 
-                                '<div class="thumbnail-placeholder"></div>'
-                            }
-                        </div>
-                        <div class="video-info">
-                            <h3 class="video-title">${video.title}</h3>
-                            <div class="video-meta">
-                                <span>${video.views || 0} views</span>
-                                <span>${video.duration || '--:--'}</span>
-                            </div>
-                        </div>
-                    `;
-                    card.onclick = () => playVideo(video);
-                    container.appendChild(card);
-                });
-
-            } catch (error) {
-                console.error('Error loading videos:', error);
-                alert('Failed to load videos. Please try again later.');
-            } finally {
-                isLoading = false;
-            }
-        }
-
-        async function playVideo(video) {
-            try {
-                // Update video views
-                await db.collection('videos').doc(video.id).update({
-                    views: firebase.firestore.FieldValue.increment(1)
-                });
-
-                // Update user history
-                const userRef = db.collection('users').doc(currentUser.uid);
-                await userRef.update({
-                    watchedVideos: firebase.firestore.FieldValue.arrayUnion({
-                        id: video.id,
-                        category: video.category,
-                        watchedAt: new Date()
-                    })
-                });
-
-                // Show video player
-                const player = document.getElementById('video-player');
-                const videoElement = document.getElementById('main-video');
-                videoElement.src = video.url;
-                player.classList.add('active');
+                // Setup chat
+                db.collection('chat')
+                    .orderBy('timestamp', 'asc')
+                    .onSnapshot(snapshot => {
+                        const container = document.getElementById('chat-messages');
+                        container.innerHTML = '';
+                        snapshot.forEach(doc => {
+                            const msg = doc.data();
+                            const div = document.createElement('div');
+                            div.className = 'chat-message';
+                            div.textContent = msg.text;
+                            container.appendChild(div);
+                        });
+                    });
                 
-                // Handle video playback
-                videoElement.play().catch(error => {
-                    console.error('Video playback error:', error);
-                    alert('Error starting video playback. Please check your connection.');
-                });
-
             } catch (error) {
-                console.error('Error playing video:', error);
-                alert('Failed to play video. Please try again.');
+                console.error('Init error:', error);
+                alert('Error initializing app. Check console.');
             }
+        }
+
+        // Video Card Creator
+        function createVideoCard(video) {
+            const container = document.getElementById('video-container');
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.innerHTML = `
+                <div class="thumbnail">
+                    <video preload="metadata">
+                        <source src="${video.url}" type="video/mp4">
+                    </video>
+                </div>
+                <h3>${video.title}</h3>
+                <p>${video.views} views</p>
+            `;
+            
+            card.querySelector('video').addEventListener('click', (e) => {
+                e.preventDefault();
+                openVideoPlayer(video.url);
+            });
+            
+            container.appendChild(card);
+        }
+
+        // Video Player
+        function openVideoPlayer(url) {
+            const player = document.createElement('div');
+            player.style.position = 'fixed';
+            player.style.inset = '0';
+            player.style.background = 'rgba(0,0,0,0.9)';
+            player.style.display = 'grid';
+            player.style.placeItems = 'center';
+            
+            player.innerHTML = `
+                <video controls autoplay style="width: 80%; height: 80%">
+                    <source src="${url}" type="video/mp4">
+                </video>
+                <button style="position: absolute; top: 20px; right: 20px" 
+                        onclick="this.parentElement.remove()">Close</button>
+            `;
+            
+            document.body.appendChild(player);
         }
 
         // Chat System
-        function setupChat() {
-            // Send message on Enter key
-            document.getElementById('chat-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-
-            // Real-time chat listener
-            db.collection('chat')
-                .orderBy('timestamp', 'asc')
-                .onSnapshot(snapshot => {
-                    const container = document.getElementById('chat-messages');
-                    container.innerHTML = '';
-                    
-                    snapshot.forEach(doc => {
-                        const msg = doc.data();
-                        const div = document.createElement('div');
-                        div.className = 'chat-message';
-                        div.textContent = msg.text;
-                        container.appendChild(div);
-                    });
-                    
-                    container.scrollTop = container.scrollHeight;
-                }, error => {
-                    console.error('Chat error:', error);
-                });
-        }
-
         function sendMessage() {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
@@ -427,72 +205,12 @@
                     text: message,
                     userId: currentUser.uid,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(error => {
-                    console.error('Error sending message:', error);
-                    alert('Failed to send message. Please try again.');
                 });
                 input.value = '';
             }
         }
 
-        // Recommendations
-        async function updateRecommendations() {
-            try {
-                const userRef = db.collection('users').doc(currentUser.uid);
-                const doc = await userRef.get();
-                
-                if (!doc.exists) return;
-                
-                const watched = doc.data().watchedVideos;
-                const categories = [...new Set(watched.map(v => v.category))];
-                
-                if (categories.length === 0) return;
-
-                const recommendations = await db.collection('videos')
-                    .where('category', 'in', categories)
-                    .limit(5)
-                    .get();
-
-                displayRecommendations(recommendations.docs);
-                
-            } catch (error) {
-                console.error('Recommendation error:', error);
-            }
-        }
-
-        function displayRecommendations(docs) {
-            const container = document.getElementById('recommendations-container');
-            container.innerHTML = '';
-            
-            docs.forEach(doc => {
-                const video = doc.data();
-                const div = document.createElement('div');
-                div.className = 'recommended-video';
-                div.innerHTML = `
-                    <div class="recommended-thumbnail">
-                        <img src="${video.thumbnail}" alt="${video.title}">
-                    </div>
-                    <div>
-                        <h4>${video.title}</h4>
-                        <p>${video.views} views</p>
-                    </div>
-                `;
-                div.onclick = () => playVideo({ id: doc.id, ...video });
-                container.appendChild(div);
-            });
-        }
-
-        // Close video player
-        document.getElementById('video-player').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                const videoElement = document.getElementById('main-video');
-                videoElement.pause();
-                videoElement.removeAttribute('src');
-                e.currentTarget.classList.remove('active');
-            }
-        });
-
-        // Initialize the application
+        // Start the app
         initApp();
     </script>
 </body>
