@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Video Platform</title>
+    <title>NeoStream - Modern Video Platform</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -11,9 +11,12 @@
         :root {
             --primary: #FF6B6B;
             --secondary: #2C3E50;
+            --accent: #4ECDC4;
             --background: #0F0F12;
+            --surface: #1A1A1F;
             --text: #FFFFFF;
-            --glass: rgba(255, 255, 255, 0.05);
+            --text-secondary: rgba(255,255,255,0.7);
+            --gradient: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
         }
 
         * {
@@ -21,115 +24,227 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            transition: all 0.3s ease;
         }
 
         body {
             background: var(--background);
             color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .app-container {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 340px;
             min-height: 100vh;
-        }
-
-        .main-content {
+            gap: 2rem;
             padding: 2rem;
-        }
-
-        .sidebar {
-            background: var(--secondary);
-            padding: 1rem;
-            height: 100vh;
-            overflow-y: auto;
-            position: sticky;
-            top: 0;
         }
 
         .video-grid {
             display: grid;
             gap: 2rem;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            align-content: start;
         }
 
         .video-card {
-            background: var(--glass);
-            border-radius: 12px;
+            background: var(--surface);
+            border-radius: 16px;
             overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            transition: transform 0.2s;
+            position: relative;
         }
 
         .video-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
         }
 
         .thumbnail {
-            height: 200px;
-            background: #1a1a1a;
+            aspect-ratio: 16/9;
+            background: rgba(0,0,0,0.2);
             position: relative;
+            overflow: hidden;
         }
 
         .thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover .thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .sidebar {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            height: calc(100vh - 4rem);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .chat-messages {
-            height: 400px;
+            flex: 1;
             overflow-y: auto;
             margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-right: 0.5rem;
         }
 
         .chat-message {
-            margin: 0.5rem 0;
-            padding: 0.5rem;
             background: rgba(255,255,255,0.05);
-            border-radius: 6px;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            animation: messageIn 0.3s ease;
         }
 
-        #chat-input {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-input {
             background: rgba(255,255,255,0.05);
             border: none;
-            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .recommendations {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
         }
 
         .recommended-video {
-            margin: 0.5rem 0;
-            padding: 0.5rem;
-            background: rgba(255,255,255,0.05);
-            border-radius: 6px;
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .recommended-thumbnail {
+            width: 80px;
+            height: 45px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .video-player-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .video-player-overlay.active {
+            display: flex;
+            animation: overlayIn 0.3s ease;
+        }
+
+        .video-player {
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 16px;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <div class="video-grid" id="video-container"></div>
-        <div class="loading" id="loading">Loading...</div>
+    <div class="app-container">
+        <main>
+            <div class="user-profile">
+                <div class="user-avatar">G</div>
+                <div>
+                    <h3>Guest User</h3>
+                    <p>Watched <span id="watched-count">0</span> videos</p>
+                </div>
+            </div>
+
+            <div class="video-grid" id="video-container"></div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="chat-container">
+                <h2>Global Chat</h2>
+                <div class="chat-messages" id="chat-messages"></div>
+                <input type="text" class="chat-input" id="chat-input" placeholder="Type a message...">
+            </div>
+
+            <div class="recommendations">
+                <h3>Recommended for You</h3>
+                <div id="recommendations-container"></div>
+            </div>
+        </aside>
     </div>
 
-    <div class="sidebar">
-        <div class="user-profile">
-            <h3>👤 Guest</h3>
-            <p>Watched: <span id="watched-count">0</span> videos</p>
-        </div>
-
-        <div class="chat-section">
-            <h3>🌍 Global Chat</h3>
-            <div class="chat-messages" id="chat-messages"></div>
-            <input type="text" id="chat-input" placeholder="Type a message...">
-            <button onclick="sendMessage()" style="width: 100%; padding: 0.5rem;">Send</button>
-        </div>
-
-        <div class="recommendations">
-            <h3>🎯 Recommended For You</h3>
-            <div id="recommendations-container"></div>
-        </div>
+    <div class="video-player-overlay" id="video-player">
+        <video controls class="video-player"></video>
     </div>
 
     <script>
@@ -143,29 +258,25 @@
             measurementId: "G-64BFKTK0BG"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // User State
         let currentUser = null;
         let currentPage = 1;
         let isLoading = false;
 
-        // Initialize Anonymous User
+        // User Management
         async function initUser() {
             await auth.signInAnonymously();
             currentUser = auth.currentUser;
             
-            // Initialize user profile
             const userRef = db.collection('users').doc(currentUser.uid);
             await userRef.set({
                 watchedVideos: [],
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
 
-            // Listen for profile updates
             userRef.onSnapshot(doc => {
                 const data = doc.data();
                 document.getElementById('watched-count').textContent = data.watchedVideos.length;
@@ -186,7 +297,6 @@
             }
         }
 
-        // Real-time Chat Listener
         db.collection('chat')
             .orderBy('timestamp', 'asc')
             .onSnapshot(snapshot => {
@@ -202,7 +312,65 @@
                 container.scrollTop = container.scrollHeight;
             });
 
-        // Recommendation System
+        // Video System
+        async function loadVideos() {
+            isLoading = true;
+            const snapshot = await db.collection('videos')
+                .orderBy('views', 'desc')
+                .limit(10)
+                .get();
+
+            const container = document.getElementById('video-container');
+            container.innerHTML = '';
+            
+            snapshot.forEach(doc => {
+                const video = { id: doc.id, ...doc.data() };
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-meta">
+                            <span>${video.views} views</span>
+                            <span>${video.duration || '--:--'}</span>
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => playVideo(video);
+                container.appendChild(card);
+            });
+            isLoading = false;
+        }
+
+        // Video Player
+        async function playVideo(video) {
+            // Update video views
+            await db.collection('videos').doc(video.id).update({
+                views: firebase.firestore.FieldValue.increment(1)
+            });
+
+            // Update user history
+            const userRef = db.collection('users').doc(currentUser.uid);
+            await userRef.update({
+                watchedVideos: firebase.firestore.FieldValue.arrayUnion({
+                    id: video.id,
+                    category: video.category,
+                    watchedAt: new Date()
+                })
+            });
+
+            // Show video player
+            const player = document.getElementById('video-player');
+            const videoElement = player.querySelector('video');
+            videoElement.src = video.url;
+            player.classList.add('active');
+            videoElement.play();
+        }
+
+        // Recommendations
         async function updateRecommendations() {
             const userRef = db.collection('users').doc(currentUser.uid);
             const doc = await userRef.get();
@@ -224,73 +392,36 @@
                 const div = document.createElement('div');
                 div.className = 'recommended-video';
                 div.innerHTML = `
-                    <h4>${video.title}</h4>
-                    <p>${video.views} views</p>
+                    <div class="recommended-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                    </div>
+                    <div>
+                        <h4>${video.title}</h4>
+                        <p>${video.views} views</p>
+                    </div>
                 `;
                 div.onclick = () => playVideo(video);
                 container.appendChild(div);
             });
         }
 
-        // Video System
-        async function loadVideos() {
-            isLoading = true;
-            const snapshot = await db.collection('videos')
-                .orderBy('views', 'desc')
-                .limit(10)
-                .get();
-
-            const container = document.getElementById('video-container');
-            snapshot.forEach(doc => {
-                const video = doc.data();
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <div class="thumbnail">
-                        <img src="${video.thumbnail}" alt="${video.title}">
-                    </div>
-                    <div class="video-info">
-                        <h3>${video.title}</h3>
-                        <p>${video.views} views</p>
-                    </div>
-                `;
-                card.onclick = () => playVideo(video);
-                container.appendChild(card);
-            });
-            isLoading = false;
-        }
-
-        async function playVideo(video) {
-            // Update view count
-            await db.collection('videos').doc(video.id).update({
-                views: firebase.firestore.FieldValue.increment(1)
-            });
-
-            // Update user history
-            const userRef = db.collection('users').doc(currentUser.uid);
-            await userRef.update({
-                watchedVideos: firebase.firestore.FieldValue.arrayUnion({
-                    id: video.id,
-                    category: video.category,
-                    watchedAt: new Date()
-                })
-            });
-
-            // Play video
-            const player = document.createElement('video');
-            player.src = video.url;
-            player.controls = true;
-            player.style.width = '100%';
-            document.body.appendChild(player);
-            player.requestFullscreen();
-        }
-
-        // Initialize App
+        // Initialize
         async function initApp() {
             await initUser();
             loadVideos();
             updateRecommendations();
+            setInterval(updateRecommendations, 60000);
         }
+
+        // Close video player
+        document.getElementById('video-player').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                e.currentTarget.classList.remove('active');
+                const video = e.currentTarget.querySelector('video');
+                video.pause();
+                video.removeAttribute('src');
+            }
+        });
 
         initApp();
     </script>
