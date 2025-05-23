@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamHub - Modern Video Platform</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <title>Video Streaming Platform</title>
     <style>
         :root {
             --primary: #FF6B6B;
@@ -38,68 +36,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .auth-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .auth-modal.active {
-            display: flex;
-        }
-
-        .auth-content {
-            background: var(--background);
-            padding: 2rem;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .auth-providers {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .auth-btn {
-            padding: 1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-size: 1rem;
-            background: var(--glass);
-            color: var(--text);
-        }
-
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid var(--primary);
         }
 
         .video-grid {
@@ -117,7 +54,6 @@
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
-            position: relative;
         }
 
         .video-card:hover {
@@ -169,31 +105,8 @@
     </style>
 </head>
 <body>
-    <div class="auth-modal" id="auth-modal">
-        <div class="auth-content">
-            <h2>Welcome to StreamHub</h2>
-            <div class="auth-providers">
-                <button class="auth-btn" id="google-signin">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="#4285f4" d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064c1.835 0 3.456.989 4.567 2.548l3.087-3.078C17.455 2.182 14.965 1 12.545 1 7.021 1 2.545 5.477 2.545 11s4.476 10 10 10c5.523 0 10-4.477 10-10 0-.671-.068-1.325-.182-1.977H12.545z"/>
-                    </svg>
-                    Continue with Google
-                </button>
-                <button class="auth-btn" id="facebook-signin">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="#3b5998" d="M12 2C6.477 2 2 6.477 2 12c0 5.013 3.693 9.153 8.505 9.876V14.65H8.031v-2.629h2.474v-1.749c0-2.896 1.411-4.167 3.818-4.167 1.153 0 2.115.085 2.461.123v2.753h-1.97c-1.226 0-1.654 1.163-1.654 2.473v1.724h3.593l-.487 2.629h-3.106v7.247C18.235 21.236 22 17.062 22 12c0-5.523-4.477-10-10-10z"/>
-                    </svg>
-                    Continue with Facebook
-                </button>
-            </div>
-        </div>
-    </div>
-
     <header class="header">
-        <h1>🎬 StreamHub</h1>
-        <div class="profile-section">
-            <img src="" alt="Profile" class="profile-pic" id="profile-pic">
-        </div>
+        <h1>🎬 Video Stream</h1>
     </header>
 
     <div class="video-grid" id="video-container"></div>
@@ -206,53 +119,9 @@
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDPCaU0Z0AGjDEnscTEB5fnqdlfVcsMNaI",
-            authDomain: "my-project-60d48.firebaseapp.com",
-            projectId: "my-project-60d48",
-            storageBucket: "my-project-60d48.firebasestorage.app",
-            messagingSenderId: "726548635832",
-            appId: "1:726548635832:web:52c8d826dc60e63289944d",
-            measurementId: "G-64BFKTK0BG"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
         let currentPage = 1;
         let isLoading = false;
         const videoElement = document.getElementById('main-video');
-
-        auth.onAuthStateChanged(user => {
-            const authModal = document.getElementById('auth-modal');
-            const profilePic = document.getElementById('profile-pic');
-            
-            if (user) {
-                authModal.classList.remove('active');
-                profilePic.src = user.photoURL;
-                profilePic.style.display = 'block';
-                loadContent();
-            } else {
-                authModal.classList.add('active');
-                profilePic.style.display = 'none';
-            }
-        });
-
-        document.getElementById('google-signin').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(error => {
-                console.error('Google sign-in error:', error);
-                alert(`Error: ${error.message}`);
-            });
-        });
-
-        document.getElementById('facebook-signin').addEventListener('click', () => {
-            const provider = new firebase.auth.FacebookAuthProvider();
-            auth.signInWithPopup(provider).catch(error => {
-                console.error('Facebook sign-in error:', error);
-                alert(`Error: ${error.message}`);
-            });
-        });
 
         async function loadContent() {
             isLoading = true;
@@ -260,7 +129,7 @@
             
             try {
                 const response = await fetch(
-                    `https://kaiz-apis.gleeze.com/api/youjizz?limit=10&page=${currentPage}&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876`
+                    `https://kaiz-apis.gleeze.com/api/youjizz?limit=3&page=${currentPage}&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876`
                 );
                 const data = await response.json();
                 
@@ -330,8 +199,8 @@
             }
         });
 
-        // Initial content load after authentication
-        auth.onAuthStateChanged(user => user && loadContent());
+        // Initial load
+        loadContent();
     </script>
 </body>
 </html>
