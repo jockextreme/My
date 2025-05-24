@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamVibe - Modern Video Platform</title>
+    <title>StreamVibe - Premium Video Platform</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4738498964190742" crossorigin="anonymous"></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -29,7 +30,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Modern Navigation */
         .navbar {
             padding: 1.5rem 2rem;
             background: var(--surface);
@@ -38,6 +38,9 @@
             top: 0;
             z-index: 100;
             backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
@@ -49,14 +52,27 @@
             letter-spacing: -0.5px;
         }
 
-        /* Enhanced Container */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 2rem;
+        .ad-container {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 1rem;
+            padding: 1rem;
+            min-height: 100px;
         }
 
-        /* Modern Video Grid */
+        .sticky-ad {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+        }
+
         .video-grid {
             display: grid;
             gap: 2rem;
@@ -64,7 +80,6 @@
             padding: 2rem 0;
         }
 
-        /* Improved Video Card */
         .video-card {
             background: var(--surface);
             border-radius: 1rem;
@@ -80,7 +95,6 @@
             box-shadow: 0 12px 32px rgba(0,0,0,0.3);
         }
 
-        /* Thumbnail Enhancements */
         .thumbnail {
             position: relative;
             aspect-ratio: 16/9;
@@ -112,30 +126,6 @@
             transform: scale(1.05);
         }
 
-        /* Play Button Overlay */
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 56px;
-            height: 56px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-
-        .video-card:hover .play-button {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
-        /* Video Info Styling */
         .video-info {
             padding: 1.25rem;
         }
@@ -159,15 +149,6 @@
             color: var(--text-secondary);
         }
 
-        /* Rating Stars */
-        .rating {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            color: #f59e0b;
-        }
-
-        /* Duration Badge */
         .duration {
             position: absolute;
             bottom: 1rem;
@@ -180,7 +161,6 @@
             z-index: 2;
         }
 
-        /* Loading Animation */
         .loading {
             display: flex;
             justify-content: center;
@@ -201,19 +181,15 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
                 padding: 1rem;
             }
-
-            .container {
-                padding: 1rem;
-            }
-
             .video-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+            }
+            .sticky-ad {
+                display: none;
             }
         }
     </style>
@@ -221,17 +197,45 @@
 <body>
     <nav class="navbar">
         <div class="logo">StreamVibe</div>
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-4738498964190742"
+                data-ad-slot="1234567890"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+        </div>
     </nav>
 
     <div class="container">
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-format="fluid"
+                data-ad-layout-key="-gw-3+1f-3d+2z"
+                data-ad-client="ca-pub-4738498964190742"
+                data-ad-slot="0987654321"></ins>
+        </div>
+
         <div class="video-grid" id="videoContainer"></div>
         <div class="loading" id="loading" hidden></div>
+
+        <div class="sticky-ad">
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-4738498964190742"
+                data-ad-slot="1357924680"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+        </div>
     </div>
 
     <script>
         const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=20&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876';
         let currentPage = 1;
         let isLoading = false;
+
+        (adsbygoogle = window.adsbygoogle || []).push({});
 
         async function fetchVideos() {
             try {
@@ -259,7 +263,6 @@
                 <div class="thumbnail">
                     <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
                     <div class="duration">${video.duration}</div>
-                    <div class="play-button">▶</div>
                 </div>
                 <div class="video-info">
                     <h3 class="video-title">${video.title}</h3>
@@ -277,8 +280,22 @@
         async function loadVideos() {
             const videos = await fetchVideos();
             const container = document.getElementById('videoContainer');
-            videos.forEach(video => {
+            videos.forEach((video, index) => {
                 container.appendChild(createVideoCard(video));
+                if ((index + 1) % 5 === 0) {
+                    const adContainer = document.createElement('div');
+                    adContainer.className = 'ad-container';
+                    adContainer.innerHTML = `
+                        <ins class="adsbygoogle"
+                            style="display:block"
+                            data-ad-client="ca-pub-4738498964190742"
+                            data-ad-slot="1122334455"
+                            data-ad-format="auto"
+                            data-full-width-responsive="true"></ins>
+                    `;
+                    container.appendChild(adContainer);
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                }
             });
         }
 
