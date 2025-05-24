@@ -8,10 +8,12 @@
         :root {
             --primary: #FF6B6B;
             --secondary: #2C3E50;
+            --accent: #4ECDC4;
             --background: #0F0F12;
             --surface: #1A1A1F;
             --text: #FFFFFF;
             --text-secondary: rgba(255,255,255,0.7);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
         }
 
         * {
@@ -24,84 +26,114 @@
         body {
             background: var(--background);
             color: var(--text);
-            line-height: 1.5;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Navigation */
         .navbar {
             background: var(--surface);
-            padding: 1rem;
+            padding: 1.5rem 2rem;
             position: sticky;
             top: 0;
             z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         .logo {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.8rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            transition: transform 0.3s ease;
         }
 
-        .search-container {
-            flex: 1;
-            max-width: 500px;
-            margin: 0 1rem;
+        .logo:hover {
+            transform: scale(1.05);
         }
 
-        .search-input {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255,255,255,0.1);
-            color: var(--text);
-        }
-
-        /* Main Content */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        /* Categories */
-        .categories {
-            display: flex;
-            gap: 0.5rem;
-            padding: 1rem 0;
-            overflow-x: auto;
-        }
-
-        .category-chip {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+        /* About Section */
+        .about-section {
+            padding: 3rem 2rem;
+            margin: 2rem 0;
             background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .about-heading {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .about-heading h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 8px 24px rgba(255,107,107,0.1);
+        }
+
+        .about-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .about-card p {
             color: var(--text-secondary);
-            white-space: nowrap;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         /* Video Grid */
         .video-grid {
             display: grid;
-            gap: 1rem;
+            gap: 1.5rem;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            padding: 1rem 0;
+            padding: 2rem 0;
         }
 
         .video-card {
             background: var(--surface);
             border-radius: 16px;
             overflow: hidden;
-            transition: transform 0.2s ease;
+            transition: transform 0.3s ease;
             position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .video-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(255,107,107,0.1);
         }
 
         .thumbnail {
@@ -110,20 +142,38 @@
             overflow: hidden;
         }
 
+        .thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+        }
+
         .thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .thumbnail img {
+            transform: scale(1.05);
         }
 
         .video-info {
-            padding: 1rem;
+            padding: 1.25rem;
+            position: relative;
+            z-index: 2;
         }
 
         .video-title {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -134,7 +184,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
         }
 
@@ -147,12 +197,13 @@
 
         .duration {
             position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
+            bottom: 1rem;
+            right: 1rem;
             background: rgba(0,0,0,0.8);
-            padding: 0.25rem 0.75rem;
-            border-radius: 16px;
-            font-size: 0.875rem;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 2;
         }
 
         /* Video Player Modal */
@@ -161,7 +212,7 @@
             inset: 0;
             background: rgba(0,0,0,0.95);
             display: none;
-            z-index: 1000;
+            z-index: 2000;
             touch-action: manipulation;
         }
 
@@ -172,68 +223,120 @@
         }
 
         .modal-content {
-            width: 100%;
-            height: 100%;
-            max-width: 1200px;
+            width: 90%;
+            height: 80%;
+            max-width: 1400px;
             position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--surface);
         }
 
         #videoPlayer {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
         }
 
         .close-btn {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
+            top: 2rem;
+            right: 2rem;
             background: var(--primary);
             border: none;
             color: white;
-            padding: 0.75rem;
+            padding: 1rem;
             border-radius: 50%;
             cursor: pointer;
-            z-index: 1001;
+            z-index: 2001;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.1);
         }
 
         /* Load More Button */
         .load-more {
             display: block;
-            width: 100%;
-            padding: 1rem;
-            margin: 2rem 0;
-            background: var(--surface);
+            width: 200px;
+            padding: 1rem 2rem;
+            margin: 3rem auto;
+            background: var(--gradient);
             border: none;
-            border-radius: 8px;
-            color: var(--text);
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .load-more::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255,255,255,0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .load-more:hover::before {
+            left: 100%;
         }
 
         .load-more:hover {
-            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,107,107,0.3);
         }
 
-        /* Mobile Optimization */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem 0.5rem;
+                padding: 1rem;
             }
 
-            .search-container {
-                width: 100%;
-                margin: 0;
+            .about-section {
+                padding: 2rem 1rem;
+                margin: 1rem;
+            }
+
+            .about-heading h2 {
+                font-size: 1.8rem;
+            }
+
+            .about-links {
+                grid-template-columns: 1fr;
             }
 
             .video-grid {
                 grid-template-columns: 1fr;
+                padding: 1rem;
             }
 
-            .video-title {
-                font-size: 0.9375rem;
+            .modal-content {
+                width: 95%;
+                height: 60%;
+            }
+
+            .close-btn {
+                top: 1rem;
+                right: 1rem;
+                width: 40px;
+                height: 40px;
             }
         }
     </style>
@@ -241,18 +344,36 @@
 <body>
     <nav class="navbar">
         <div class="logo">StreamVibe</div>
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Search videos...">
-        </div>
     </nav>
 
     <div class="container">
-        <div class="categories">
-            <button class="category-chip">All</button>
-            <button class="category-chip">Popular</button>
-            <button class="category-chip">Trending</button>
-            <button class="category-chip">New</button>
-        </div>
+        <section class="about-section">
+            <div class="about-heading">
+                <h2>About StreamVibe</h2>
+            </div>
+            <div class="about-links">
+                <div class="about-card">
+                    <h3>📝 Description</h3>
+                    <p>Discover our platform's vision and what makes us unique in the streaming world.</p>
+                </div>
+                <div class="about-card">
+                    <h3>❓ FAQ</h3>
+                    <p>Find answers to common questions about our services and features.</p>
+                </div>
+                <div class="about-card">
+                    <h3>📜 Guidelines</h3>
+                    <p>Learn about our community standards and content policies.</p>
+                </div>
+                <div class="about-card">
+                    <h3>⚖️ Rules</h3>
+                    <p>Review our platform rules and terms of service.</p>
+                </div>
+                <div class="about-card">
+                    <h3>➕ Other</h3>
+                    <p>Explore additional resources and partnership opportunities.</p>
+                </div>
+            </div>
+        </section>
 
         <div class="video-grid" id="videoContainer"></div>
         <button class="load-more" onclick="loadMoreVideos()">Load More</button>
@@ -266,7 +387,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=20&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876';
+        const API_URL = 'https://your-secure-proxy.com/api/videos';
         let currentPage = 1;
         let isLoading = false;
 
@@ -275,7 +396,7 @@
                 if(isLoading) return;
                 isLoading = true;
                 
-                const response = await fetch(`${API_URL}&page=${currentPage}`);
+                const response = await fetch(`${API_URL}?page=${currentPage}`);
                 const data = await response.json();
                 return data.videos;
                 
