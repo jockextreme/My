@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamFlow - Modern Video Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>StreamVibe - Video Platform</title>
     <style>
         :root {
             --primary: #FF6B6B;
@@ -27,12 +27,64 @@
             line-height: 1.5;
         }
 
+        /* Navigation */
+        .navbar {
+            background: var(--surface);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+        }
+
+        /* Main Content */
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 1rem;
         }
 
+        /* Categories */
+        .categories {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .category-chip {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Video Grid */
         .video-grid {
             display: grid;
             gap: 1rem;
@@ -62,7 +114,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
 
         .video-info {
@@ -104,6 +155,7 @@
             font-size: 0.875rem;
         }
 
+        /* Video Player Modal */
         .video-modal {
             position: fixed;
             inset: 0;
@@ -145,38 +197,65 @@
             z-index: 1001;
         }
 
-        .loading {
-            display: none;
-            padding: 2rem;
-            text-align: center;
-            color: var(--primary);
+        /* Load More Button */
+        .load-more {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin: 2rem 0;
+            background: var(--surface);
+            border: none;
+            border-radius: 8px;
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.2s ease;
         }
 
+        .load-more:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Mobile Optimization */
         @media (max-width: 768px) {
-            .container {
-                padding: 0.5rem;
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 0.5rem;
+            }
+
+            .search-container {
+                width: 100%;
+                margin: 0;
             }
 
             .video-grid {
                 grid-template-columns: 1fr;
-                gap: 0.75rem;
             }
 
             .video-title {
                 font-size: 0.9375rem;
             }
-
-            .video-meta {
-                font-size: 0.8125rem;
-            }
         }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="logo">StreamVibe</div>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search videos...">
+        </div>
+    </nav>
+
     <div class="container">
-        <h1 style="padding: 1rem 0.5rem; font-size: 1.5rem">Featured Videos</h1>
+        <div class="categories">
+            <button class="category-chip">All</button>
+            <button class="category-chip">Popular</button>
+            <button class="category-chip">Trending</button>
+            <button class="category-chip">New</button>
+        </div>
+
         <div class="video-grid" id="videoContainer"></div>
-        <div class="loading" id="loading">Loading...</div>
+        <button class="load-more" onclick="loadMoreVideos()">Load More</button>
     </div>
 
     <div class="video-modal" id="videoModal">
@@ -187,41 +266,28 @@
     </div>
 
     <script>
-        const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=10&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876';
+        const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=20&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876';
         let currentPage = 1;
         let isLoading = false;
 
-        async function loadVideos() {
+        async function fetchVideos() {
             try {
                 if(isLoading) return;
                 isLoading = true;
-                document.getElementById('loading').style.display = 'block';
                 
                 const response = await fetch(`${API_URL}&page=${currentPage}`);
                 const data = await response.json();
-                
-                if(data.videos.length === 0) {
-                    document.getElementById('loading').textContent = 'No more videos';
-                    return;
-                }
-
-                data.videos.forEach(video => {
-                    createVideoCard(video);
-                });
-
-                currentPage++;
+                return data.videos;
                 
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('loading').textContent = 'Error loading content';
+                return [];
             } finally {
                 isLoading = false;
-                document.getElementById('loading').style.display = 'none';
             }
         }
 
         function createVideoCard(video) {
-            const container = document.getElementById('videoContainer');
             const card = document.createElement('div');
             card.className = 'video-card';
             card.innerHTML = `
@@ -241,7 +307,18 @@
             `;
             
             card.addEventListener('click', () => playVideo(video.videoUrl));
-            container.appendChild(card);
+            return card;
+        }
+
+        async function loadMoreVideos() {
+            const videos = await fetchVideos();
+            if(videos.length === 0) return;
+            
+            const container = document.getElementById('videoContainer');
+            videos.forEach(video => {
+                container.appendChild(createVideoCard(video));
+            });
+            currentPage++;
         }
 
         function playVideo(url) {
@@ -250,11 +327,6 @@
             modal.classList.add('active');
             videoPlayer.src = url;
             videoPlayer.play().catch(error => console.error('Video play failed:', error));
-            
-            // Lock screen orientation on mobile
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(() => {});
-            }
         }
 
         function closeVideo() {
@@ -263,29 +335,10 @@
             modal.classList.remove('active');
             videoPlayer.pause();
             videoPlayer.removeAttribute('src');
-            
-            // Unlock screen orientation
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
-            }
         }
 
-        // Infinite scroll with Intersection Observer
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && !isLoading) {
-                loadVideos();
-            }
-        }, { threshold: 1.0 });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const sentinel = document.createElement('div');
-            sentinel.id = 'sentinel';
-            document.body.appendChild(sentinel);
-            observer.observe(sentinel);
-        });
-
         // Initial load
-        loadVideos();
+        loadMoreVideos();
     </script>
 </body>
 </html>
