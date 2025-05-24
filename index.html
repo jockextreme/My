@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interdimensional NoodleVision</title>
+    <title>Quantum Noodle Chaos TV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
         :root {
             --primary: #ff69b4;
@@ -20,6 +22,7 @@
             margin: 0;
             line-height: 1.6;
             overflow-x: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text x="8" y="24" style="font-size:24px">🍜</text></svg>') 16 16, auto;
         }
 
         .navbar {
@@ -27,6 +30,8 @@
             padding: 2rem;
             text-align: center;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1000;
         }
 
         .logo {
@@ -44,40 +49,31 @@
             to { transform: rotate(360deg); }
         }
 
-        .about-section {
-            padding: 2rem;
-            background: repeating-linear-gradient(
-                45deg,
-                #3b2e58,
-                #3b2e58 10px,
-                #2d1e2f 10px,
-                #2d1e2f 20px
-            );
-            margin: 2rem;
-            border: 3px dashed #00ff88;
-            border-radius: 20px;
+        .chaos-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 10000;
+            display: flex;
+            gap: 10px;
         }
 
-        .nonsense-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
+        .chaos-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-family: inherit;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
         }
 
-        .nonsense-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 20px;
-            border: 2px solid var(--primary);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(5px);
-        }
-
-        .nonsense-card:hover {
-            transform: rotate(3deg) scale(1.05);
-            background: rgba(255, 105, 180, 0.2);
-            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3);
+        .chaos-button:hover {
+            transform: scale(1.1) rotate(3deg);
+            filter: hue-rotate(90deg);
         }
 
         .video-grid {
@@ -85,6 +81,8 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
             padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
         .video-card {
@@ -92,8 +90,12 @@
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: grab;
+        }
+
+        .video-card:active {
+            cursor: grabbing;
         }
 
         .video-card:hover {
@@ -111,10 +113,6 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
-        }
-
-        .video-card:hover .thumbnail img {
-            transform: scale(1.1);
         }
 
         .duration {
@@ -149,42 +147,20 @@
             font-size: 0.9rem;
         }
 
-        .load-more {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            border: none;
-            padding: 1.5rem 3rem;
-            font-size: 1.2rem;
-            color: white;
-            border-radius: 50px;
-            margin: 2rem auto;
-            display: block;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
-        }
-
-        .load-more:hover {
-            transform: scale(1.05) rotate(2deg);
-        }
-
-        .modal {
+        .quantum-flare {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,105,180,0.5) 0%, rgba(0,255,136,0) 70%);
+            pointer-events: none;
+            mix-blend-mode: screen;
         }
 
-        .modal video {
-            width: 80%;
-            height: 80%;
-            border-radius: 20px;
-            background: black;
+        .emoji-storm {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 24px;
         }
 
         @media (max-width: 768px) {
@@ -192,65 +168,52 @@
                 font-size: 2rem;
             }
             
-            .nonsense-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .video-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .modal video {
-                width: 95%;
-                height: auto;
             }
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <h1 class="logo">🍜 NoodleVision ∞</h1>
+        <h1 class="logo">🍜 Quantum Noodle TV 🌌</h1>
     </nav>
 
-    <div class="about-section">
-        <div class="nonsense-grid">
-            <div class="nonsense-card">
-                <h3>🌌 Quantum Noodle Theory</h3>
-                <p>Our videos are transmitted through spaghetti wormholes using sauce-based encryption. Each view generates exactly 11.7 gigawatts of noodle power!</p>
-            </div>
-            <div class="nonsense-card">
-                <h3>🍌 Banana FAQs</h3>
-                <p>Q: Can I blend videos into smoothies?<br>
-                   A: Only if you use a quantum blender on Thursdays</p>
-            </div>
-            <div class="nonsense-card">
-                <h3>🧭 Noodle Guidelines</h3>
-                <p>1. All comments must rhyme with "avocado"<br>
-                   2. Worship the Flying Spaghetti Monster daily<br>
-                   3. No left socks allowed during viewing</p>
-            </div>
-            <div class="nonsense-card">
-                <h3>🦄 Legal Nonsense</h3>
-                <p>Our CEO is a sentient meatball. All disputes settled via thumb wrestling matches at dawn.</p>
-            </div>
-        </div>
+    <div class="chaos-controls">
+        <button class="chaos-button" onclick="toggleGravity()">🌍 Toggle Gravity</button>
+        <button class="chaos-button" onclick="summonEmojiStorm()">🌀 Emoji Storm</button>
+        <button class="chaos-button" onclick="activateHyperspeed()">🚀 HYPERSPEED</button>
     </div>
 
     <div class="video-grid" id="videoContainer"></div>
-    
-    <button class="load-more" onclick="loadMoreVideos()">
-        🧪 Synthesize More Noodles 🍝
-    </button>
-
-    <div class="modal" id="videoModal">
-        <video controls id="videoPlayer"></video>
-    </div>
 
     <script>
         const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=20&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876';
         let currentPage = 1;
-        let isCooking = false;
+        let gravityEnabled = false;
+        let hyperspeed = false;
+        const physicsBodies = new Set();
+        const engine = Matter.Engine.create();
 
+        // Initialize physics world
+        Matter.Engine.run(engine);
+        Matter.Composite.add(engine.world, Matter.Bodies.rectangle(
+            window.innerWidth / 2, 
+            window.innerHeight + 100, 
+            window.innerWidth * 2, 
+            200, 
+            { isStatic: true }
+        ));
+
+        // Mouse interaction
+        const mouse = Matter.Mouse.create(document.body);
+        const mouseConstraint = Matter.MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: { stiffness: 0.2 }
+        });
+        Matter.Composite.add(engine.world, mouseConstraint);
+
+        // Chaotic functions
         function quantumTitle(text) {
             return text.split('').map((c, i) => 
                 Math.random() > 0.7 ? c.toUpperCase() : c.toLowerCase()
@@ -258,23 +221,13 @@
         }
 
         async function fetchNoodles() {
-            if(isCooking) {
-                console.log("🚨 Noodle overflow! Wait for the colander!");
-                return [];
-            }
-            isCooking = true;
-            
             try {
                 const response = await fetch(`${API_URL}&page=${currentPage}`);
-                if(!response.ok) throw new Error('Sauce connection failed');
                 const data = await response.json();
                 return data.videos || [];
             } catch (error) {
-                console.error("💥 Quantum pasta collapse:", error);
-                alert("⚠️ The meatball matrix has destabilized!");
+                console.error("Quantum pasta collapse:", error);
                 return [];
-            } finally {
-                isCooking = false;
             }
         }
 
@@ -289,21 +242,32 @@
                 <div class="video-info">
                     <h3 class="video-title">${quantumTitle(video.title)}</h3>
                     <div class="video-meta">
-                        <span>${Math.round(video.views * Math.random()).toLocaleString()} noodle views</span>
+                        <span>${Math.round(video.views * Math.random()).toLocaleString()} views</span>
                         <div class="rating">
                             ${'🍜'.repeat(Math.ceil(video.rating))}
                         </div>
                     </div>
                 </div>
             `;
+
+            // Enable physics
+            const body = Matter.Bodies.rectangle(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight,
+                300,
+                400,
+                { chamfer: { radius: 20 } }
+            );
+            physicsBodies.add(body);
+            Matter.Composite.add(engine.world, body);
             
-            card.onclick = () => {
-                const modal = document.getElementById('videoModal');
-                const player = document.getElementById('videoPlayer');
-                modal.style.display = 'flex';
-                player.src = video.videoUrl;
-                player.play();
-            };
+            card.style.position = 'absolute';
+            Matter.Events.on(engine, 'afterUpdate', () => {
+                card.style.left = `${body.position.x - 150}px`;
+                card.style.top = `${body.position.y - 200}px`;
+                card.style.transform = `rotate(${body.angle}rad)`;
+            });
+
             return card;
         }
 
@@ -316,16 +280,67 @@
             currentPage++;
         }
 
-        // Close modal when clicking outside
-        document.getElementById('videoModal').onclick = (e) => {
-            if(e.target === document.getElementById('videoModal')) {
-                document.getElementById('videoModal').style.display = 'none';
-                document.getElementById('videoPlayer').pause();
-            }
-        };
+        function toggleGravity() {
+            gravityEnabled = !gravityEnabled;
+            physicsBodies.forEach(body => {
+                Matter.Body.setVelocity(body, { 
+                    x: (Math.random() - 0.5) * 10, 
+                    y: (Math.random() - 0.5) * 10 
+                });
+                body.restitution = 0.9;
+            });
+        }
 
-        // Initial noodle synthesis
+        function summonEmojiStorm() {
+            const emojis = ['🍝', '👾', '🎉', '🌈', '🔥', '🌟'];
+            for(let i = 0; i < 50; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-storm';
+                emoji.style.left = `${Math.random() * window.innerWidth}px`;
+                emoji.style.top = `${Math.random() * window.innerHeight}px`;
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                document.body.appendChild(emoji);
+                
+                anime({
+                    targets: emoji,
+                    translateY: [-1000, Math.random() * window.innerHeight + 500],
+                    translateX: [Math.random() * 500 - 250, Math.random() * 500 - 250],
+                    rotate: Math.random() * 720 - 360,
+                    duration: 3000 + Math.random() * 2000,
+                    easing: 'linear',
+                    complete: () => emoji.remove()
+                });
+            }
+        }
+
+        function activateHyperspeed() {
+            hyperspeed = !hyperspeed;
+            document.documentElement.style.filter = hyperspeed ? 'hue-rotate(360deg)' : '';
+            document.documentElement.style.animation = hyperspeed ? 'hyperspeed 1s infinite' : '';
+            
+            anime({
+                targets: '.video-card',
+                translateX: () => anime.random(-100, 100),
+                translateY: () => anime.random(-100, 100),
+                rotate: () => anime.random(-15, 15),
+                duration: 1000,
+                easing: 'easeInOutQuad',
+                loop: hyperspeed
+            });
+        }
+
+        // Initial load
         loadMoreVideos();
+
+        // Add hyperspeed animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes hyperspeed {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
