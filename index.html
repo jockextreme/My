@@ -30,7 +30,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Modern Navigation */
         .navbar {
             padding: 1.5rem 4rem;
             background: rgba(30, 41, 59, 0.8);
@@ -53,7 +52,6 @@
             letter-spacing: -0.05em;
         }
 
-        /* Premium Video Grid */
         .video-grid {
             display: grid;
             gap: 2.5rem;
@@ -63,7 +61,6 @@
             margin: 0 auto;
         }
 
-        /* Professional Video Card */
         .video-card {
             background: var(--surface);
             border-radius: 1.25rem;
@@ -72,6 +69,7 @@
                         box-shadow 0.3s ease;
             position: relative;
             border: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer;
         }
 
         .video-card:hover {
@@ -79,21 +77,11 @@
             box-shadow: 0 16px 48px rgba(0,0,0,0.4);
         }
 
-        /* Enhanced Thumbnail Design */
         .thumbnail {
             position: relative;
             aspect-ratio: 16/9;
             overflow: hidden;
             background: #000;
-        }
-
-        .thumbnail::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9) 100%);
-            z-index: 1;
-            transition: opacity 0.3s ease;
         }
 
         .thumbnail img {
@@ -107,7 +95,6 @@
             transform: scale(1.08);
         }
 
-        /* Video Info Styling */
         .video-info {
             padding: 1.5rem;
             position: relative;
@@ -125,14 +112,6 @@
             line-height: 1.4;
         }
 
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-
         .duration {
             position: absolute;
             bottom: 1.5rem;
@@ -145,7 +124,6 @@
             z-index: 2;
         }
 
-        /* Professional Video Player Modal */
         .video-modal {
             position: fixed;
             top: 0;
@@ -195,7 +173,6 @@
             background: var(--accent);
         }
 
-        /* Loading Animation */
         .loading {
             display: flex;
             justify-content: center;
@@ -216,21 +193,17 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
                 padding: 1.5rem;
             }
-
             .video-grid {
                 padding: 2rem;
                 grid-template-columns: 1fr;
             }
-
             .video-player {
                 width: 95%;
             }
-
             #player {
                 height: 50vh;
             }
@@ -259,7 +232,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=10&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336';
+        const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=20&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336';
         let currentPage = 1;
         let isLoading = false;
 
@@ -270,11 +243,17 @@
                 document.getElementById('loading').hidden = false;
                 
                 const response = await fetch(`${API_URL}&page=${currentPage}`);
-                const data = await response.json();
-                return data.videos || [];
+                if(!response.ok) throw new Error('Network response was not ok');
                 
+                const data = await response.json();
+                console.log('API Response:', data);
+                
+                if(!data || !data.videos) throw new Error('Invalid API response format');
+                return data.videos;
+
             } catch (error) {
                 console.error('Error:', error);
+                alert('Failed to load videos. Please try again later.');
                 return [];
             } finally {
                 isLoading = false;
@@ -285,29 +264,53 @@
         function createVideoCard(video) {
             const card = document.createElement('div');
             card.className = 'video-card';
+            
+            // Handle different thumbnail property names
+            const thumbnail = video.thumb || video.thumbnail || '';
+            const duration = video.duration || '';
+            const views = video.views ? video.views.toLocaleString() + ' views' : '';
+            const videoUrl = video.embed || video.url || video.videoUrl;
+
             card.innerHTML = `
                 <div class="thumbnail">
-                    <img src="${video.thumb}" alt="${video.title}" loading="lazy">
-                    <div class="duration">${video.duration}</div>
+                    ${thumbnail ? `<img src="${thumbnail}" alt="${video.title}" loading="lazy">` : ''}
+                    ${duration ? `<div class="duration">${duration}</div>` : ''}
                 </div>
                 <div class="video-info">
-                    <h3 class="video-title">${video.title}</h3>
-                    <div class="video-meta">
-                        <span>${video.views ? video.views.toLocaleString() + ' views' : ''}</span>
-                    </div>
+                    <h3 class="video-title">${video.title || 'Untitled Video'}</h3>
+                    ${views ? `<div class="video-meta"><span>${views}</span></div>` : ''}
                 </div>
             `;
+
+            if(videoUrl) {
+                card.addEventListener('click', () => playVideo(videoUrl));
+            } else {
+                console.warn('No video URL found for:', video);
+            }
             
-            card.addEventListener('click', () => playVideo(video.embed));
             return card;
         }
 
-        function playVideo(videoUrl) {
+        function playVideo(url) {
             const modal = document.getElementById('videoModal');
             const player = document.getElementById('player');
+            
+            // Reset player
+            player.pause();
+            while(player.firstChild) player.removeChild(player.firstChild);
+            
+            // Create new source element
+            const source = document.createElement('source');
+            source.src = url;
+            source.type = 'video/mp4';
+            
+            player.appendChild(source);
             modal.style.display = 'flex';
-            player.src = videoUrl;
-            player.play();
+            
+            player.play().catch(error => {
+                console.error('Video playback failed:', error);
+                alert('Error playing video. Please try another one.');
+            });
         }
 
         function closeVideo() {
@@ -315,21 +318,25 @@
             const player = document.getElementById('player');
             modal.style.display = 'none';
             player.pause();
-            player.removeAttribute('src');
+            player.currentTime = 0;
         }
 
         async function loadVideos() {
             const videos = await fetchVideos();
             const container = document.getElementById('videoContainer');
+            
             videos.forEach(video => {
-                container.appendChild(createVideoCard(video));
+                const card = createVideoCard(video);
+                container.appendChild(card);
             });
         }
 
+        // Initial load
         window.addEventListener('DOMContentLoaded', () => {
             loadVideos();
         });
 
+        // Infinite scroll
         window.addEventListener('scroll', () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
                 currentPage++;
