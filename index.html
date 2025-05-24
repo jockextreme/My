@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamVibe - Premium Video Platform</title>
+    <title>StreamVibe - NextGen Video Platform</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4738498964190742" crossorigin="anonymous"></script>
     <style>
         :root {
             --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --background: #0f172a;
-            --surface: #1e293b;
-            --text: #f8fafc;
-            --text-secondary: #94a3b8;
-            --gradient: linear-gradient(45deg, #6366f1 0%, #a855f7 100%);
+            --secondary: #10b981;
+            --background: #0a0a0a;
+            --surface: #1a1a1a;
+            --text: #ffffff;
+            --text-secondary: #a3a3a3;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #10b981 100%);
         }
 
         * {
@@ -26,75 +26,60 @@
         body {
             background-color: var(--background);
             color: var(--text);
-            line-height: 1.5;
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Modern Glassmorphism Navigation */
         .navbar {
             padding: 1.5rem 2rem;
-            background: var(--surface);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(16px);
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(12px);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.05em;
         }
 
-        .ad-container {
-            margin: 2rem 0;
-            display: flex;
-            justify-content: center;
-            background: rgba(255,255,255,0.05);
-            border-radius: 1rem;
-            padding: 1rem;
-            min-height: 100px;
-        }
-
-        .sticky-ad {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            background: var(--surface);
-            border-radius: 1rem;
-            padding: 1rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-        }
-
+        /* Enhanced Video Grid */
         .video-grid {
             display: grid;
             gap: 2rem;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            padding: 2rem 0;
+            padding: 4rem 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
+        /* Premium Video Card Design */
         .video-card {
             background: var(--surface);
-            border-radius: 1rem;
+            border-radius: 1.5rem;
             overflow: hidden;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
                         box-shadow 0.3s ease;
             position: relative;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
         }
 
         .video-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
         }
 
+        /* Dynamic Thumbnail Effects */
         .thumbnail {
             position: relative;
             aspect-ratio: 16/9;
@@ -105,33 +90,31 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 50%);
+            background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9) 100%);
             z-index: 1;
-            opacity: 0;
             transition: opacity 0.3s ease;
-        }
-
-        .video-card:hover .thumbnail::before {
-            opacity: 1;
         }
 
         .thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .video-card:hover .thumbnail img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
+        /* Video Info Styling */
         .video-info {
-            padding: 1.25rem;
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
         }
 
         .video-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
             display: -webkit-box;
@@ -145,33 +128,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-secondary);
         }
 
-        .duration {
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            background: rgba(0,0,0,0.8);
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            z-index: 2;
+        /* Modern Ad Containers */
+        .ad-container {
+            margin: 3rem auto;
+            max-width: 1200px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            padding: 1.5rem;
         }
 
+        /* Loading Animation */
         .loading {
             display: flex;
             justify-content: center;
-            padding: 2rem;
+            padding: 4rem;
         }
 
         .loading::after {
             content: "";
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--text);
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--text);
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -181,15 +163,19 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
                 padding: 1rem;
             }
+            
             .video-grid {
+                padding: 2rem 1rem;
                 grid-template-columns: 1fr;
             }
-            .sticky-ad {
-                display: none;
+            
+            .video-title {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -207,34 +193,18 @@
         </div>
     </nav>
 
-    <div class="container">
-        <div class="ad-container">
-            <ins class="adsbygoogle"
-                style="display:block"
-                data-ad-format="fluid"
-                data-ad-layout-key="-gw-3+1f-3d+2z"
-                data-ad-client="ca-pub-4738498964190742"
-                data-ad-slot="0987654321"></ins>
-        </div>
-
+    <main>
         <div class="video-grid" id="videoContainer"></div>
         <div class="loading" id="loading" hidden></div>
-
-        <div class="sticky-ad">
-            <ins class="adsbygoogle"
-                style="display:block"
-                data-ad-client="ca-pub-4738498964190742"
-                data-ad-slot="1357924680"
-                data-ad-format="auto"
-                data-full-width-responsive="true"></ins>
-        </div>
-    </div>
+    </main>
 
     <script>
-        const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=25&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336';
+        // Replace with your new API endpoint
+        const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=30&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336';
         let currentPage = 1;
         let isLoading = false;
 
+        // Initialize AdSense
         (adsbygoogle = window.adsbygoogle || []).push({});
 
         async function fetchVideos() {
@@ -243,7 +213,7 @@
                 isLoading = true;
                 document.getElementById('loading').hidden = false;
                 
-                const response = await fetch(`${API_URL}&page=${currentPage}`);
+                const response = await fetch(`${API_URL}?page=${currentPage}`);
                 const data = await response.json();
                 return data.videos || [];
                 
@@ -262,7 +232,7 @@
             card.innerHTML = `
                 <div class="thumbnail">
                     <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
-                    <div class="duration">${video.duration}</div>
+                    <div class="video-meta duration">${video.duration}</div>
                 </div>
                 <div class="video-info">
                     <h3 class="video-title">${video.title}</h3>
@@ -282,7 +252,9 @@
             const container = document.getElementById('videoContainer');
             videos.forEach((video, index) => {
                 container.appendChild(createVideoCard(video));
-                if ((index + 1) % 5 === 0) {
+                
+                // Insert ad after every 4 videos
+                if ((index + 1) % 4 === 0) {
                     const adContainer = document.createElement('div');
                     adContainer.className = 'ad-container';
                     adContainer.innerHTML = `
@@ -299,10 +271,12 @@
             });
         }
 
+        // Initial load
         window.addEventListener('DOMContentLoaded', () => {
             loadVideos();
         });
 
+        // Infinite scroll
         window.addEventListener('scroll', () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
                 currentPage++;
