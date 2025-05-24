@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Streaming Platform</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <title>Premium Video Collection</title>
     <style>
         :root {
-            --primary: #FF6B6B;
+            --primary: #FF4D4D;
             --secondary: #2C3E50;
+            --accent: #4ECDC4;
             --background: #0F0F12;
-            --surface: #1A1A1F;
             --text: #FFFFFF;
         }
 
@@ -26,27 +23,28 @@
         body {
             background: var(--background);
             color: var(--text);
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            min-height: 100vh;
+            padding: 2rem;
         }
 
-        .main-content {
-            padding: 2rem;
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .video-grid {
             display: grid;
-            gap: 2rem;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .video-card {
-            background: var(--surface);
+            background: var(--secondary);
             border-radius: 12px;
             overflow: hidden;
+            transition: transform 0.3s ease;
             cursor: pointer;
-            transition: transform 0.2s;
+            position: relative;
         }
 
         .video-card:hover {
@@ -54,164 +52,169 @@
         }
 
         .thumbnail {
-            aspect-ratio: 16/9;
-            background: #000;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .thumbnail video {
+        .thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
-        .sidebar {
-            background: var(--surface);
-            padding: 2rem;
-            height: 100vh;
-            overflow-y: auto;
+        .video-card:hover .thumbnail img {
+            transform: scale(1.05);
         }
 
-        .chat-messages {
-            height: 300px;
-            overflow-y: auto;
-            margin-bottom: 1rem;
+        .video-info {
+            padding: 1.5rem;
         }
 
-        .chat-message {
-            background: rgba(255,255,255,0.05);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #FFD700;
+        }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.8);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <main class="main-content">
-        <div class="video-grid" id="video-container"></div>
-    </main>
+    <div class="container">
+        <h1>Premium Videos</h1>
+        <div class="video-grid" id="videoContainer"></div>
+    </div>
 
-    <aside class="sidebar">
-        <div class="chat">
-            <h2>Global Chat</h2>
-            <div class="chat-messages" id="chat-messages"></div>
-            <input type="text" id="chat-input" placeholder="Type message...">
-            <button onclick="sendMessage()">Send</button>
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeVideo()">×</span>
+            <video controls id="videoPlayer" class="video-player"></video>
         </div>
-    </aside>
+    </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDPCaU0Z0AGjDEnscTEB5fnqdlfVcsMNaI",
-            authDomain: "my-project-60d48.firebaseapp.com",
-            projectId: "my-project-60d48",
-            storageBucket: "my-project-60d48.firebasestorage.app",
-            messagingSenderId: "726548635832",
-            appId: "1:726548635832:web:52c8d826dc60e63289944d",
-            measurementId: "G-64BFKTK0BG"
-        };
+        const apiUrl = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=3&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876';
+        const videoContainer = document.getElementById('videoContainer');
+        const videoModal = document.getElementById('videoModal');
+        const videoPlayer = document.getElementById('videoPlayer');
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        let currentUser = null;
-
-        // Initialize App
-        async function initApp() {
+        // Fetch and display videos
+        async function loadVideos() {
             try {
-                // Anonymous login
-                const { user } = await auth.signInAnonymously();
-                currentUser = user;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
                 
-                // Load videos
-                const videosSnapshot = await db.collection('videos').get();
-                videosSnapshot.forEach(doc => {
-                    const video = doc.data();
-                    createVideoCard(video);
+                data.videos.forEach(video => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="thumbnail">
+                            <img src="${video.thumbnail}" alt="${video.title}">
+                            <div class="duration-badge">${video.duration}</div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">${video.title}</h3>
+                            <div class="video-meta">
+                                <span>👁 ${video.views.toLocaleString()}</span>
+                                <div class="rating">
+                                    ${'★'.repeat(Math.round(video.rating))}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', () => playVideo(video.videoUrl));
+                    videoContainer.appendChild(card);
                 });
 
-                // Setup chat
-                db.collection('chat')
-                    .orderBy('timestamp', 'asc')
-                    .onSnapshot(snapshot => {
-                        const container = document.getElementById('chat-messages');
-                        container.innerHTML = '';
-                        snapshot.forEach(doc => {
-                            const msg = doc.data();
-                            const div = document.createElement('div');
-                            div.className = 'chat-message';
-                            div.textContent = msg.text;
-                            container.appendChild(div);
-                        });
-                    });
-                
             } catch (error) {
-                console.error('Init error:', error);
-                alert('Error initializing app. Check console.');
+                console.error('Error loading videos:', error);
+                videoContainer.innerHTML = '<p>Error loading content. Please try again later.</p>';
             }
         }
 
-        // Video Card Creator
-        function createVideoCard(video) {
-            const container = document.getElementById('video-container');
-            const card = document.createElement('div');
-            card.className = 'video-card';
-            card.innerHTML = `
-                <div class="thumbnail">
-                    <video preload="metadata">
-                        <source src="${video.url}" type="video/mp4">
-                    </video>
-                </div>
-                <h3>${video.title}</h3>
-                <p>${video.views} views</p>
-            `;
-            
-            card.querySelector('video').addEventListener('click', (e) => {
-                e.preventDefault();
-                openVideoPlayer(video.url);
-            });
-            
-            container.appendChild(card);
+        function playVideo(url) {
+            videoPlayer.src = url;
+            videoModal.classList.add('active');
+            videoPlayer.play();
         }
 
-        // Video Player
-        function openVideoPlayer(url) {
-            const player = document.createElement('div');
-            player.style.position = 'fixed';
-            player.style.inset = '0';
-            player.style.background = 'rgba(0,0,0,0.9)';
-            player.style.display = 'grid';
-            player.style.placeItems = 'center';
-            
-            player.innerHTML = `
-                <video controls autoplay style="width: 80%; height: 80%">
-                    <source src="${url}" type="video/mp4">
-                </video>
-                <button style="position: absolute; top: 20px; right: 20px" 
-                        onclick="this.parentElement.remove()">Close</button>
-            `;
-            
-            document.body.appendChild(player);
+        function closeVideo() {
+            videoModal.classList.remove('active');
+            videoPlayer.pause();
+            videoPlayer.removeAttribute('src');
         }
 
-        // Chat System
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            
-            if (message && currentUser) {
-                db.collection('chat').add({
-                    text: message,
-                    userId: currentUser.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                input.value = '';
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target === videoModal) {
+                closeVideo();
             }
         }
 
-        // Start the app
-        initApp();
+        // Initial load
+        loadVideos();
     </script>
 </body>
 </html>
