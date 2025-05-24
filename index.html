@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="StreamVibe - Premium Video Streaming Platform">
-    <title>StreamVibe - Modern Video Platform</title>
+    <title>StreamVibe</title>
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
             --background: #0f172a;
             --surface: #1e293b;
             --text: #f8fafc;
             --text-secondary: #94a3b8;
-            --border: #334155;
         }
 
         * {
@@ -28,81 +25,26 @@
             color: var(--text);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* Navigation */
         .navbar {
-            background: var(--surface);
             padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            border-bottom: 1px solid #334155;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 600;
             color: var(--text);
-            text-decoration: none;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            margin-left: auto;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--text);
-        }
-
-        /* Main Content */
         .container {
-            flex: 1;
             max-width: 1600px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Page Sections */
-        .page-section {
-            display: none;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 0;
-        }
-
-        .page-section.active {
-            display: block;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            color: var(--text);
-        }
-
-        .section-content {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
-        }
-
-        /* Video Grid */
         .video-grid {
             display: grid;
             gap: 1.5rem;
@@ -129,7 +71,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 0.75rem;
         }
 
         .video-info {
@@ -163,266 +104,31 @@
             border-radius: 0.375rem;
             font-size: 0.875rem;
         }
-
-        /* Footer */
-        .footer {
-            background: var(--surface);
-            padding: 4rem 2rem;
-            margin-top: auto;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-content {
-            max-width: 1600px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            color: var(--text);
-        }
-
-        .footer-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .footer-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .footer-link:hover {
-            color: var(--text);
-        }
-
-        /* Support Pages */
-        .content-page {
-            line-height: 1.6;
-        }
-
-        .content-page h2 {
-            margin: 2rem 0 1rem;
-            color: var(--text);
-        }
-
-        .content-page p {
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-        }
-
-        .contact-form {
-            display: grid;
-            gap: 1rem;
-            max-width: 600px;
-        }
-
-        .form-input {
-            padding: 0.75rem;
-            background: var(--background);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            color: var(--text);
-        }
-
-        .form-button {
-            padding: 0.75rem 1.5rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .form-button:hover {
-            background: var(--primary-hover);
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-                flex-wrap: wrap;
-            }
-            
-            .nav-links {
-                width: 100%;
-                justify-content: space-between;
-                margin-top: 0.5rem;
-            }
-        }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <a href="#home" class="logo">StreamVibe</a>
-        <nav class="nav-links">
-            <a href="#home" class="nav-link">Home</a>
-            <a href="#movies" class="nav-link">Movies</a>
-            <a href="#series" class="nav-link">Series</a>
-        </nav>
+        <div class="logo">StreamVibe</div>
     </nav>
 
-    <main class="container">
-        <!-- Home Page -->
-        <section id="home" class="page-section active">
-            <div class="video-grid" id="videoContainer"></div>
-        </section>
-
-        <!-- About Page -->
-        <section id="about" class="page-section">
-            <h1 class="section-title">About Us</h1>
-            <div class="section-content content-page">
-                <h2>Our Story</h2>
-                <p>StreamVibe was founded in 2020 with a mission to deliver premium streaming experiences...</p>
-                
-                <h2>Our Team</h2>
-                <p>We're a global team of streaming experts passionate about entertainment technology...</p>
-            </div>
-        </section>
-
-        <!-- Careers Page -->
-        <section id="careers" class="page-section">
-            <h1 class="section-title">Careers</h1>
-            <div class="section-content content-page">
-                <h2>Join Our Team</h2>
-                <p>We're always looking for talented individuals to join our growing team...</p>
-                
-                <h2>Current Openings</h2>
-                <p>• Streaming Engineer<br>• Content Curator<br>• Customer Support Specialist</p>
-            </div>
-        </section>
-
-        <!-- Contact Page -->
-        <section id="contact" class="page-section">
-            <h1 class="section-title">Contact Us</h1>
-            <div class="section-content">
-                <form class="contact-form">
-                    <input type="text" class="form-input" placeholder="Name" required>
-                    <input type="email" class="form-input" placeholder="Email" required>
-                    <textarea class="form-input" rows="5" placeholder="Message" required></textarea>
-                    <button type="submit" class="form-button">Send Message</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Legal Pages -->
-        <section id="terms" class="page-section">
-            <h1 class="section-title">Terms of Service</h1>
-            <div class="section-content content-page">
-                <h2>1. Acceptance of Terms</h2>
-                <p>By accessing StreamVibe, you agree to be bound by these terms...</p>
-            </div>
-        </section>
-
-        <section id="privacy" class="page-section">
-            <h1 class="section-title">Privacy Policy</h1>
-            <div class="section-content content-page">
-                <h2>Data Collection</h2>
-                <p>We collect information necessary to provide our services...</p>
-            </div>
-        </section>
-
-        <section id="cookies" class="page-section">
-            <h1 class="section-title">Cookie Policy</h1>
-            <div class="section-content content-page">
-                <h2>Cookie Usage</h2>
-                <p>We use cookies to enhance your browsing experience...</p>
-            </div>
-        </section>
-
-        <!-- Support Pages -->
-        <section id="faq" class="page-section">
-            <h1 class="section-title">FAQ</h1>
-            <div class="section-content content-page">
-                <h2>Common Questions</h2>
-                <p>Q: How do I reset my password?<br>A: Visit the account recovery page...</p>
-            </div>
-        </section>
-
-        <section id="help" class="page-section">
-            <h1 class="section-title">Help Center</h1>
-            <div class="section-content content-page">
-                <h2>Getting Started</h2>
-                <p>Learn how to make the most of your StreamVibe subscription...</p>
-            </div>
-        </section>
-
-        <section id="guidelines" class="page-section">
-            <h1 class="section-title">Community Guidelines</h1>
-            <div class="section-content content-page">
-                <h2>Our Standards</h2>
-                <p>We strive to maintain a respectful community environment...</p>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>StreamVibe</h3>
-                <ul class="footer-links">
-                    <li><a href="#about" class="footer-link">About Us</a></li>
-                    <li><a href="#careers" class="footer-link">Careers</a></li>
-                    <li><a href="#contact" class="footer-link">Contact</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul class="footer-links">
-                    <li><a href="#terms" class="footer-link">Terms of Service</a></li>
-                    <li><a href="#privacy" class="footer-link">Privacy Policy</a></li>
-                    <li><a href="#cookies" class="footer-link">Cookie Policy</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Support</h3>
-                <ul class="footer-links">
-                    <li><a href="#faq" class="footer-link">FAQ</a></li>
-                    <li><a href="#help" class="footer-link">Help Center</a></li>
-                    <li><a href="#guidelines" class="footer-link">Community Guidelines</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+    <div class="container">
+        <div class="video-grid" id="videoContainer"></div>
+    </div>
 
     <script>
         const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=20&apikey=4048c8f4-c80d-4f30-857f-ee3e7e246876';
         let currentPage = 1;
         let isLoading = false;
 
-        // Navigation Handler
-        function showSection(sectionId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-        }
-
-        // Link Click Handler
-        document.querySelectorAll('a[href^="#"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const sectionId = link.getAttribute('href').substring(1);
-                showSection(sectionId);
-            });
-        });
-
-        // Video Loading Functions
         async function fetchVideos() {
             try {
+                if(isLoading) return;
                 isLoading = true;
+                
                 const response = await fetch(`${API_URL}&page=${currentPage}`);
                 const data = await response.json();
                 return data.videos || [];
+                
             } catch (error) {
                 console.error('Error fetching videos:', error);
                 return [];
@@ -460,15 +166,15 @@
             });
         }
 
-        // Initialize
         window.addEventListener('DOMContentLoaded', () => {
             loadVideos();
-            window.addEventListener('scroll', () => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
-                    currentPage++;
-                    loadVideos();
-                }
-            });
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
+                currentPage++;
+                loadVideos();
+            }
         });
     </script>
 </body>
