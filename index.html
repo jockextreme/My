@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase Video Platform</title>
+    <title>Next-Gen Video Platform</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -11,24 +11,27 @@
         :root {
             --primary: #FF6B6B;
             --secondary: #2C3E50;
+            --accent: #4ECDC4;
             --background: #0F0F12;
-            --text: #FFFFFF;
             --surface: rgba(255, 255, 255, 0.05);
+            --text: #FFFFFF;
+            --glass: blur(16px);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
 
         body {
             background: var(--background);
             color: var(--text);
-            min-height: 100vh;
+            line-height: 1.6;
         }
 
+        /* Modern Glassmorphism Design */
         .app-container {
             display: grid;
             grid-template-columns: 1fr 340px;
@@ -42,202 +45,272 @@
             display: grid;
             gap: 2rem;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            align-content: start;
         }
 
         .video-card {
             background: var(--surface);
+            backdrop-filter: var(--glass);
             border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
-            transition: transform 0.3s ease;
-            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .video-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
+        /* Enhanced Thumbnail Design */
         .thumbnail {
-            aspect-ratio: 16/9;
-            background: #000;
             position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
         }
 
         .thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
+        .video-card:hover .thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary);
+            width: var(--progress, 0);
+        }
+
+        /* Modern Info Panel */
+        .video-info {
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Floating Sidebar */
         .sidebar {
             background: var(--surface);
+            backdrop-filter: var(--glass);
             border-radius: 16px;
             padding: 2rem;
             height: calc(100vh - 4rem);
             position: sticky;
             top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Modern Chat Design */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .chat-messages {
-            height: 400px;
+            flex: 1;
             overflow-y: auto;
             margin-bottom: 1rem;
+            padding-right: 0.5rem;
         }
 
         .chat-message {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             padding: 1rem;
+            border-radius: 12px;
             margin-bottom: 1rem;
-            border-radius: 8px;
+            animation: messageIn 0.3s ease;
         }
 
-        .video-player {
-            width: 100%;
-            height: 70vh;
-            border-radius: 16px;
+        /* Video Player Overlay */
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            z-index: 1000;
         }
+
+        .video-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes messageIn { from { opacity: 0; transform: translateY(10px); } }
     </style>
 </head>
 <body>
     <div class="app-container">
         <main>
-            <div class="video-grid" id="videoContainer"></div>
-            <div id="loading" style="text-align: center; padding: 2rem;">
-                <div class="loading-spinner"></div>
+            <div class="video-grid" id="videoContainer">
+                <div class="loading"></div>
             </div>
         </main>
 
         <aside class="sidebar">
-            <div class="chat">
+            <div class="user-profile">
+                <div class="avatar">👤</div>
+                <div>
+                    <h3>Guest User</h3>
+                    <p>Watched <span id="watchedCount">0</span> videos</p>
+                </div>
+            </div>
+
+            <div class="chat-container">
                 <h2>Global Chat</h2>
                 <div class="chat-messages" id="chatMessages"></div>
-                <input type="text" id="chatInput" placeholder="Type a message...">
-                <button onclick="sendMessage()">Send</button>
+                <div class="chat-input">
+                    <input type="text" placeholder="Type a message..." id="chatInput">
+                    <button onclick="sendMessage()">💬</button>
+                </div>
             </div>
         </aside>
     </div>
 
-    <div id="videoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center;">
-        <video controls class="video-player" id="mainVideo"></video>
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <video controls id="mainVideo"></video>
+            <div class="player-controls">
+                <button onclick="togglePlay()">⏯️</button>
+                <input type="range" id="progressBar" min="0" max="100" value="0">
+                <button onclick="toggleFullscreen()">⤡</button>
+            </div>
+        </div>
     </div>
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDPCaU0Z0AGjDEnscTEB5fnqdlfVcsMNaI",
-            authDomain: "my-project-60d48.firebaseapp.com",
-            projectId: "my-project-60d48",
-            storageBucket: "my-project-60d48.firebasestorage.app",
-            messagingSenderId: "726548635832",
-            appId: "1:726548635832:web:52c8d826dc60e63289944d",
-            measurementId: "G-64BFKTK0BG"
+            apiKey: "YOUR_FIREBASE_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abc123def456"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
         let currentUser = null;
-        let lastVisible = null;
-        let loading = false;
+        let currentPage = 1;
 
-        // Initialize Application
+        // Enhanced Features
         async function initApp() {
-            try {
-                // Anonymous authentication
-                const { user } = await auth.signInAnonymously();
-                currentUser = user;
-                
-                // Load initial videos
-                loadVideos();
-                
-                // Setup real-time chat
-                setupChat();
-                
-                // Setup infinite scroll
-                setupInfiniteScroll();
-
-            } catch (error) {
-                console.error('Initialization error:', error);
-            }
+            await auth.signInAnonymously();
+            currentUser = auth.currentUser;
+            
+            // Real-time Video Loading
+            loadVideos();
+            setupInfiniteScroll();
+            setupChat();
+            setupVideoPlayer();
         }
 
-        // Video Loading with Infinite Scroll
         async function loadVideos() {
-            try {
-                loading = true;
-                let query = db.collection('videos')
-                    .orderBy('timestamp', 'desc')
-                    .limit(6);
-
-                if (lastVisible) {
-                    query = query.startAfter(lastVisible);
-                }
-
-                const snapshot = await query.get();
-                lastVisible = snapshot.docs[snapshot.docs.length-1];
-
-                snapshot.forEach(doc => {
-                    createVideoCard(doc.data());
-                });
-
-            } catch (error) {
-                console.error('Error loading videos:', error);
-            } finally {
-                loading = false;
-            }
+            const response = await fetch('YOUR_API_ENDPOINT');
+            const data = await response.json();
+            
+            data.videos.forEach(video => {
+                const card = createVideoCard(video);
+                document.getElementById('videoContainer').appendChild(card);
+            });
         }
 
         function createVideoCard(video) {
-            const container = document.getElementById('videoContainer');
             const card = document.createElement('div');
             card.className = 'video-card';
             card.innerHTML = `
                 <div class="thumbnail">
                     <img src="${video.thumbnail}" loading="lazy">
+                    <div class="progress-bar" style="--progress: ${Math.random() * 100}%"></div>
                 </div>
                 <div class="video-info">
-                    <h3>${video.title}</h3>
-                    <p>${video.views} views</p>
+                    <h3 class="video-title">${video.title}</h3>
+                    <div class="video-meta">
+                        <span>👁 ${video.views}</span>
+                        <div class="rating">${'★'.repeat(video.rating)}</div>
+                    </div>
                 </div>
             `;
-            card.onclick = () => playVideo(video.videoUrl);
-            container.appendChild(card);
+            card.onclick = () => playVideo(video);
+            return card;
         }
 
-        // Video Player
-        function playVideo(url) {
-            const modal = document.getElementById('videoModal');
+        // Modern Video Player
+        function setupVideoPlayer() {
+            const videoElement = document.getElementById('mainVideo');
+            
+            videoElement.addEventListener('timeupdate', () => {
+                document.getElementById('progressBar').value = 
+                    (videoElement.currentTime / videoElement.duration) * 100;
+            });
+        }
+
+        function togglePlay() {
             const video = document.getElementById('mainVideo');
-            modal.style.display = 'flex';
-            video.src = url;
-            video.play();
+            video.paused ? video.play() : video.pause();
         }
 
         // Real-time Chat System
         function setupChat() {
-            db.collection('chat')
-                .orderBy('timestamp', 'asc')
-                .onSnapshot(snapshot => {
-                    const container = document.getElementById('chatMessages');
-                    container.innerHTML = '';
-                    snapshot.forEach(doc => {
-                        const msg = doc.data();
-                        const div = document.createElement('div');
-                        div.className = 'chat-message';
-                        div.textContent = msg.text;
-                        container.appendChild(div);
-                    });
+            db.collection('chat').onSnapshot(snapshot => {
+                const container = document.getElementById('chatMessages');
+                container.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const msg = doc.data();
+                    const div = document.createElement('div');
+                    div.className = 'chat-message';
+                    div.textContent = msg.text;
+                    container.appendChild(div);
                 });
+            });
         }
 
         function sendMessage() {
             const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            
-            if (message && currentUser) {
+            if (input.value.trim()) {
                 db.collection('chat').add({
-                    text: message,
+                    text: input.value,
                     userId: currentUser.uid,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -247,14 +320,15 @@
 
         // Infinite Scroll
         function setupInfiniteScroll() {
-            window.addEventListener('scroll', async () => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-                    if (!loading) loadVideos();
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    loadVideos(++currentPage);
                 }
-            });
+            }, { threshold: 1.0 });
+
+            observer.observe(document.querySelector('.loading'));
         }
 
-        // Initialize the app
         initApp();
     </script>
 </body>
