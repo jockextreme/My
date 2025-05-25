@@ -189,6 +189,9 @@
             transform: translate(-50%, -50%);
             font-size: 24px;
             color: var(--light);
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
             display: none;
         }
 
@@ -228,6 +231,8 @@
     </style>
 </head>
 <body>
+    <div class="loading" id="loading">Loading...</div>
+    
     <header class="header">
         <div class="container">
             <h1>🎥 JAVHD Streamer</h1>
@@ -236,9 +241,8 @@
 
     <div class="container">
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="Search videos..." id="searchInput" 
-                   onkeypress="if(event.key === 'Enter') searchVideos()">
-            <button class="search-btn" onclick="searchVideos()">Search</button>
+            <input type="text" class="search-input" placeholder="Search videos..." id="searchInput">
+            <button class="search-btn" id="searchBtn">Search</button>
         </div>
 
         <div class="grid" id="resultsGrid"></div>
@@ -249,10 +253,10 @@
         <div class="player-container">
             <video id="videoPlayer" controls></video>
             <div class="player-controls">
-                <select class="quality-selector" id="qualitySelect" onchange="changeQuality(this.value)">
+                <select class="quality-selector" id="qualitySelect">
                     <option value="auto">Auto Quality</option>
                 </select>
-                <button class="close-btn" onclick="closePlayer()">Close</button>
+                <button class="close-btn" id="closeBtn">Close</button>
             </div>
         </div>
     </div>
@@ -262,11 +266,30 @@
         let currentPage = 1;
         let currentVideoData = null;
 
+        // DOM Elements with null checks
+        const elements = {
+            loading: document.getElementById('loading'),
+            searchInput: document.getElementById('searchInput'),
+            searchBtn: document.getElementById('searchBtn'),
+            resultsGrid: document.getElementById('resultsGrid'),
+            pagination: document.getElementById('pagination'),
+            playerOverlay: document.getElementById('playerOverlay'),
+            videoPlayer: document.getElementById('videoPlayer'),
+            qualitySelect: document.getElementById('qualitySelect'),
+            closeBtn: document.getElementById('closeBtn')
+        };
+
+        // Safe element access
+        function getElement(id) {
+            return elements[id] || console.error(`Element ${id} not found`);
+        }
+
         async function searchVideos(page = 1) {
             try {
                 showLoading();
                 currentPage = page;
-                const query = document.getElementById('searchInput').value.trim();
+                const query = elements.searchInput?.value.trim() || '';
+                
                 const apiUrl = query ? 
                     `https://api.zetsu.xyz/javhd?action=search&query=${encodeURIComponent(query)}&page=${page}` :
                     `https://api.zetsu.xyz/javhd?action=trending&page=${page}`;
@@ -293,7 +316,7 @@
         }
 
         function displayResults(results) {
-            const grid = document.getElementById('resultsGrid');
+            const grid = getElement('resultsGrid');
             grid.innerHTML = '';
 
             results.forEach(item => {
@@ -350,8 +373,8 @@
         }
 
         function openPlayer(videoData) {
-            const player = document.getElementById('videoPlayer');
-            const qualitySelect = document.getElementById('qualitySelect');
+            const player = getElement('videoPlayer');
+            const qualitySelect = getElement('qualitySelect');
             
             qualitySelect.innerHTML = videoData.qualities
                 .map((q, index) => `<option value="${q.url}">${q.label || `Quality ${index + 1}`}</option>`)
@@ -367,25 +390,25 @@
                 });
             }
 
-            document.getElementById('playerOverlay').style.display = 'block';
+            getElement('playerOverlay').style.display = 'block';
         }
 
         function closePlayer() {
-            document.getElementById('playerOverlay').style.display = 'none';
-            const player = document.getElementById('videoPlayer');
+            getElement('playerOverlay').style.display = 'none';
+            const player = getElement('videoPlayer');
             player.pause();
             player.removeAttribute('src');
         }
 
         function changeQuality(url) {
-            const player = document.getElementById('videoPlayer');
+            const player = getElement('videoPlayer');
             player.src = url;
             player.load();
             player.play();
         }
 
         function setupPagination(totalPages) {
-            const pagination = document.getElementById('pagination');
+            const pagination = getElement('pagination');
             pagination.innerHTML = '';
 
             // Previous Button
@@ -418,20 +441,22 @@
         }
 
         function showLoading() {
-            document.getElementById('loading').style.display = 'block';
+            const loader = getElement('loading');
+            loader.style.display = 'block';
         }
 
         function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
+            const loader = getElement('loading');
+            loader.style.display = 'none';
         }
 
         function showError(message) {
-            const grid = document.getElementById('resultsGrid');
+            const grid = getElement('resultsGrid');
             grid.innerHTML = `<div class="error-msg">${message}</div>`;
         }
 
         function showNoResults(query) {
-            const grid = document.getElementById('resultsGrid');
+            const grid = getElement('resultsGrid');
             grid.innerHTML = `
                 <div class="no-results">
                     <h2>No videos found for "${query}"</h2>
@@ -445,8 +470,17 @@
             `;
         }
 
-        // Initial load
-        searchVideos();
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            elements.searchBtn?.addEventListener('click', searchVideos);
+            elements.closeBtn?.addEventListener('click', closePlayer);
+            elements.qualitySelect?.addEventListener('change', (e) => changeQuality(e.target.value));
+            elements.searchInput?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchVideos();
+            });
+            
+            searchVideos();
+        });
     </script>
 </body>
 </html>
