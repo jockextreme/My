@@ -3,60 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAVHD API Browser</title>
+    <title>JAVHD Browser with Player</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+        /* Previous styles remain */
+        .video-player {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #000;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
         }
 
-        .search-box {
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .pagination {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 20px 0;
+            justify-content: center;
         }
 
-        input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .results {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        .result-item {
-            background-color: white;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            cursor: pointer;
-        }
-
-        .detail-view {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .hidden {
+        .loading {
             display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #fff;
+            background: rgba(0,0,0,0.7);
+            padding: 20px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -64,34 +60,53 @@
     <h1>JAVHD Browser</h1>
     
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Enter search query...">
+        <input type="text" id="searchInput" placeholder="Enter search query..." onkeypress="handleEnter(event)">
         <button onclick="searchVideos()">Search</button>
     </div>
 
+    <div class="pagination" id="pagination"></div>
+
     <div id="results" class="results"></div>
 
-    <div id="detailView" class="detail-view hidden">
-        <button onclick="closeDetail()">Close</button>
-        <pre id="detailContent"></pre>
+    <div class="video-player hidden" id="videoPlayer">
+        <div class="video-container">
+            <video id="mainVideo" controls>
+                <source id="videoSource" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <button onclick="closePlayer()">Close Player</button>
     </div>
+
+    <div class="loading" id="loading">Loading...</div>
 
     <script>
         const API_KEY = '3ca6c004b075b34b0549def065220da5';
+        let currentPage = 1;
 
-        async function searchVideos() {
+        function handleEnter(e) {
+            if(e.key === 'Enter') searchVideos();
+        }
+
+        async function searchVideos(page = 1) {
+            showLoading();
+            currentPage = page;
             const query = document.getElementById('searchInput').value;
             const resultsDiv = document.getElementById('results');
             
             try {
                 const response = await fetch(
-                    `https://api.zetsu.xyz/javhd?action=search&query=${encodeURIComponent(query)}&apikey=${API_KEY}`
+                    `https://api.zetsu.xyz/javhd?action=search&query=${encodeURIComponent(query)}&page=${page}&apikey=${API_KEY}`
                 );
                 
                 const data = await response.json();
                 displayResults(data);
+                setupPagination(data.totalPages);
             } catch (error) {
                 console.error('Search failed:', error);
                 resultsDiv.innerHTML = 'Error searching videos';
+            } finally {
+                hideLoading();
             }
         }
 
@@ -102,32 +117,72 @@
             results.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'result-item';
-                itemDiv.innerHTML = `<h3>${item.title}</h3>`;
-                itemDiv.addEventListener('click', () => showDetail(item.url));
+                itemDiv.innerHTML = `
+                    ${item.thumbnail ? `<img src="${item.thumbnail}" class="thumbnail" alt="${item.title}">` : ''}
+                    <h3>${item.title}</h3>
+                    ${item.duration ? `<p>Duration: ${item.duration}</p>` : ''}
+                `;
+                
+                itemDiv.addEventListener('click', async () => {
+                    showLoading();
+                    try {
+                        const videoUrl = await getVideoUrl(item.url);
+                        playVideo(videoUrl);
+                    } catch (error) {
+                        console.error('Error loading video:', error);
+                    } finally {
+                        hideLoading();
+                    }
+                });
                 resultsDiv.appendChild(itemDiv);
             });
         }
 
-        async function showDetail(url) {
-            try {
-                const response = await fetch(
-                    `https://api.zetsu.xyz/javhd?action=detail&url=${encodeURIComponent(url)}&apikey=${API_KEY}`
-                );
-                
-                const data = await response.json();
-                document.getElementById('detailContent').textContent = JSON.stringify(data, null, 2);
-                document.getElementById('detailView').classList.remove('hidden');
-            } catch (error) {
-                console.error('Failed to load detail:', error);
+        async function getVideoUrl(url) {
+            const response = await fetch(
+                `https://api.zetsu.xyz/javhd?action=detail&url=${encodeURIComponent(url)}&apikey=${API_KEY}`
+            );
+            const data = await response.json();
+            return data.videoUrl; // Adjust this based on actual API response structure
+        }
+
+        function playVideo(url) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoSource = document.getElementById('videoSource');
+            
+            videoSource.src = url;
+            document.getElementById('mainVideo').load();
+            videoPlayer.classList.remove('hidden');
+        }
+
+        function closePlayer() {
+            document.getElementById('videoPlayer').classList.add('hidden');
+            document.getElementById('mainVideo').pause();
+        }
+
+        function setupPagination(totalPages) {
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+            
+            for(let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.disabled = i === currentPage;
+                btn.onclick = () => searchVideos(i);
+                paginationDiv.appendChild(btn);
             }
         }
 
-        function closeDetail() {
-            document.getElementById('detailView').classList.add('hidden');
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
         }
 
-        // Initial search example
-        window.onload = searchVideos;
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Initialize with popular videos
+        window.onload = () => searchVideos(1);
     </script>
 </body>
 </html>
