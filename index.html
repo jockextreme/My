@@ -108,6 +108,13 @@
             margin: 2rem auto;
         }
 
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: #ff6666;
+            grid-column: 1 / -1;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -122,7 +129,6 @@
         <h1>StreamFlix</h1>
         <p>Your Premium Adult Entertainment Hub</p>
         <div class="ad-banner">
-            <!-- DirectLink_1 Ad -->
             <a href="https://virtualflashy.com/jnf3d1pua?key=6832e4423c55e16afec5ac036518dfa6" target="_blank">
                 <img src="https://source.unsplash.com/random/728x90" alt="Advertisement">
             </a>
@@ -134,7 +140,6 @@
     </div>
 
     <div class="ad-banner" style="margin: 2rem auto;">
-        <!-- Popunder_1 Ad -->
         <a href="https://virtualflashy.com/j00dx0p2?key=2c389e493fcd95390c4b3c42a46b1440" target="_blank">
             <img src="https://source.unsplash.com/random/728x90" alt="Advertisement">
         </a>
@@ -147,35 +152,100 @@
     </div>
 
     <script>
-        async function fetchVideos() {
+        let retries = 0;
+        
+        async function fetchWithRetry() {
             try {
-                const response = await fetch('https://kaiz-apis.gleeze.com/api/youjizz?limit=30&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336');
-                const data = await response.json();
+                await fetchVideos();
+            } catch (error) {
+                if (retries < 3) {
+                    retries++;
+                    setTimeout(fetchWithRetry, 2000);
+                }
+            }
+        }
+
+        async function fetchVideos() {
+            const container = document.getElementById('videoContainer');
+            try {
+                const response = await fetch('https://kaiz-apis.gleeze.com/api/youjizz?limit=30&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336', {
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
-                const container = document.getElementById('videoContainer');
+                const data = await response.json();
+                if (!data.videos?.length) throw new Error('No videos available');
+
                 container.innerHTML = '';
                 
                 data.videos.forEach(video => {
                     const card = document.createElement('div');
                     card.className = 'video-card';
                     card.innerHTML = `
-                        <img src="${video.thumbnail || 'https://source.unsplash.com/random/300x200'}" class="thumbnail">
+                        <img src="${video.thumbnail || 'https://source.unsplash.com/random/300x200'}" 
+                             class="thumbnail"
+                             onerror="this.src='https://source.unsplash.com/random/300x200'">
                         <div class="video-info">
                             <h3 class="video-title">${video.title || 'Premium Content'}</h3>
                             <div class="video-stats">
-                                <span>${video.views || '100K'} views</span>
-                                <span>${video.duration || '15:00'}</span>
+                                <span>${video.views ? `${video.views} views` : 'Trending Now'}</span>
+                                <span>${video.duration || '00:00'}</span>
                             </div>
                         </div>
                     `;
                     
-                    card.addEventListener('click', () => playVideo(video.videoUrl));
+                    card.addEventListener('click', () => playVideo(video.videoUrl || '#'));
                     container.appendChild(card);
                 });
+
             } catch (error) {
-                console.error('Error fetching videos:', error);
-                videoContainer.innerHTML = '<p>Error loading content. Please try again later.</p>';
+                console.error('Fetch error:', error);
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h3>Content Temporarily Unavailable</h3>
+                        <p>Check out these popular videos instead:</p>
+                        ${getFallbackContent()}
+                    </div>
+                `;
             }
+        }
+
+        function getFallbackContent() {
+            const fallbackVideos = [
+                {
+                    title: "Hot Summer Collection",
+                    thumbnail: "https://source.unsplash.com/random/300x200",
+                    views: "1.2M",
+                    duration: "18:30"
+                },
+                {
+                    title: "Late Night Special",
+                    thumbnail: "https://source.unsplash.com/random/301x201",
+                    views: "950K",
+                    duration: "22:15"
+                },
+                {
+                    title: "Exclusive Content",
+                    thumbnail: "https://source.unsplash.com/random/302x202",
+                    views: "2.1M",
+                    duration: "25:00"
+                }
+            ];
+            
+            return fallbackVideos.map(video => `
+                <div class="video-card">
+                    <img src="${video.thumbnail}" class="thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-stats">
+                            <span>${video.views} views</span>
+                            <span>${video.duration}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function playVideo(url) {
@@ -190,8 +260,8 @@
             }
         }
 
-        // Initialize
-        fetchVideos();
+        // Initialize with retry support
+        fetchWithRetry();
         
         // Trigger popunder after 5 seconds
         setTimeout(() => {
