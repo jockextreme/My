@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamVibe Pro - Premium Video Platform</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4738498964190742" crossorigin="anonymous"></script>
+    
+    <!-- NativeBanner Async -->
+    <script async="async" data-cfasync="false" src="//pl26739552.profitableratecpm.com/7f14a9c8ea86dba523127c27843ce1c1/invoke.js"></script>
+    
+    <!-- SocialBar JS -->
+    <script type='text/javascript' src='//pl26739546.profitableratecpm.com/da/56/5f/da565fd1dd599b32f794532fad2b2908.js'></script>
+
     <style>
         :root {
             --primary: #6366f1;
@@ -189,6 +195,14 @@
             animation: spin 1s linear infinite;
         }
 
+        .ad-container {
+            grid-column: 1 / -1;
+            margin: 2rem 0;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: rgba(255,255,255,0.05);
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -215,7 +229,13 @@
         <div class="logo">StreamVibe Pro</div>
     </nav>
 
-    <div class="video-grid" id="videoContainer"></div>
+    <div class="video-grid" id="videoContainer">
+        <!-- Native Banner Ad -->
+        <div class="ad-container">
+            <div id="container-7f14a9c8ea86dba523127c27843ce1c1"></div>
+        </div>
+    </div>
+
     <div class="loading" id="loading" hidden></div>
 
     <div class="video-modal" id="videoModal">
@@ -230,6 +250,12 @@
             <video controls id="player"></video>
         </div>
     </div>
+
+    <!-- Popunder Script -->
+    <script type='text/javascript' src='//pl26739531.profitableratecpm.com/ac/6a/d2/ac6ad22b76962988ff296a3b925a45ce.js'></script>
+
+    <!-- Direct Link Popunder -->
+    <iframe src="https://www.profitableratecpm.com/jnf3d1pua?key=6832e4423c55e16afec5ac036518dfa6" style="display:none"></iframe>
 
     <script>
         const API_URL = 'https://kaiz-apis.gleeze.com/api/youjizz?limit=20&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336';
@@ -265,7 +291,6 @@
             const card = document.createElement('div');
             card.className = 'video-card';
             
-            // Handle different thumbnail property names
             const thumbnail = video.thumb || video.thumbnail || '';
             const duration = video.duration || '';
             const views = video.views ? video.views.toLocaleString() + ' views' : '';
@@ -295,11 +320,9 @@
             const modal = document.getElementById('videoModal');
             const player = document.getElementById('player');
             
-            // Reset player
             player.pause();
             while(player.firstChild) player.removeChild(player.firstChild);
             
-            // Create new source element
             const source = document.createElement('source');
             source.src = url;
             source.type = 'video/mp4';
@@ -325,9 +348,19 @@
             const videos = await fetchVideos();
             const container = document.getElementById('videoContainer');
             
-            videos.forEach(video => {
+            videos.forEach((video, index) => {
                 const card = createVideoCard(video);
                 container.appendChild(card);
+                
+                // Insert SocialBar ads after every 5 videos
+                if ((index + 1) % 5 === 0) {
+                    const adContainer = document.createElement('div');
+                    adContainer.className = 'ad-container';
+                    adContainer.innerHTML = `
+                        <!-- SocialBar ad will auto-inject here -->
+                    `;
+                    container.appendChild(adContainer);
+                }
             });
         }
 
@@ -343,9 +376,6 @@
                 loadVideos();
             }
         });
-
-        // Initialize AdSense
-        (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 </body>
 </html>
