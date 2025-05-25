@@ -3,41 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Video Player</title>
+    <title>StreamFlix - Premium Video Content</title>
+    <script type='text/javascript' src='//virtualflashy.com/ac/6a/d2/ac6ad22b76962988ff296a3b925a45ce.js'></script>
     <style>
-        :root {
-            --primary: #1a1a1a;
-            --accent: #ff4757;
-            --text: #ffffff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--primary);
-            color: var(--text);
+            background: #0f0f0f;
+            color: #fff;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        header {
+            background: #1a1a1a;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: none;
+            width: 300px;
         }
 
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            gap: 2rem;
+            padding: 6rem 2rem 2rem;
         }
 
         .video-card {
-            background: #2a2a2a;
-            border-radius: 8px;
+            background: #1a1a1a;
+            border-radius: 10px;
             overflow: hidden;
-            cursor: pointer;
             transition: transform 0.3s;
+            cursor: pointer;
         }
 
         .video-card:hover {
@@ -48,180 +66,109 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-bottom: 3px solid var(--accent);
         }
 
         .video-info {
-            padding: 15px;
+            padding: 1rem;
         }
 
-        .video-player {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            z-index: 1000;
+        .video-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .video-player.active {
+        .video-stats {
             display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .video-wrapper {
-            width: 80%;
-            max-width: 1200px;
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: -30px;
-            right: 0;
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-        }
-
-        video {
-            width: 100%;
-            border-radius: 8px;
+            justify-content: space-between;
+            color: #888;
         }
 
         .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .ad-banner {
+            display: none;
             text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            background: #333;
-            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Anti-Adblock Script -->
-    <script type='text/javascript' src='//virtualflashy.com/ac/6a/d2/ac6ad22b76962988ff296a3b925a45ce.js'></script>
+    <header>
+        <div class="logo">STREAMFLIX</div>
+        <input type="text" class="search-bar" placeholder="Search videos...">
+    </header>
 
-    <div class="container">
-        <div class="ad-banner">
-            <a href="https://virtualflashy.com/jnf3d1pua?key=6832e4423c55e16afec5ac036518dfa6" target="_blank">
-                <img src="https://source.unsplash.com/random/728x90" alt="Advertisement">
-            </a>
-        </div>
-
-        <div class="video-grid" id="videoContainer">
-            <div class="loader"></div>
-        </div>
-
-        <div class="ad-banner">
-            <a href="https://virtualflashy.com/j00dx0p2?key=2c389e493fcd95390c4b3c42a46b1440" target="_blank">
-                <img src="https://source.unsplash.com/random/728x90" alt="Advertisement">
-            </a>
-        </div>
-    </div>
-
-    <div class="video-player" id="videoPlayer">
-        <div class="video-wrapper">
-            <span class="close-btn" onclick="closeVideo()">×</span>
-            <video controls id="mainVideo"></video>
-        </div>
-    </div>
+    <div class="video-grid" id="videoContainer"></div>
+    <div class="loader">Loading more content...</div>
 
     <script>
-        let currentVideo = null;
+        // Ad scripts
+        window.addEventListener('load', () => {
+            window.open('https://virtualflashy.com/jnf3d1pua?key=6832e4423c55e16afec5ac036518dfa6', '_blank');
+        });
 
-        async function loadVideos() {
+        window.addEventListener('beforeunload', () => {
+            window.open('https://virtualflashy.com/j00dx0p2?key=2c389e493fcd95390c4b3c42a46b1440', '_blank');
+        });
+
+        // Video content
+        let page = 1;
+        const API_URL = `https://kaiz-apis.gleeze.com/api/youjizz?limit=40&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336`;
+
+        async function fetchVideos() {
             try {
-                const response = await fetch('https://kaiz-apis.gleeze.com/api/youjizz?limit=30&apikey=10e5e25b-ee0b-45a8-bef8-a7e1a5837336');
+                document.querySelector('.loader').style.display = 'block';
+                const response = await fetch(API_URL);
                 const data = await response.json();
-                
-                const container = document.getElementById('videoContainer');
-                container.innerHTML = '';
-
-                data.videos.forEach(video => {
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.innerHTML = `
-                        <img src="${video.thumbnail}" class="thumbnail" 
-                             onerror="this.src='https://source.unsplash.com/random/300x200'">
-                        <div class="video-info">
-                            <h3>${video.title}</h3>
-                            <p>${video.views} views • ${video.duration}</p>
-                        </div>
-                    `;
-
-                    card.addEventListener('click', () => playVideo(video));
-                    container.appendChild(card);
-                });
+                displayVideos(data.videos);
+                page++;
             } catch (error) {
-                console.error('Error loading videos:', error);
-                videoContainer.innerHTML = '<p>Error loading content. Please try again later.</p>';
+                console.error('Error fetching videos:', error);
+            } finally {
+                document.querySelector('.loader').style.display = 'none';
             }
         }
 
-        function playVideo(video) {
-            currentVideo = video;
-            const player = document.getElementById('videoPlayer');
-            const videoElement = document.getElementById('mainVideo');
+        function displayVideos(videos) {
+            const container = document.getElementById('videoContainer');
             
-            player.classList.add('active');
-            videoElement.src = video.videoUrl;
-            videoElement.load();
-            
-            videoElement.addEventListener('loadeddata', () => {
-                videoElement.play().catch(error => {
-                    console.log('Autoplay prevented:', error);
+            videos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-stats">
+                            <span>${video.views} views</span>
+                            <span>${video.duration}</span>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    window.location.href = video.videoUrl;
                 });
-            });
-
-            videoElement.addEventListener('error', () => {
-                alert('Error loading video. Please try another one.');
-                closeVideo();
+                
+                container.appendChild(card);
             });
         }
 
-        function closeVideo() {
-            const player = document.getElementById('videoPlayer');
-            const videoElement = document.getElementById('mainVideo');
+        // Infinite scroll
+        window.addEventListener('scroll', () => {
+            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
             
-            player.classList.remove('active');
-            videoElement.pause();
-            videoElement.src = '';
-            currentVideo = null;
-        }
-
-        // Initialize video loading
-        loadVideos();
-
-        // Popunder ad after 5 seconds
-        setTimeout(() => {
-            window.open('https://virtualflashy.com/jnf3d1pua?key=6832e4423c55e16afec5ac036518dfa6', '_blank');
-        }, 5000);
-
-        // Close video when clicking outside
-        document.getElementById('videoPlayer').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('videoPlayer')) {
-                closeVideo();
+            if (scrollTop + clientHeight >= scrollHeight - 5) {
+                fetchVideos();
             }
         });
+
+        // Initial load
+        fetchVideos();
     </script>
 </body>
 </html>
