@@ -1,59 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Confession Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Confessions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            overflow: hidden;
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .confession-form {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            resize: none;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.5);
+            background: white;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            color: white;
+            margin: 15px 0;
+        }
+        
+        .checkbox-group input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: #1877F2;
+            color: white;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
+        }
+        
+        .btn-primary:hover {
+            background: #166FE5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(24, 119, 242, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .privacy-note {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .privacy-note i {
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+        
+        .confession-preview {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .preview-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .preview-content {
+            line-height: 1.5;
+            color: #333;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .confession-form {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-6">
-
-  <div class="max-w-5xl mx-auto">
-    <h1 class="text-3xl font-bold text-center mb-6">💬 Confession Admin Panel</h1>
-
-    <!-- Confession Log Section -->
-    <div id="confession-list" class="space-y-4">
-      <!-- Confession cards will be injected here -->
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-lock"></i> Secret Confession</h1>
+            <p>Share anonymously or post to Facebook</p>
+        </header>
+        
+        <div class="confession-form">
+            <div class="form-group">
+                <textarea id="confessionText" placeholder="What's on your mind? Share your confession..."></textarea>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="postToFacebook">
+                <label for="postToFacebook">Post to Facebook</label>
+            </div>
+            
+            <button class="btn btn-primary" onclick="postConfession()">
+                <i class="fab fa-facebook"></i> Share Confession
+            </button>
+            
+            <button class="btn btn-secondary" onclick="postAnonymously()">
+                <i class="fas fa-user-secret"></i> Share Anonymously
+            </button>
+            
+            <div class="privacy-note">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>Privacy Assurance:</strong> When posting to Facebook, your identity will not be revealed in the confession text. The post will appear from your account but with anonymous content.
+                </div>
+            </div>
+            
+            <div id="confessionPreview" class="confession-preview">
+                <div class="preview-header">
+                    <div class="preview-avatar">Y</div>
+                    <div>
+                        <strong>Your Name</strong>
+                        <div style="font-size: 0.8rem; color: #666;">Just now</div>
+                    </div>
+                </div>
+                <div class="preview-content" id="previewContent"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Your secrets are safe with us | Confessions are not stored on our servers</p>
+        </div>
     </div>
-  </div>
 
-  <!-- Sample Confessions -->
-  <script>
-    const confessions = [
-      { id: 'cfn001', content: 'Crush ko si seatmate ko 😳', status: 'pending' },
-      { id: 'cfn002', content: 'I want to say sorry to my best friend.', status: 'approved' },
-    ];
-
-    const confessionList = document.getElementById('confession-list');
-
-    confessions.forEach((confession) => {
-      const card = document.createElement('div');
-      card.className = 'bg-white shadow-md p-4 rounded-xl';
-      card.innerHTML = `
-        <div class="flex justify-between items-center">
-          <h2 class="text-lg font-semibold">${confession.id}</h2>
-          <span class="text-sm ${confession.status === 'approved' ? 'text-green-600' : 'text-yellow-500'}">
-            ${confession.status.toUpperCase()}
-          </span>
-        </div>
-        <p class="mt-2 text-gray-800">${confession.content}</p>
-        <div class="mt-4 space-x-2">
-          <button class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" onclick="approve('${confession.id}')">Approve</button>
-          <button class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600" onclick="decline('${confession.id}')">Decline</button>
-        </div>
-      `;
-      confessionList.appendChild(card);
-    });
-
-    function approve(id) {
-      alert(`✅ Confession ${id} approved and will be posted.`);
-      // Trigger post to Facebook function here (Node.js backend)
-    }
-
-    function decline(id) {
-      alert(`❌ Confession ${id} declined.`);
-      // Optional: Log decline in database or file
-    }
-  </script>
-
+    <script>
+        // Facebook integration using cookie.json
+        function loadFacebookSession() {
+            // In a real implementation, you would securely load the cookie session
+            console.log("Loading Facebook session from cookie.json...");
+            return {
+                userId: "123456789",
+                name: "Your Name",
+                accessToken: "EAAGK... (your access token)"
+            };
+        }
+        
+        function postToFacebook(content) {
+            const session = loadFacebookSession();
+            console.log(`Posting to Facebook as ${session.name}...`);
+            
+            // Simulate API call to Facebook Graph API
+            setTimeout(() => {
+                showPreview(content, session.name);
+            }, 1500);
+        }
+        
+        function postConfession() {
+            const confessionText = document.getElementById('confessionText').value;
+            const postToFB = document.getElementById('postToFacebook').checked;
+            
+            if (!confessionText.trim()) {
+                alert("Please write your confession first!");
+                return;
+            }
+            
+            if (postToFB) {
+                postToFacebook(confessionText);
+            } else {
+                postAnonymously(confessionText);
+            }
+        }
+        
+        function postAnonymously() {
+            const confessionText = document.getElementById('confessionText').value;
+            if (!confessionText.trim()) {
+                alert("Please write your confession first!");
+                return;
+            }
+            
+            console.log("Posting anonymously to wall...");
+            showPreview(confessionText, "Anonymous");
+        }
+        
+        function showPreview(content, author) {
+            document.getElementById('previewContent').textContent = content;
+            document.querySelector('.preview-avatar').textContent = author.charAt(0);
+            document.querySelector('.preview-header strong').textContent = author;
+            document.getElementById('confessionPreview').style.display = 'block';
+            
+            // Scroll to preview
+            document.getElementById('confessionPreview').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    </script>
 </body>
 </html>
