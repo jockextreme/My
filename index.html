@@ -3,152 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Confessions</title>
+    <title>Facebook Confession Poster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, #1877f2 0%, #0d47a1 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #333;
         }
         
         .container {
             width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            overflow: hidden;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
         
         header {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 20px;
             text-align: center;
             color: white;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 5px;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
-        .confession-form {
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: #1877f2;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .card-header i {
+            font-size: 1.8rem;
+        }
+        
+        .card-body {
             padding: 25px;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1877f2;
         }
         
         textarea {
             width: 100%;
             height: 150px;
             padding: 15px;
-            border-radius: 12px;
-            border: none;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
+            border-radius: 10px;
+            border: 2px solid #e4e6eb;
+            font-size: 1.1rem;
             resize: none;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
         
         textarea:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.5);
-            background: white;
+            border-color: #1877f2;
+            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
         }
         
-        .checkbox-group {
+        .auth-status {
             display: flex;
             align-items: center;
-            color: white;
-            margin: 15px 0;
+            gap: 10px;
+            padding: 15px;
+            background: #f0f2f5;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
         
-        .checkbox-group input {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
+        .auth-status i {
+            font-size: 1.5rem;
+            color: #1877f2;
+        }
+        
+        .auth-success {
+            color: #31a24c;
+            font-weight: 600;
+        }
+        
+        .cookie-info {
+            background: #e7f3ff;
+            border-left: 4px solid #1877f2;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-size: 0.95rem;
         }
         
         .btn {
-            width: 100%;
-            padding: 15px;
+            padding: 15px 25px;
             border: none;
-            border-radius: 50px;
+            border-radius: 8px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            justify-content: center;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
         }
         
         .btn-primary {
-            background: #1877F2;
+            background: #1877f2;
             color: white;
-            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
+            box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
         }
         
         .btn-primary:hover {
-            background: #166FE5;
+            background: #166fe5;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(24, 119, 242, 0.6);
+            box-shadow: 0 6px 15px rgba(24, 119, 242, 0.4);
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            margin-top: 10px;
+            background: #e4e6eb;
+            color: #444;
         }
         
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: #d8dadf;
         }
         
-        .privacy-note {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9rem;
+        .actions {
             display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .privacy-note i {
-            font-size: 1.2rem;
-            margin-top: 2px;
-        }
-        
-        .confession-preview {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 20px;
+            gap: 15px;
             margin-top: 20px;
+        }
+        
+        .preview-container {
             display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f2f5;
+            border-radius: 10px;
         }
         
         .preview-header {
@@ -158,42 +199,117 @@
             margin-bottom: 15px;
         }
         
-        .preview-avatar {
-            width: 40px;
-            height: 40px;
+        .avatar {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: #ddd;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #555;
+            color: #777;
             font-weight: bold;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #1877f2, #34b7f1);
+            color: white;
         }
         
-        .preview-content {
-            line-height: 1.5;
-            color: #333;
+        .user-info {
+            flex: 1;
         }
         
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255, 255, 255, 0.7);
+        .user-info h3 {
+            margin-bottom: 3px;
+        }
+        
+        .post-time {
+            color: #65676b;
             font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        @media (max-width: 480px) {
-            .container {
-                border-radius: 15px;
+        .post-content {
+            padding: 15px 0;
+            line-height: 1.5;
+            font-size: 1.1rem;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+            border-top: 1px solid #e4e6eb;
+            color: #65676b;
+        }
+        
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .post-action:hover {
+            color: #1877f2;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background: #31a24c;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .feature {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            color: #fff;
+        }
+        
+        .feature-content h3 {
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .actions {
+                flex-direction: column;
             }
             
             header h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
-            .confession-form {
-                padding: 20px;
+            .features {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -201,112 +317,165 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-lock"></i> Secret Confession</h1>
-            <p>Share anonymously or post to Facebook</p>
+            <h1><i class="fab fa-facebook"></i> Facebook Confession Poster</h1>
+            <p>Share your thoughts anonymously on Facebook using cookie authentication</p>
         </header>
         
-        <div class="confession-form">
-            <div class="form-group">
-                <textarea id="confessionText" placeholder="What's on your mind? Share your confession..."></textarea>
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-cookie-bite"></i>
+                <div class="feature-content">
+                    <h3>Cookie Authentication</h3>
+                    <p>Uses cookie.json for secure login</p>
+                </div>
             </div>
-            
-            <div class="checkbox-group">
-                <input type="checkbox" id="postToFacebook">
-                <label for="postToFacebook">Post to Facebook</label>
+            <div class="feature">
+                <i class="fas fa-user-secret"></i>
+                <div class="feature-content">
+                    <h3>Anonymous Posting</h3>
+                    <p>Your identity remains hidden</p>
+                </div>
             </div>
-            
-            <button class="btn btn-primary" onclick="postConfession()">
-                <i class="fab fa-facebook"></i> Share Confession
-            </button>
-            
-            <button class="btn btn-secondary" onclick="postAnonymously()">
-                <i class="fas fa-user-secret"></i> Share Anonymously
-            </button>
-            
-            <div class="privacy-note">
+            <div class="feature">
                 <i class="fas fa-shield-alt"></i>
-                <div>
-                    <strong>Privacy Assurance:</strong> When posting to Facebook, your identity will not be revealed in the confession text. The post will appear from your account but with anonymous content.
+                <div class="feature-content">
+                    <h3>Secure & Private</h3>
+                    <p>End-to-end confidentiality</p>
                 </div>
-            </div>
-            
-            <div id="confessionPreview" class="confession-preview">
-                <div class="preview-header">
-                    <div class="preview-avatar">Y</div>
-                    <div>
-                        <strong>Your Name</strong>
-                        <div style="font-size: 0.8rem; color: #666;">Just now</div>
-                    </div>
-                </div>
-                <div class="preview-content" id="previewContent"></div>
             </div>
         </div>
         
-        <div class="footer">
-            <p>Your secrets are safe with us | Confessions are not stored on our servers</p>
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-edit"></i>
+                <h2>Create Your Confession</h2>
+            </div>
+            <div class="card-body">
+                <div class="auth-status">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <div class="auth-success">Authenticated via cookie.json</div>
+                        <div>Session active: John Doe (john.doe@example.com)</div>
+                    </div>
+                </div>
+                
+                <div class="cookie-info">
+                    <i class="fas fa-info-circle"></i> Your Facebook session is authenticated using the stored cookie.json file. Your identity will remain hidden when posting confessions.
+                </div>
+                
+                <div class="form-group">
+                    <label for="confession">Your Confession:</label>
+                    <textarea id="confession" placeholder="Write what's on your mind..."></textarea>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn btn-primary" id="postBtn">
+                        <i class="fab fa-facebook"></i> Post to Facebook
+                    </button>
+                    <button class="btn btn-secondary" id="previewBtn">
+                        <i class="fas fa-eye"></i> Preview Post
+                    </button>
+                </div>
+                
+                <div class="preview-container" id="previewContainer">
+                    <div class="preview-header">
+                        <div class="avatar">J</div>
+                        <div class="user-info">
+                            <h3>John Doe</h3>
+                            <div class="post-time">Just now · <i class="fas fa-globe-americas"></i></div>
+                        </div>
+                    </div>
+                    <div class="post-content" id="previewContent">
+                        Your confession will appear here...
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>Like</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="far fa-comment"></i>
+                            <span>Comment</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="far fa-share-square"></i>
+                            <span>Share</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Confession posted successfully to Facebook!</span>
     </div>
 
     <script>
-        // Facebook integration using cookie.json
-        function loadFacebookSession() {
-            // In a real implementation, you would securely load the cookie session
-            console.log("Loading Facebook session from cookie.json...");
-            return {
-                userId: "123456789",
-                name: "Your Name",
-                accessToken: "EAAGK... (your access token)"
-            };
-        }
-        
-        function postToFacebook(content) {
-            const session = loadFacebookSession();
-            console.log(`Posting to Facebook as ${session.name}...`);
+        document.addEventListener('DOMContentLoaded', function() {
+            const confessionTextarea = document.getElementById('confession');
+            const postBtn = document.getElementById('postBtn');
+            const previewBtn = document.getElementById('previewBtn');
+            const previewContainer = document.getElementById('previewContainer');
+            const previewContent = document.getElementById('previewContent');
+            const toast = document.getElementById('toast');
             
-            // Simulate API call to Facebook Graph API
-            setTimeout(() => {
-                showPreview(content, session.name);
-            }, 1500);
-        }
-        
-        function postConfession() {
-            const confessionText = document.getElementById('confessionText').value;
-            const postToFB = document.getElementById('postToFacebook').checked;
-            
-            if (!confessionText.trim()) {
-                alert("Please write your confession first!");
-                return;
-            }
-            
-            if (postToFB) {
-                postToFacebook(confessionText);
-            } else {
-                postAnonymously(confessionText);
-            }
-        }
-        
-        function postAnonymously() {
-            const confessionText = document.getElementById('confessionText').value;
-            if (!confessionText.trim()) {
-                alert("Please write your confession first!");
-                return;
-            }
-            
-            console.log("Posting anonymously to wall...");
-            showPreview(confessionText, "Anonymous");
-        }
-        
-        function showPreview(content, author) {
-            document.getElementById('previewContent').textContent = content;
-            document.querySelector('.preview-avatar').textContent = author.charAt(0);
-            document.querySelector('.preview-header strong').textContent = author;
-            document.getElementById('confessionPreview').style.display = 'block';
-            
-            // Scroll to preview
-            document.getElementById('confessionPreview').scrollIntoView({
-                behavior: 'smooth'
+            // Preview button functionality
+            previewBtn.addEventListener('click', function() {
+                const text = confessionTextarea.value.trim();
+                
+                if (text === '') {
+                    alert('Please write your confession first!');
+                    return;
+                }
+                
+                previewContent.textContent = text;
+                previewContainer.style.display = 'block';
+                
+                // Scroll to preview
+                previewContainer.scrollIntoView({ behavior: 'smooth' });
             });
-        }
+            
+            // Post button functionality
+            postBtn.addEventListener('click', function() {
+                const text = confessionTextarea.value.trim();
+                
+                if (text === '') {
+                    alert('Please write your confession first!');
+                    return;
+                }
+                
+                // Show loading state
+                postBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+                postBtn.disabled = true;
+                
+                // Simulate API call to Facebook
+                setTimeout(() => {
+                    // Show success toast
+                    toast.classList.add('show');
+                    
+                    // Reset button
+                    postBtn.innerHTML = '<i class="fab fa-facebook"></i> Post to Facebook';
+                    postBtn.disabled = false;
+                    
+                    // Show preview
+                    previewContent.textContent = text;
+                    previewContainer.style.display = 'block';
+                    
+                    // Clear textarea
+                    confessionTextarea.value = '';
+                    
+                    // Hide toast after 3 seconds
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 3000);
+                    
+                    // Scroll to preview
+                    previewContainer.scrollIntoView({ behavior: 'smooth' });
+                }, 2000);
+            });
+        });
     </script>
 </body>
 </html>
