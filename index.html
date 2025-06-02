@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Facebook Confession Poster</title>
+    <title>Facebook Confession Poster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -416,6 +416,31 @@
             border-color: #1877f2;
         }
         
+        .post-history {
+            background: #f0f2f5;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+            display: none;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e4e6eb;
+        }
+        
+        .history-item {
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
         @media (max-width: 768px) {
             .actions {
                 flex-direction: column;
@@ -438,24 +463,24 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fab fa-facebook"></i> Secure Confession Poster</h1>
-            <p>Share your thoughts anonymously on Facebook with encrypted cookie protection</p>
+            <h1><i class="fab fa-facebook"></i> Public Confession Poster</h1>
+            <p>Share your thoughts publicly on Facebook with enhanced privacy protection</p>
             
             <div class="feature-grid">
                 <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                    <h3 class="feature-title">Public Posting</h3>
+                    <p>Reach a wider audience</p>
+                </div>
+                <div class="feature-card">
                     <div class="feature-icon"><i class="fas fa-user-secret"></i></div>
-                    <h3 class="feature-title">Full Anonymity</h3>
-                    <p>Your identity remains completely hidden</p>
+                    <h3 class="feature-title">Privacy Protection</h3>
+                    <p>Your identity remains secure</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                    <h3 class="feature-title">Cookie Encryption</h3>
-                    <p>Session data protected with AES-256</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-eye-slash"></i></div>
-                    <h3 class="feature-title">No Data Storage</h3>
-                    <p>We don't store any of your information</p>
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3 class="feature-title">Quick Posting</h3>
+                    <p>Share your thoughts instantly</p>
                 </div>
             </div>
         </header>
@@ -464,22 +489,22 @@
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-edit"></i>
-                    <h2>Create Your Confession</h2>
+                    <h2>Create Public Confession</h2>
                 </div>
                 <div class="card-body">
                     <div class="auth-status">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-check-circle"></i>
                         <div>
-                            <div class="auth-success">Secure Session Active</div>
-                            <div>Authenticated via encrypted cookies</div>
+                            <div class="auth-success">Public Posting Enabled</div>
+                            <div>Session active: John Doe (user ID: 100085796989685)</div>
                         </div>
                     </div>
                     
                     <div class="cookie-info">
-                        <i class="fas fa-key"></i>
+                        <i class="fas fa-shield-alt"></i>
                         <div>
                             <strong>Security Status:</strong> Your Facebook cookies are encrypted and protected. 
-                            No sensitive data is exposed or stored on our servers.
+                            Public posts will not reveal your identity.
                         </div>
                     </div>
                     
@@ -490,19 +515,19 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>Privacy Settings:</label>
+                        <label>Post Privacy:</label>
                         <div class="privacy-controls">
-                            <div class="privacy-option active">
+                            <div class="privacy-option active" id="publicOption">
                                 <i class="fas fa-globe-americas"></i>
                                 <h4>Public</h4>
                                 <p>Anyone can see this</p>
                             </div>
-                            <div class="privacy-option">
+                            <div class="privacy-option" id="friendsOption">
                                 <i class="fas fa-user-friends"></i>
                                 <h4>Friends</h4>
                                 <p>Only your friends</p>
                             </div>
-                            <div class="privacy-option">
+                            <div class="privacy-option" id="privateOption">
                                 <i class="fas fa-lock"></i>
                                 <h4>Only Me</h4>
                                 <p>Just for you</p>
@@ -524,19 +549,19 @@
                     
                     <div class="actions">
                         <button class="btn btn-primary" id="postBtn">
-                            <i class="fab fa-facebook"></i> Post Confession
+                            <i class="fab fa-facebook"></i> Post Publicly
                         </button>
                         <button class="btn btn-secondary" id="previewBtn">
-                            <i class="fas fa-eye"></i> Preview
+                            <i class="fas fa-eye"></i> Preview Post
                         </button>
                     </div>
                     
                     <div class="preview-container" id="previewContainer">
                         <div class="preview-header">
-                            <div class="avatar">A</div>
+                            <div class="avatar">J</div>
                             <div class="user-info">
-                                <h3>Anonymous User</h3>
-                                <div class="post-time">
+                                <h3>John Doe</h3>
+                                <div class="post-time" id="privacyDisplay">
                                     <i class="fas fa-globe-americas"></i> Public · Just now
                                 </div>
                             </div>
@@ -559,63 +584,71 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="post-history" id="postHistory">
+                        <div class="history-header">
+                            <h3>Recent Public Posts</h3>
+                            <button class="btn btn-secondary" id="refreshHistory">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                        <div id="historyList">
+                            <!-- History items will be added here -->
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-shield-alt"></i>
-                    <h2>Security Features</h2>
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Public Post Analytics</h2>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <div class="cookie-info">
-                            <i class="fas fa-user-secret"></i>
-                            <div>
-                                <strong>Anonymous Posting:</strong> Your personal information is never revealed in your confessions
-                            </div>
+                        <label>Public Post Engagement</label>
+                        <div style="background: #f0f2f5; height: 20px; border-radius: 10px; margin-top: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(to right, #31a24c, #1877f2); width: 85%; height: 100%;"></div>
                         </div>
-                        
-                        <div class="cookie-info">
-                            <i class="fas fa-lock"></i>
-                            <div>
-                                <strong>Cookie Protection:</strong> Your session cookies are encrypted with military-grade AES-256 encryption
-                            </div>
-                        </div>
-                        
-                        <div class="cookie-info">
-                            <i class="fas fa-ban"></i>
-                            <div>
-                                <strong>No Data Storage:</strong> We don't store your confessions or personal information
-                            </div>
-                        </div>
-                        
-                        <div class="cookie-info">
-                            <i class="fas fa-sync-alt"></i>
-                            <div>
-                                <strong>Session Refresh:</strong> Your session is automatically refreshed every 24 hours
-                            </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                            <span>Low</span>
+                            <span style="font-weight: bold;">High Engagement</span>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label>Security Level</label>
-                        <div style="background: #f0f2f5; height: 20px; border-radius: 10px; margin-top: 10px; overflow: hidden;">
-                            <div style="background: linear-gradient(to right, #31a24c, #1877f2); width: 95%; height: 100%;"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
-                            <span>Low</span>
-                            <span style="font-weight: bold;">Maximum Security</span>
-                            <span>High</span>
+                        <div style="display: flex; justify-content: space-between; margin: 25px 0;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #1877f2;">1.2K</div>
+                                <div>Impressions</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #1877f2;">348</div>
+                                <div>Engagements</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #1877f2;">78</div>
+                                <div>Shares</div>
+                            </div>
                         </div>
                     </div>
                     
-                    <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;">
-                        <i class="fas fa-sync"></i> Refresh Session
-                    </button>
+                    <div class="cookie-info">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>Audience Reach:</strong> Public posts typically reach 5-10x more people than private posts.
+                        </div>
+                    </div>
                     
-                    <button class="btn btn-secondary" style="width: 100%; margin-top: 15px; background: #ffe8e8; color: #e74c3c;">
-                        <i class="fas fa-sign-out-alt"></i> Logout Securely
+                    <div class="cookie-info">
+                        <i class="fas fa-rocket"></i>
+                        <div>
+                            <strong>Tip:</strong> Post during peak hours (3-5 PM) for maximum visibility.
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-chart-bar"></i> View Detailed Analytics
                     </button>
                 </div>
             </div>
@@ -624,7 +657,7 @@
     
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
-        <span>Confession posted successfully to Facebook!</span>
+        <span id="toastMessage">Confession posted publicly to Facebook!</span>
     </div>
 
     <script>
@@ -635,9 +668,16 @@
             const previewContainer = document.getElementById('previewContainer');
             const previewContent = document.getElementById('previewContent');
             const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
             const charCount = document.getElementById('charCount');
             const privacyOptions = document.querySelectorAll('.privacy-option');
             const moodOptions = document.querySelectorAll('.mood-option');
+            const privacyDisplay = document.getElementById('privacyDisplay');
+            const postHistory = document.getElementById('postHistory');
+            const historyList = document.getElementById('historyList');
+            const refreshHistory = document.getElementById('refreshHistory');
+            
+            let currentPrivacy = 'public';
             
             // Character counter
             confessionTextarea.addEventListener('input', function() {
@@ -649,6 +689,29 @@
                 option.addEventListener('click', function() {
                     privacyOptions.forEach(o => o.classList.remove('active'));
                     this.classList.add('active');
+                    
+                    currentPrivacy = this.id.replace('Option', '');
+                    
+                    // Update privacy display
+                    let privacyText = '';
+                    let privacyIcon = '';
+                    
+                    switch(currentPrivacy) {
+                        case 'public':
+                            privacyText = 'Public';
+                            privacyIcon = 'fas fa-globe-americas';
+                            break;
+                        case 'friends':
+                            privacyText = 'Friends';
+                            privacyIcon = 'fas fa-user-friends';
+                            break;
+                        case 'private':
+                            privacyText = 'Only Me';
+                            privacyIcon = 'fas fa-lock';
+                            break;
+                    }
+                    
+                    privacyDisplay.innerHTML = `<i class="${privacyIcon}"></i> ${privacyText} · Just now`;
                 });
             });
             
@@ -687,13 +750,15 @@
                 
                 // Show loading state
                 const originalText = postBtn.innerHTML;
-                postBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting Securely...';
+                postBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting Publicly...';
                 postBtn.disabled = true;
                 
                 // Simulate secure posting process
                 setTimeout(() => {
                     // Show success toast
-                    showToast('Confession posted successfully to Facebook!', 'success');
+                    const privacyText = currentPrivacy === 'public' ? 'publicly' : 
+                                      currentPrivacy === 'friends' ? 'to friends' : 'privately';
+                    showToast(`Confession posted ${privacyText} to Facebook!`, 'success');
                     
                     // Reset button
                     postBtn.innerHTML = originalText;
@@ -703,18 +768,51 @@
                     previewContent.textContent = text;
                     previewContainer.style.display = 'block';
                     
+                    // Show post history
+                    postHistory.style.display = 'block';
+                    
+                    // Add to history
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong>${timeString}</strong>
+                            <span style="color: ${currentPrivacy === 'public' ? '#31a24c' : '#1877f2'}">
+                                <i class="${currentPrivacy === 'public' ? 'fas fa-globe-americas' : 
+                                         currentPrivacy === 'friends' ? 'fas fa-user-friends' : 'fas fa-lock'}"></i>
+                                ${currentPrivacy === 'public' ? 'Public' : 
+                                 currentPrivacy === 'friends' ? 'Friends' : 'Private'}
+                            </span>
+                        </div>
+                        <div>${text.substring(0, 100)}${text.length > 100 ? '...' : ''}</div>
+                    `;
+                    
+                    historyList.insertBefore(historyItem, historyList.firstChild);
+                    
                     // Clear textarea
                     confessionTextarea.value = '';
                     charCount.textContent = '0';
                     
                     // Scroll to preview
                     previewContainer.scrollIntoView({ behavior: 'smooth' });
-                }, 3000);
+                }, 2000);
+            });
+            
+            // Refresh history
+            refreshHistory.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-sync"></i> Refresh';
+                    showToast('Post history refreshed!', 'success');
+                }, 1000);
             });
             
             // Show toast notification
             function showToast(message, type) {
-                toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+                toastMessage.textContent = message;
                 toast.style.background = type === 'success' ? '#31a24c' : '#e74c3c';
                 toast.classList.add('show');
                 
@@ -722,6 +820,9 @@
                     toast.classList.remove('show');
                 }, 4000);
             }
+            
+            // Initialize with public selected
+            document.getElementById('publicOption').click();
         });
     </script>
 </body>
