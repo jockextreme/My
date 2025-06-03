@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoti Media Viewer</title>
+    <title>Shoti - Viral TikTok Videos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #ff0050;
+            --primary-light: #ff3379;
+            --dark-bg: #121212;
+            --darker-bg: #000;
+            --card-bg: #1e1e1e;
+            --text: #ffffff;
+            --text-secondary: #aaa;
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,716 +25,926 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--dark-bg);
+            color: var(--text);
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1200px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
+        /* Header Styles */
         header {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 25px 40px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: var(--darker-bg);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #4facfe, #00f2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        header p {
-            color: #a0aec0;
-            font-size: 1.1rem;
-        }
-
-        .main-content {
+        .header-content {
             display: flex;
-            padding: 30px;
-            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-        }
-
-        .panel {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .controls-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .media-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #4facfe;
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        h2 i {
-            font-size: 1.5rem;
+        .logo i {
+            color: var(--primary-light);
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .search-bar {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 30px;
+            position: relative;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #cbd5e0;
-        }
-
-        input, select {
+        .search-bar input {
             width: 100%;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s ease;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 16px;
+            padding-left: 50px;
         }
 
-        input:focus, select:focus {
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.3);
+        .search-bar i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
         }
 
-        .btn-group {
+        .nav-buttons {
             display: flex;
             gap: 15px;
-            flex-wrap: wrap;
         }
 
-        .btn {
-            padding: 14px 25px;
-            border-radius: 10px;
+        .nav-btn {
+            background: var(--primary);
+            color: white;
             border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
             font-weight: 600;
-            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
         }
 
-        .btn-primary {
-            background: linear-gradient(to right, #4facfe, #00f2fe);
-            color: white;
-            flex: 1;
+        .nav-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .nav-btn.outline {
+            background: transparent;
+            border: 2px solid var(--primary);
         }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .media-container {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            overflow: hidden;
+        /* Hero Section */
+        .hero {
+            padding: 50px 0;
+            background: linear-gradient(to bottom, #1a1a2e, #16213e);
             position: relative;
-            height: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
         }
 
-        .placeholder {
-            text-align: center;
-            color: #718096;
-            padding: 30px;
-        }
-
-        .placeholder i {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .placeholder h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .media-content {
-            max-width: 100%;
-            max-height: 100%;
-            display: none;
-        }
-
-        .media-content.active {
-            display: block;
-        }
-
-        .media-content img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .media-content video {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .media-info {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            color: #a0aec0;
-        }
-
-        .info-value {
-            color: #fff;
-            font-weight: 500;
-        }
-
-        .loader {
-            display: none;
+        .hero::before {
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            flex-direction: column;
-            gap: 20px;
+            background: radial-gradient(circle at top right, #ff005050, transparent 70%);
+            pointer-events: none;
         }
 
-        .loader.active {
+        .hero-content {
             display: flex;
+            gap: 40px;
+            align-items: center;
         }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.1);
-            border-top: 5px solid #4facfe;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .hero-text {
+            flex: 1;
+            z-index: 2;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
         }
 
-        .history-panel {
-            margin-top: 30px;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        .hero-text h1 span {
+            color: var(--primary);
         }
 
-        .history-items {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .hero-btns {
+            display: flex;
             gap: 15px;
-            margin-top: 20px;
         }
 
-        .history-item {
-            border-radius: 10px;
-            overflow: hidden;
+        .hero-video {
+            flex: 1;
             position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .hero-video video {
+            width: 100%;
+            display: block;
+            border-radius: 20px;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), #ff3379);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Trending Videos */
+        .trending {
+            padding: 80px 0;
+            background: var(--darker-bg);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-thumb {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .video-card:hover .video-thumb img {
+            transform: scale(1.1);
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-info h3 {
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .video-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        /* Creator Section */
+        .creators {
+            padding: 80px 0;
+        }
+
+        .creator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .creator-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .creator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .creator-avatar {
+            width: 100px;
             height: 100px;
-            background: rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 15px;
+            border: 3px solid var(--primary);
         }
 
-        .history-item:hover {
-            transform: scale(1.05);
-        }
-
-        .history-item img, .history-item video {
+        .creator-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .type-indicator {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 0.8rem;
+        .creator-name {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
         }
 
+        .creator-username {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .creator-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-count {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .follow-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .follow-btn:hover {
+            background: var(--primary-light);
+        }
+
+        /* Footer */
         footer {
+            background: var(--darker-bg);
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
             text-align: center;
-            padding: 20px;
-            color: #718096;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            border-top: 1px solid #333;
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
 
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #38a169;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1000;
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                flex-direction: column;
+            }
+            
+            .hero-text {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+            
+            .hero-text p {
+                margin: 0 auto 30px;
+            }
+            
+            .hero-btns {
+                justify-content: center;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-images"></i> Shoti Media Viewer</h1>
-            <p>Browse and display images and videos from the Shoti API</p>
-        </header>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-video"></i>
+                    SHOTI
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for videos, creators, hashtags...">
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                    <button class="nav-btn outline">
+                        <i class="fas fa-user"></i> Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
 
-        <div class="main-content">
-            <div class="panel controls-panel">
-                <h2><i class="fas fa-sliders-h"></i> Controls</h2>
-                
-                <div class="form-group">
-                    <label for="apiKey">API Key</label>
-                    <input type="text" id="apiKey" value="$shoti-616b2a1a4c" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label for="mediaType">Media Type</label>
-                    <select id="mediaType">
-                        <option value="image">Image</option>
-                        <option value="video">Video</option>
-                        <option value="random">Random</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="category">Category (Optional)</label>
-                    <input type="text" id="category" placeholder="Enter category">
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn btn-primary" id="fetchBtn">
-                        <i class="fas fa-download"></i> Fetch Media
-                    </button>
-                    <button class="btn btn-secondary" id="clearBtn">
-                        <i class="fas fa-trash"></i> Clear
-                    </button>
-                </div>
-                
-                <div class="media-info">
-                    <h2><i class="fas fa-info-circle"></i> Media Information</h2>
-                    <div class="info-item">
-                        <span class="info-label">Type:</span>
-                        <span class="info-value" id="infoType">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Dimensions:</span>
-                        <span class="info-value" id="infoDimensions">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Source:</span>
-                        <span class="info-value" id="infoSource">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Date:</span>
-                        <span class="info-value" id="infoDate">-</span>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Discover <span>Viral Videos</span> From Around The World</h1>
+                    <p>Shoti brings you the most entertaining, inspiring, and viral short videos from creators worldwide. Join our community of millions today!</p>
+                    <div class="hero-btns">
+                        <button class="nav-btn">
+                            <i class="fas fa-play"></i> Watch Now
+                        </button>
+                        <button class="nav-btn outline">
+                            <i class="fas fa-user-plus"></i> Join Free
+                        </button>
                     </div>
                 </div>
-            </div>
-            
-            <div class="panel media-panel">
-                <h2><i class="fas fa-photo-video"></i> Media Display</h2>
-                
-                <div class="media-container">
-                    <div class="placeholder">
-                        <i class="fas fa-cloud-download-alt"></i>
-                        <h3>No Media Loaded</h3>
-                        <p>Click "Fetch Media" to load your first image or video</p>
+                <div class="hero-video">
+                    <video autoplay muted loop>
+                        <source src="https://assets.codepen.io/3364143/sample.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-overlay">
+                        <h3>Trending Dance Challenge</h3>
+                        <p>@dancequeen • 2.4M views</p>
                     </div>
-                    
-                    <div class="loader" id="loader">
-                        <div class="spinner"></div>
-                        <p>Fetching media from Shoti API...</p>
-                    </div>
-                    
-                    <img class="media-content" id="imageDisplay" alt="Shoti Image">
-                    <video class="media-content" id="videoDisplay" controls></video>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn btn-secondary" id="downloadBtn" disabled>
-                        <i class="fas fa-download"></i> Download
-                    </button>
-                    <button class="btn btn-secondary" id="shareBtn" disabled>
-                        <i class="fas fa-share-alt"></i> Share
-                    </button>
                 </div>
             </div>
         </div>
-        
-        <div class="history-panel">
-            <h2><i class="fas fa-history"></i> Recent Media</h2>
-            <div class="history-items" id="historyContainer">
-                <!-- History items will be added here dynamically -->
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Shoti?</h2>
+                <p>We provide the best platform for creators and viewers to enjoy short-form video content</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Our optimized platform delivers videos instantly without buffering or delays</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Vibrant Community</h3>
+                    <p>Join millions of creators and viewers in our active, supportive community</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Creator Earnings</h3>
+                    <p>Monetize your content and earn money from your viral videos</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>AI-Powered Editing</h3>
+                    <p>Create professional videos with our advanced editing tools</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Global Reach</h3>
+                    <p>Share your content with audiences around the world</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safe Environment</h3>
+                    <p>We prioritize safety with advanced content moderation</p>
+                </div>
             </div>
         </div>
-        
-        <footer>
-            <p>Shoti Media Viewer &copy; 2023 | Made with <i class="fas fa-heart" style="color: #e74c3c;"></i> for developers</p>
-        </footer>
-    </div>
-    
-    <div class="toast" id="toast">Media fetched successfully!</div>
+    </section>
+
+    <!-- Trending Videos Section -->
+    <section class="trending">
+        <div class="container">
+            <div class="section-header">
+                <h2>Trending Now</h2>
+                <p>Discover the most viral videos on Shoti right now</p>
+            </div>
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-thumb">
+                        <img src="https://images.unsplash.com/photo-1616469829479-1d0e5b0324d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Video Thumbnail">
+                        <div class="video-duration">1:45</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Epic Skateboard Fail Compilation</h3>
+                        <div class="video-meta">
+                            <span>@skatelife</span>
+                            <span>2 days ago</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="stat">
+                                <i class="fas fa-thumbs-up"></i> 245K
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-eye"></i> 1.2M
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-share"></i> 42K
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumb">
+                        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Video Thumbnail">
+                        <div class="video-duration">0:58</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>5 Minute Craft Hacks That Actually Work</h3>
+                        <div class="video-meta">
+                            <span>@diyqueen</span>
+                            <span>1 day ago</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="stat">
+                                <i class="fas fa-thumbs-up"></i> 521K
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-eye"></i> 3.4M
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-share"></i> 120K
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumb">
+                        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Video Thumbnail">
+                        <div class="video-duration">2:15</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Cooking Challenge: 3 Gourmet Meals in 10 Minutes</h3>
+                        <div class="video-meta">
+                            <span>@chefextra</span>
+                            <span>3 hours ago</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="stat">
+                                <i class="fas fa-thumbs-up"></i> 84K
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-eye"></i> 450K
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-share"></i> 15K
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumb">
+                        <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Video Thumbnail">
+                        <div class="video-duration">0:42</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Puppy Fails Compilation - Too Cute!</h3>
+                        <div class="video-meta">
+                            <span>@animalworld</span>
+                            <span>5 days ago</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="stat">
+                                <i class="fas fa-thumbs-up"></i> 1.2M
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-eye"></i> 8.7M
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-share"></i> 320K
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Creators Section -->
+    <section class="creators">
+        <div class="container">
+            <div class="section-header">
+                <h2>Top Creators</h2>
+                <p>Follow your favorite creators and never miss their latest videos</p>
+            </div>
+            <div class="creator-grid">
+                <div class="creator-card">
+                    <div class="creator-avatar">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Creator">
+                    </div>
+                    <h3 class="creator-name">Emma Johnson</h3>
+                    <div class="creator-username">@emma.creates</div>
+                    <div class="creator-stats">
+                        <div>
+                            <div class="stat-count">2.4M</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div>
+                            <div class="stat-count">184</div>
+                            <div class="stat-label">Videos</div>
+                        </div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-avatar">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Creator">
+                    </div>
+                    <h3 class="creator-name">Alex Chen</h3>
+                    <div class="creator-username">@alex.dance</div>
+                    <div class="creator-stats">
+                        <div>
+                            <div class="stat-count">3.1M</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div>
+                            <div class="stat-count">267</div>
+                            <div class="stat-label">Videos</div>
+                        </div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-avatar">
+                        <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Creator">
+                    </div>
+                    <h3 class="creator-name">Sophia Rodriguez</h3>
+                    <div class="creator-username">@sophia.travels</div>
+                    <div class="creator-stats">
+                        <div>
+                            <div class="stat-count">1.8M</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div>
+                            <div class="stat-count">142</div>
+                            <div class="stat-label">Videos</div>
+                        </div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-avatar">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Creator">
+                    </div>
+                    <h3 class="creator-name">Michael Brown</h3>
+                    <div class="creator-username">@mike.comedy</div>
+                    <div class="creator-stats">
+                        <div>
+                            <div class="stat-count">4.2M</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div>
+                            <div class="stat-count">312</div>
+                            <div class="stat-label">Videos</div>
+                        </div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo">
+                        <i class="fas fa-video"></i>
+                        SHOTI
+                    </div>
+                    <p style="margin: 20px 0; color: var(--text-secondary); max-width: 400px;">
+                        Shoti is the world's leading short video platform, connecting creators with audiences through entertaining and inspiring content.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Creator Academy</a></li>
+                        <li><a href="#">Community Guidelines</a></li>
+                        <li><a href="#">Safety Center</a></li>
+                        <li><a href="#">Transparency Report</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Copyright Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Shoti. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // Mock implementation of Shoti client for demonstration
-        class Shoti {
-            constructor(apikey) {
-                this.apikey = apikey;
-            }
+        // Simple animation for feature cards on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
             
-            async getShoti(options = {}) {
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                const type = options.type || 'image';
-                const isImage = type === 'image' || (type === 'random' && Math.random() > 0.5);
-                
-                if (isImage) {
-                    return {
-                        code: 200,
-                        data: this.getRandomImageUrl(),
-                        type: 'image',
-                        width: Math.floor(Math.random() * 500) + 800,
-                        height: Math.floor(Math.random() * 500) + 600,
-                        timestamp: new Date().toISOString()
-                    };
-                } else {
-                    return {
-                        code: 200,
-                        data: this.getRandomVideoUrl(),
-                        type: 'video',
-                        width: 1280,
-                        height: 720,
-                        timestamp: new Date().toISOString()
-                    };
-                }
-            }
-            
-            getRandomImageUrl() {
-                const categories = ['nature', 'city', 'animals', 'technology', 'food', 'abstract'];
-                const category = categories[Math.floor(Math.random() * categories.length)];
-                return `https://source.unsplash.com/800x600/?${category}`;
-            }
-            
-            getRandomVideoUrl() {
-                const videos = [
-                    'https://assets.mixkit.co/videos/preview/mixkit-clouds-and-blue-sky-8933-large.mp4',
-                    'https://assets.mixkit.co/videos/preview/mixkit-a-girl-blowing-a-bubble-gum-at-an-amusement-park-1226-large.mp4',
-                    'https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4',
-                    'https://assets.mixkit.co/videos/preview/mixkit-snow-covered-trees-in-a-forest-856-large.mp4'
-                ];
-                return videos[Math.floor(Math.random() * videos.length)];
-            }
-        }
-        
-        // DOM Elements
-        const apiKeyInput = document.getElementById('apiKey');
-        const mediaTypeSelect = document.getElementById('mediaType');
-        const categoryInput = document.getElementById('category');
-        const fetchBtn = document.getElementById('fetchBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const shareBtn = document.getElementById('shareBtn');
-        const imageDisplay = document.getElementById('imageDisplay');
-        const videoDisplay = document.getElementById('videoDisplay');
-        const mediaContainer = document.querySelector('.media-container');
-        const loader = document.getElementById('loader');
-        const placeholder = document.querySelector('.placeholder');
-        const toast = document.getElementById('toast');
-        const historyContainer = document.getElementById('historyContainer');
-        
-        // Info elements
-        const infoType = document.getElementById('infoType');
-        const infoDimensions = document.getElementById('infoDimensions');
-        const infoSource = document.getElementById('infoSource');
-        const infoDate = document.getElementById('infoDate');
-        
-        // Initialize Shoti client
-        const shoti = new Shoti(apiKeyInput.value);
-        
-        // Store history
-        let mediaHistory = [];
-        
-        // Event Listeners
-        fetchBtn.addEventListener('click', fetchMedia);
-        clearBtn.addEventListener('click', clearMedia);
-        downloadBtn.addEventListener('click', downloadMedia);
-        shareBtn.addEventListener('click', shareMedia);
-        
-        // Functions
-        async function fetchMedia() {
-            // Show loader
-            loader.classList.add('active');
-            placeholder.style.display = 'none';
-            downloadBtn.disabled = true;
-            shareBtn.disabled = true;
-            
-            try {
-                const options = {
-                    type: mediaTypeSelect.value
-                };
-                
-                if (categoryInput.value.trim() !== '') {
-                    options.category = categoryInput.value.trim();
-                }
-                
-                const data = await shoti.getShoti(options);
-                
-                // Hide loader
-                loader.classList.remove('active');
-                
-                // Show media
-                if (data.type === 'image') {
-                    imageDisplay.src = data.data;
-                    imageDisplay.classList.add('active');
-                    videoDisplay.classList.remove('active');
-                    videoDisplay.pause();
-                } else {
-                    videoDisplay.src = data.data;
-                    videoDisplay.classList.add('active');
-                    imageDisplay.classList.remove('active');
-                }
-                
-                // Update info
-                infoType.textContent = data.type.charAt(0).toUpperCase() + data.type.slice(1);
-                infoDimensions.textContent = `${data.width} × ${data.height}`;
-                infoSource.textContent = 'Shoti API';
-                infoDate.textContent = new Date(data.timestamp).toLocaleString();
-                
-                // Enable buttons
-                downloadBtn.disabled = false;
-                shareBtn.disabled = false;
-                
-                // Add to history
-                addToHistory(data);
-                
-                // Show success toast
-                showToast('Media fetched successfully!');
-            } catch (error) {
-                loader.classList.remove('active');
-                placeholder.style.display = 'block';
-                placeholder.innerHTML = `
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h3>Error Loading Media</h3>
-                    <p>${error.message || 'Failed to fetch media'}</p>
-                `;
-                showToast('Error fetching media!', 'error');
-            }
-        }
-        
-        function clearMedia() {
-            imageDisplay.classList.remove('active');
-            videoDisplay.classList.remove('active');
-            videoDisplay.pause();
-            placeholder.style.display = 'block';
-            downloadBtn.disabled = true;
-            shareBtn.disabled = true;
-            
-            // Reset info
-            infoType.textContent = '-';
-            infoDimensions.textContent = '-';
-            infoSource.textContent = '-';
-            infoDate.textContent = '-';
-            
-            showToast('Media cleared');
-        }
-        
-        function downloadMedia() {
-            let downloadUrl;
-            let filename;
-            
-            if (imageDisplay.classList.contains('active')) {
-                downloadUrl = imageDisplay.src;
-                filename = 'shoti-image.jpg';
-            } else if (videoDisplay.classList.contains('active')) {
-                downloadUrl = videoDisplay.src;
-                filename = 'shoti-video.mp4';
-            } else {
-                return;
-            }
-            
-            const a = document.createElement('a');
-            a.href = downloadUrl;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            showToast('Download started');
-        }
-        
-        function shareMedia() {
-            // In a real app, this would use the Web Share API
-            showToast('Share function is not implemented in this demo');
-        }
-        
-        function addToHistory(media) {
-            // Add to beginning of history
-            mediaHistory.unshift(media);
-            
-            // Keep only last 6 items
-            if (mediaHistory.length > 6) {
-                mediaHistory.pop();
-            }
-            
-            renderHistory();
-        }
-        
-        function renderHistory() {
-            historyContainer.innerHTML = '';
-            
-            mediaHistory.forEach(media => {
-                const item = document.createElement('div');
-                item.className = 'history-item';
-                
-                if (media.type === 'image') {
-                    item.innerHTML = `
-                        <img src="${media.data}" alt="History item">
-                        <div class="type-indicator">IMG</div>
-                    `;
-                } else {
-                    item.innerHTML = `
-                        <video muted>
-                            <source src="${media.data}" type="video/mp4">
-                        </video>
-                        <div class="type-indicator">VID</div>
-                    `;
-                }
-                
-                item.addEventListener('click', () => {
-                    if (media.type === 'image') {
-                        imageDisplay.src = media.data;
-                        imageDisplay.classList.add('active');
-                        videoDisplay.classList.remove('active');
-                        videoDisplay.pause();
-                    } else {
-                        videoDisplay.src = media.data;
-                        videoDisplay.classList.add('active');
-                        imageDisplay.classList.remove('active');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
                     }
-                    
-                    placeholder.style.display = 'none';
-                    downloadBtn.disabled = false;
-                    shareBtn.disabled = false;
-                    
-                    // Update info
-                    infoType.textContent = media.type.charAt(0).toUpperCase() + media.type.slice(1);
-                    infoDimensions.textContent = `${media.width} × ${media.height}`;
-                    infoSource.textContent = 'Shoti API';
-                    infoDate.textContent = new Date(media.timestamp).toLocaleString();
-                    
-                    showToast('Media loaded from history');
                 });
-                
-                historyContainer.appendChild(item);
-            });
-        }
-        
-        function showToast(message, type = 'success') {
-            toast.textContent = message;
-            toast.style.background = type === 'success' ? '#38a169' : '#e53e3e';
-            toast.classList.add('show');
+            }, { threshold: 0.1 });
             
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Initialize history
-        renderHistory();
+            featureCards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+            
+            // Video play on hover for video cards
+            const videoCards = document.querySelectorAll('.video-card');
+            videoCards.forEach(card => {
+                const video = card.querySelector('video');
+                if (video) {
+                    card.addEventListener('mouseenter', () => {
+                        video.play();
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
