@@ -3,842 +3,566 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Facebook Confession Poster</title>
+    <title>Grow a Garden - Stock Alerts</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --warning: #f39c12;
+            --danger: #e74c3c;
         }
         
         body {
-            background: linear-gradient(135deg, #1877f2 0%, #0d47a1 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #2ecc71);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--light);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
-            color: #333;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .container {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         header {
             text-align: center;
-            color: white;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 30px 0;
+            margin-bottom: 30px;
         }
         
-        header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
+        .logo {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        
-        .main-content {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            flex: 1;
-            min-width: 300px;
-        }
-        
-        .card:hover {
-            transform: translateY(-8px);
-        }
-        
-        .card-header {
-            background: linear-gradient(to right, #1877f2, #34b7f1);
-            color: white;
-            padding: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        }
-        
-        .card-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(to right, #ff6b6b, #ff8e53);
-        }
-        
-        .card-header i {
-            font-size: 2rem;
-            background: rgba(255, 255, 255, 0.2);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .card-body {
-            padding: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #1877f2;
-            font-size: 1.1rem;
-        }
-        
-        textarea {
-            width: 100%;
-            height: 180px;
-            padding: 20px;
-            border-radius: 15px;
-            border: 2px solid #e4e6eb;
-            font-size: 1.1rem;
-            resize: none;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        textarea:focus {
-            outline: none;
-            border-color: #1877f2;
-            box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.2);
-        }
-        
-        .auth-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px;
-            background: #f0f2f5;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border: 1px solid #e4e6eb;
-        }
-        
-        .auth-status i {
-            font-size: 2rem;
-            color: #31a24c;
-        }
-        
-        .auth-success {
-            color: #31a24c;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-        
-        .cookie-info {
-            background: #e7f3ff;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 25px 0;
-            font-size: 1rem;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            border: 1px dashed #1877f2;
-        }
-        
-        .btn {
-            padding: 17px 30px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(to right, #1877f2, #34b7f1);
-            color: white;
-            box-shadow: 0 6px 15px rgba(24, 119, 242, 0.4);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(24, 119, 242, 0.5);
-        }
-        
-        .btn-secondary {
-            background: #e4e6eb;
-            color: #444;
-        }
-        
-        .btn-secondary:hover {
-            background: #d8dadf;
-            transform: translateY(-3px);
-        }
-        
-        .actions {
-            display: flex;
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .preview-container {
-            display: none;
-            margin-top: 35px;
-            padding: 25px;
-            background: #f0f2f5;
-            border-radius: 20px;
-            border: 1px solid #dddfe2;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        .preview-header {
-            display: flex;
-            align-items: center;
             gap: 15px;
             margin-bottom: 20px;
         }
         
-        .avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.8rem;
-            background: linear-gradient(45deg, #1877f2, #34b7f1);
+        .logo i {
+            font-size: 3rem;
+            color: var(--primary);
         }
         
-        .user-info {
-            flex: 1;
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
-        .user-info h3 {
-            margin-bottom: 5px;
-            font-size: 1.3rem;
-        }
-        
-        .post-time {
-            color: #65676b;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .post-content {
-            padding: 20px 0;
-            line-height: 1.6;
+        .subtitle {
             font-size: 1.2rem;
-            color: #333;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
         }
         
-        .post-actions {
-            display: flex;
-            gap: 25px;
-            padding: 15px 0;
-            border-top: 1px solid #e4e6eb;
-            color: #65676b;
-        }
-        
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: color 0.2s;
-            font-weight: 600;
-        }
-        
-        .post-action:hover {
-            color: #1877f2;
-        }
-        
-        .toast {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 20px 30px;
-            border-radius: 15px;
-            background: #31a24c;
-            color: white;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transform: translateX(150%);
-            transition: transform 0.4s ease;
-            z-index: 1000;
-        }
-        
-        .toast.show {
-            transform: translateX(0);
-        }
-        
-        .feature-grid {
+        .main-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .feature-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: white;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .feature-title {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .privacy-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .privacy-option {
-            background: #f0f2f5;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid #e4e6eb;
-        }
-        
-        .privacy-option.active {
-            border-color: #1877f2;
-            background: #e7f3ff;
-            box-shadow: 0 4px 10px rgba(24, 119, 242, 0.2);
-        }
-        
-        .privacy-option i {
-            font-size: 2rem;
-            color: #1877f2;
-            margin-bottom: 10px;
-        }
-        
-        .privacy-option h4 {
-            margin-bottom: 5px;
-            color: #1877f2;
-        }
-        
-        .counter {
-            text-align: right;
-            margin-top: 5px;
-            color: #65676b;
-            font-size: 0.9rem;
-        }
-        
-        .mood-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 10px;
-        }
-        
-        .mood-option {
-            background: #f0f2f5;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid #e4e6eb;
-        }
-        
-        .mood-option:hover, .mood-option.active {
-            background: #e7f3ff;
-            border-color: #1877f2;
-        }
-        
-        .post-history {
-            background: #f0f2f5;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 25px;
-            display: none;
-        }
-        
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e4e6eb;
-        }
-        
-        .history-item {
-            padding: 15px;
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 40px;
         }
         
         @media (max-width: 768px) {
-            .actions {
-                flex-direction: column;
-            }
-            
-            header h1 {
-                font-size: 2.2rem;
-            }
-            
             .main-content {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
+                grid-template-columns: 1fr;
             }
         }
         
-        .security-badge {
-            display: inline-flex;
+        .stock-section {
+            background: rgba(44, 62, 80, 0.85);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section-title {
+            display: flex;
             align-items: center;
-            gap: 8px;
-            background: #31a24c;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .section-title i {
+            font-size: 1.8rem;
+        }
+        
+        .section-title h2 {
+            font-size: 1.8rem;
+        }
+        
+        .restock-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .restock-card {
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .restock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .restock-card.active {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .restock-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .restock-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .restock-title h3 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+        
+        .restock-title p {
+            color: #bdc3c7;
+        }
+        
+        .restock-timer {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+        }
+        
+        .restock-progress {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 30%;
+            border-radius: 4px;
+        }
+        
+        .weather-section {
+            margin-top: 30px;
+        }
+        
+        .weather-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .weather-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .weather-card.active {
+            border-color: var(--warning);
+            background: rgba(243, 156, 18, 0.2);
+        }
+        
+        .weather-card i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .messenger-section {
+            background: rgba(44, 62, 80, 0.85);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .messenger-box {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .bot-command {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
             color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-top: 5px;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+        
+        .alert-banner {
+            background: rgba(231, 76, 60, 0.3);
+            border: 1px solid var(--danger);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .alert-banner i {
+            font-size: 1.8rem;
+        }
+        
+        .mutations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .mutation-card {
+            background: rgba(155, 89, 182, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mutation-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fab fa-facebook"></i> Secure Confession Poster</h1>
-            <p>Share your thoughts securely using protected session data</p>
-            
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-user-secret"></i></div>
-                    <h3 class="feature-title">Full Anonymity</h3>
-                    <p>Your identity remains protected</p>
+            <div class="logo">
+                <i class="fas fa-seedling"></i>
+                <div>
+                    <h1>Grow a Garden Stock Alerts</h1>
+                    <p class="subtitle">Get real-time notifications for seed, gear, and pet restocks directly in Messenger - no Discord required!</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                    <h3 class="feature-title">Secure Session</h3>
-                    <p>Protected with encryption</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
-                    <h3 class="feature-title">Public Posting</h3>
-                    <p>Reach a wider audience</p>
-                </div>
+                <i class="fas fa-robot"></i>
             </div>
         </header>
         
+        <div class="alert-banner">
+            <i class="fas fa-exclamation-circle"></i>
+            <div>
+                <h3>Restock Alert: Rare Seeds Available!</h3>
+                <p>Golden Lotus seeds just restocked on all servers - buy them now before they're gone!</p>
+            </div>
+        </div>
+        
         <div class="main-content">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-edit"></i>
-                    <h2>Create Your Confession</h2>
+            <div class="stock-section">
+                <div class="section-title">
+                    <i class="fas fa-clock"></i>
+                    <h2>Next Restocks</h2>
                 </div>
-                <div class="card-body">
-                    <div class="auth-status">
-                        <i class="fas fa-check-circle"></i>
-                        <div>
-                            <div class="auth-success">Secure Session Active</div>
-                            <div>User ID: 100085796989685 <span class="security-badge"><i class="fas fa-lock"></i> Protected</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="cookie-info">
-                        <i class="fas fa-shield-alt"></i>
-                        <div>
-                            <strong>Security Status:</strong> Your session is protected and encrypted. 
-                            Your identity remains hidden when posting confessions.
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="confession">Your Confession:</label>
-                        <textarea id="confession" placeholder="Share what's on your mind..."></textarea>
-                        <div class="counter"><span id="charCount">0</span>/5000 characters</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Privacy Settings:</label>
-                        <div class="privacy-controls">
-                            <div class="privacy-option active" id="publicOption">
-                                <i class="fas fa-globe-americas"></i>
-                                <h4>Public</h4>
-                                <p>Anyone can see this</p>
+                
+                <div class="restock-container">
+                    <div class="restock-card active">
+                        <div class="restock-header">
+                            <div class="restock-icon">
+                                <i class="fas fa-seedling"></i>
                             </div>
-                            <div class="privacy-option" id="friendsOption">
-                                <i class="fas fa-user-friends"></i>
-                                <h4>Friends</h4>
-                                <p>Only your connections</p>
-                            </div>
-                            <div class="privacy-option" id="privateOption">
-                                <i class="fas fa-lock"></i>
-                                <h4>Only Me</h4>
-                                <p>Just for you</p>
+                            <div class="restock-title">
+                                <h3>Seeds & Gear</h3>
+                                <p>Restocks every 5 minutes</p>
                             </div>
                         </div>
+                        <div class="restock-timer" id="seed-timer">02:15</div>
+                        <div class="restock-progress">
+                            <div class="progress-bar" id="seed-progress" style="width: 55%"></div>
+                        </div>
+                        <p><i class="fas fa-info-circle"></i> Current stock: Frostbloom (Rare), Sunpetal (Common)</p>
                     </div>
                     
-                    <div class="form-group">
-                        <label>How are you feeling?</label>
-                        <div class="mood-selector">
-                            <div class="mood-option">😊 Happy</div>
-                            <div class="mood-option">😢 Sad</div>
-                            <div class="mood-option active">😍 Excited</div>
-                            <div class="mood-option">😡 Angry</div>
-                            <div class="mood-option">🤔 Thoughtful</div>
-                            <div class="mood-option">😯 Surprised</div>
+                    <div class="restock-card">
+                        <div class="restock-header">
+                            <div class="restock-icon">
+                                <i class="fas fa-egg"></i>
+                            </div>
+                            <div class="restock-title">
+                                <h3>Pet Eggs</h3>
+                                <p>Restocks every 30 minutes</p>
+                            </div>
                         </div>
+                        <div class="restock-timer" id="pet-timer">15:42</div>
+                        <div class="restock-progress">
+                            <div class="progress-bar" id="pet-progress" style="width: 48%"></div>
+                        </div>
+                        <p><i class="fas fa-info-circle"></i> Current stock: Phoenix Egg (Legendary)</p>
+                    </div>
+                </div>
+                
+                <div class="weather-section">
+                    <div class="section-title">
+                        <i class="fas fa-cloud-sun"></i>
+                        <h2>Current Weather Events</h2>
                     </div>
                     
-                    <div class="actions">
-                        <button class="btn btn-primary" id="postBtn">
-                            <i class="fab fa-facebook"></i> Post Confession
-                        </button>
-                        <button class="btn btn-secondary" id="previewBtn">
-                            <i class="fas fa-eye"></i> Preview
-                        </button>
-                    </div>
-                    
-                    <div class="preview-container" id="previewContainer">
-                        <div class="preview-header">
-                            <div class="avatar">A</div>
-                            <div class="user-info">
-                                <h3>Anonymous User</h3>
-                                <div class="post-time" id="privacyDisplay">
-                                    <i class="fas fa-globe-americas"></i> Public · Just now
-                                </div>
-                            </div>
+                    <div class="weather-cards">
+                        <div class="weather-card">
+                            <i class="fas fa-sun"></i>
+                            <h3>Sunny</h3>
+                            <p>No bonuses</p>
                         </div>
-                        <div class="post-content" id="previewContent">
-                            Your confession will appear here...
+                        
+                        <div class="weather-card active">
+                            <i class="fas fa-cloud-rain"></i>
+                            <h3>Rain</h3>
+                            <p>+50% Wet mutation</p>
                         </div>
-                        <div class="post-actions">
-                            <div class="post-action">
-                                <i class="far fa-thumbs-up"></i>
-                                <span>Like</span>
-                            </div>
-                            <div class="post-action">
-                                <i class="far fa-comment"></i>
-                                <span>Comment</span>
-                            </div>
-                            <div class="post-action">
-                                <i class="far fa-share-square"></i>
-                                <span>Share</span>
-                            </div>
+                        
+                        <div class="weather-card">
+                            <i class="fas fa-moon"></i>
+                            <h3>Night</h3>
+                            <p>Moonlit mutations</p>
                         </div>
                     </div>
+                </div>
+                
+                <div class="mutations-section" style="margin-top: 30px;">
+                    <div class="section-title">
+                        <i class="fas fa-dna"></i>
+                        <h2>Active Mutations</h2>
+                    </div>
                     
-                    <div class="post-history" id="postHistory">
-                        <div class="history-header">
-                            <h3>Recent Posts</h3>
-                            <button class="btn btn-secondary" id="refreshHistory">
-                                <i class="fas fa-sync"></i> Refresh
-                            </button>
+                    <div class="mutations-grid">
+                        <div class="mutation-card">
+                            <h4><i class="fas fa-tint"></i> Wet</h4>
+                            <p>Value: 1.5x</p>
+                            <p>Trigger: Rain</p>
                         </div>
-                        <div id="historyList">
-                            <!-- History items will be added here -->
+                        
+                        <div class="mutation-card">
+                            <h4><i class="fas fa-bolt"></i> Shocked</h4>
+                            <p>Value: 3.5x</p>
+                            <p>Trigger: Thunder</p>
+                        </div>
+                        
+                        <div class="mutation-card">
+                            <h4><i class="fas fa-fire"></i> Sunburnt</h4>
+                            <p>Value: 2.0x</p>
+                            <p>Trigger: Extreme Sun</p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-shield-alt"></i>
-                    <h2>Security Information</h2>
+            <div class="messenger-section">
+                <div class="section-title">
+                    <i class="fab fa-facebook-messenger"></i>
+                    <h2>Messenger Alerts</h2>
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <div class="cookie-info">
-                            <i class="fas fa-user-secret"></i>
-                            <div>
-                                <strong>Anonymous Posting:</strong> Your personal information is never revealed in your confessions
-                            </div>
-                        </div>
-                        
-                        <div class="cookie-info">
-                            <i class="fas fa-lock"></i>
-                            <div>
-                                <strong>Session Protection:</strong> Your session is encrypted with military-grade AES-256 encryption
-                            </div>
-                        </div>
-                        
-                        <div class="cookie-info">
-                            <i class="fas fa-ban"></i>
-                            <div>
-                                <strong>No Data Storage:</strong> We don't store your confessions or personal information
-                            </div>
-                        </div>
-                        
-                        <div class="cookie-info">
-                            <i class="fas fa-sync-alt"></i>
-                            <div>
-                                <strong>Session Refresh:</strong> Your session is automatically refreshed every 24 hours
-                            </div>
-                        </div>
+                
+                <div class="messenger-box">
+                    <p><i class="fas fa-info-circle"></i> Get alerts directly in your Messenger groups</p>
+                    
+                    <div class="bot-command">
+                        <p>!gardenstock start</p>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Security Level</label>
-                        <div style="background: #f0f2f5; height: 20px; border-radius: 10px; margin-top: 10px; overflow: hidden;">
-                            <div style="background: linear-gradient(to right, #31a24c, #1877f2); width: 95%; height: 100%;"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
-                            <span>Low</span>
-                            <span style="font-weight: bold;">Maximum Security</span>
-                            <span>High</span>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;">
-                        <i class="fas fa-sync"></i> Refresh Session
-                    </button>
-                    
-                    <button class="btn btn-secondary" style="width: 100%; margin-top: 15px; background: #ffe8e8; color: #e74c3c;">
-                        <i class="fas fa-sign-out-alt"></i> End Session Securely
-                    </button>
+                    <p>Add our bot to your group and use this command to start receiving alerts for:</p>
+                    <ul style="padding: 15px 0 15px 20px;">
+                        <li>Seed & gear restocks</li>
+                        <li>Pet egg availability</li>
+                        <li>Weather changes</li>
+                        <li>Special events</li>
+                    </ul>
+                </div>
+                
+                <a href="#" class="btn btn-primary">
+                    <i class="fab fa-facebook-messenger"></i> Add to Messenger
+                </a>
+                
+                <a href="#" class="btn btn-secondary">
+                    <i class="fas fa-robot"></i> Add to Group Chat
+                </a>
+                
+                <div style="margin-top: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                    <h3>Recent Alert:</h3>
+                    <p><i class="fas fa-seedling"></i> Seed Restock: Frostbloom, Sunpetal, Golden Lotus</p>
+                    <p><i class="fas fa-cloud-rain"></i> Weather: Rain started (Wet mutation active)</p>
+                    <p style="color: #bdc3c7; font-size: 0.9rem; margin-top: 10px;">Sent 2 minutes ago</p>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Confession posted successfully!</span>
+        
+        <footer>
+            <p>Grow a Garden Stock Alerts &copy; 2023 | Real-time notifications without Discord</p>
+            <p>This is an unofficial fan site. Roblox and Grow a Garden are trademarks of Roblox Corporation.</p>
+        </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const confessionTextarea = document.getElementById('confession');
-            const postBtn = document.getElementById('postBtn');
-            const previewBtn = document.getElementById('previewBtn');
-            const previewContainer = document.getElementById('previewContainer');
-            const previewContent = document.getElementById('previewContent');
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            const charCount = document.getElementById('charCount');
-            const privacyOptions = document.querySelectorAll('.privacy-option');
-            const moodOptions = document.querySelectorAll('.mood-option');
-            const privacyDisplay = document.getElementById('privacyDisplay');
-            const postHistory = document.getElementById('postHistory');
-            const historyList = document.getElementById('historyList');
-            const refreshHistory = document.getElementById('refreshHistory');
+        // Restock timer functionality
+        function updateTimers() {
+            // Seed restock timer (5 minutes)
+            const now = new Date();
+            const seedSeconds = (4 * 60) + 15 - (now.getSeconds() + (now.getMinutes() % 5) * 60);
+            const seedMins = Math.floor(seedSeconds / 60);
+            const seedSecs = seedSeconds % 60;
+            document.getElementById('seed-timer').textContent = 
+                `${seedMins.toString().padStart(2, '0')}:${seedSecs.toString().padStart(2, '0')}`;
             
-            let currentPrivacy = 'public';
+            // Update progress bar
+            const seedProgress = (1 - (seedSeconds / (5 * 60))) * 100;
+            document.getElementById('seed-progress').style.width = `${seedProgress}%`;
             
-            // Character counter
-            confessionTextarea.addEventListener('input', function() {
-                charCount.textContent = this.value.length;
-            });
+            // Pet restock timer (30 minutes)
+            const petSeconds = (29 * 60) + 18 - (now.getSeconds() + (now.getMinutes() % 30) * 60);
+            const petMins = Math.floor(petSeconds / 60);
+            const petSecs = petSeconds % 60;
+            document.getElementById('pet-timer').textContent = 
+                `${petMins.toString().padStart(2, '0')}:${petSecs.toString().padStart(2, '0')}`;
             
-            // Privacy option selection
-            privacyOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    privacyOptions.forEach(o => o.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    currentPrivacy = this.id.replace('Option', '');
-                    
-                    // Update privacy display
-                    let privacyText = '';
-                    let privacyIcon = '';
-                    
-                    switch(currentPrivacy) {
-                        case 'public':
-                            privacyText = 'Public';
-                            privacyIcon = 'fas fa-globe-americas';
-                            break;
-                        case 'friends':
-                            privacyText = 'Friends';
-                            privacyIcon = 'fas fa-user-friends';
-                            break;
-                        case 'private':
-                            privacyText = 'Only Me';
-                            privacyIcon = 'fas fa-lock';
-                            break;
-                    }
-                    
-                    privacyDisplay.innerHTML = `<i class="${privacyIcon}"></i> ${privacyText} · Just now`;
-                });
-            });
+            // Update progress bar
+            const petProgress = (1 - (petSeconds / (30 * 60))) * 100;
+            document.getElementById('pet-progress').style.width = `${petProgress}%`;
+        }
+        
+        // Initial update
+        updateTimers();
+        
+        // Update every second
+        setInterval(updateTimers, 1000);
+        
+        // Simulate weather changes
+        setInterval(() => {
+            const weatherCards = document.querySelectorAll('.weather-card');
+            weatherCards.forEach(card => card.classList.remove('active'));
             
-            // Mood option selection
-            moodOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    moodOptions.forEach(o => o.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
+            // Randomly activate a weather card
+            const randomIndex = Math.floor(Math.random() * weatherCards.length);
+            weatherCards[randomIndex].classList.add('active');
+        }, 10000);
+        
+        // Simulate restock alerts
+        setInterval(() => {
+            const alertBanner = document.querySelector('.alert-banner');
+            alertBanner.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <div>
+                    <h3>Restock Alert: ${getRandomSeed()} Seeds Available!</h3>
+                    <p>${getRandomSeed()} seeds just restocked on all servers - buy them now before they're gone!</p>
+                </div>
+            `;
             
-            // Preview button functionality
-            previewBtn.addEventListener('click', function() {
-                const text = confessionTextarea.value.trim();
-                
-                if (text === '') {
-                    showToast('Please write your confession first!', 'error');
-                    return;
-                }
-                
-                previewContent.textContent = text;
-                previewContainer.style.display = 'block';
-                
-                // Scroll to preview
-                previewContainer.scrollIntoView({ behavior: 'smooth' });
-            });
-            
-            // Post button functionality
-            postBtn.addEventListener('click', function() {
-                const text = confessionTextarea.value.trim();
-                
-                if (text === '') {
-                    showToast('Please write your confession first!', 'error');
-                    return;
-                }
-                
-                // Show loading state
-                const originalText = postBtn.innerHTML;
-                postBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting Securely...';
-                postBtn.disabled = true;
-                
-                // Simulate secure posting process
-                setTimeout(() => {
-                    // Show success toast
-                    showToast('Confession posted successfully!', 'success');
-                    
-                    // Reset button
-                    postBtn.innerHTML = originalText;
-                    postBtn.disabled = false;
-                    
-                    // Show preview
-                    previewContent.textContent = text;
-                    previewContainer.style.display = 'block';
-                    
-                    // Show post history
-                    postHistory.style.display = 'block';
-                    
-                    // Add to history
-                    const now = new Date();
-                    const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    historyItem.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <strong>${timeString}</strong>
-                            <span style="color: ${currentPrivacy === 'public' ? '#31a24c' : '#1877f2'}">
-                                <i class="${currentPrivacy === 'public' ? 'fas fa-globe-americas' : 
-                                         currentPrivacy === 'friends' ? 'fas fa-user-friends' : 'fas fa-lock'}"></i>
-                                ${currentPrivacy === 'public' ? 'Public' : 
-                                 currentPrivacy === 'friends' ? 'Friends' : 'Private'}
-                            </span>
-                        </div>
-                        <div>${text.substring(0, 100)}${text.length > 100 ? '...' : ''}</div>
-                    `;
-                    
-                    historyList.insertBefore(historyItem, historyList.firstChild);
-                    
-                    // Clear textarea
-                    confessionTextarea.value = '';
-                    charCount.textContent = '0';
-                    
-                    // Scroll to preview
-                    previewContainer.scrollIntoView({ behavior: 'smooth' });
-                }, 2000);
-            });
-            
-            // Refresh history
-            refreshHistory.addEventListener('click', function() {
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
-                setTimeout(() => {
-                    this.innerHTML = '<i class="fas fa-sync"></i> Refresh';
-                    showToast('Post history refreshed!', 'success');
-                }, 1000);
-            });
-            
-            // Show toast notification
-            function showToast(message, type) {
-                toastMessage.textContent = message;
-                toast.style.background = type === 'success' ? '#31a24c' : '#e74c3c';
-                toast.classList.add('show');
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 4000);
+            // Flash animation
+            alertBanner.style.animation = 'none';
+            setTimeout(() => {
+                alertBanner.style.animation = 'pulse 1s';
+            }, 10);
+        }, 30000);
+        
+        function getRandomSeed() {
+            const seeds = ['Frostbloom', 'Sunpetal', 'Golden Lotus', 'Moonpetal', 'Thornvine', 'Starshine'];
+            return seeds[Math.floor(Math.random() * seeds.length)];
+        }
+        
+        // Add pulse animation for alerts
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
             }
             
-            // Initialize with public selected
-            document.getElementById('publicOption').click();
-        });
+            .alert-banner {
+                animation: pulse 2s infinite;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
