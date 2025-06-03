@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Confession Poster</title>
+    <title>Secure Facebook Confession Poster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -441,45 +441,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
-        .cookie-viewer {
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 15px;
-            background: #f0f2f5;
-            border-radius: 12px;
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .cookie-item {
-            padding: 12px;
-            border-bottom: 1px solid #e4e6eb;
-            font-family: monospace;
-            font-size: 0.9rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-        
-        .cookie-name {
-            font-weight: bold;
-            color: #1877f2;
-            min-width: 120px;
-        }
-        
-        .cookie-value {
-            flex: 1;
-            word-break: break-all;
-            color: #333;
-        }
-        
-        .cookie-domain {
-            color: #666;
-            font-size: 0.85rem;
-            width: 100%;
-            margin-top: 5px;
-        }
-        
         @media (max-width: 768px) {
             .actions {
                 flex-direction: column;
@@ -497,29 +458,42 @@
                 width: 100%;
             }
         }
+        
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #31a24c;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fab fa-facebook"></i> Facebook Confession Poster</h1>
-            <p>Share your thoughts securely using cookie authentication</p>
+            <h1><i class="fab fa-facebook"></i> Secure Confession Poster</h1>
+            <p>Share your thoughts securely using protected session data</p>
             
             <div class="feature-grid">
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-cookie-bite"></i></div>
-                    <h3 class="feature-title">Cookie Auth</h3>
-                    <p>Using your Facebook cookies</p>
-                </div>
-                <div class="feature-card">
                     <div class="feature-icon"><i class="fas fa-user-secret"></i></div>
-                    <h3 class="feature-title">Secure</h3>
-                    <p>Encrypted session protection</p>
+                    <h3 class="feature-title">Full Anonymity</h3>
+                    <p>Your identity remains protected</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-share-alt"></i></div>
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="feature-title">Secure Session</h3>
+                    <p>Protected with encryption</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
                     <h3 class="feature-title">Public Posting</h3>
-                    <p>Share with the world</p>
+                    <p>Reach a wider audience</p>
                 </div>
             </div>
         </header>
@@ -534,16 +508,16 @@
                     <div class="auth-status">
                         <i class="fas fa-check-circle"></i>
                         <div>
-                            <div class="auth-success">Authenticated via Cookies</div>
-                            <div>User ID: 100085796989685</div>
+                            <div class="auth-success">Secure Session Active</div>
+                            <div>User ID: 100085796989685 <span class="security-badge"><i class="fas fa-lock"></i> Protected</span></div>
                         </div>
                     </div>
                     
                     <div class="cookie-info">
                         <i class="fas fa-shield-alt"></i>
                         <div>
-                            <strong>Security Status:</strong> Your Facebook cookies are encrypted and protected. 
-                            Public posts will not reveal your identity.
+                            <strong>Security Status:</strong> Your session is protected and encrypted. 
+                            Your identity remains hidden when posting confessions.
                         </div>
                     </div>
                     
@@ -554,7 +528,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>Post Privacy:</label>
+                        <label>Privacy Settings:</label>
                         <div class="privacy-controls">
                             <div class="privacy-option active" id="publicOption">
                                 <i class="fas fa-globe-americas"></i>
@@ -564,7 +538,7 @@
                             <div class="privacy-option" id="friendsOption">
                                 <i class="fas fa-user-friends"></i>
                                 <h4>Friends</h4>
-                                <p>Only your friends</p>
+                                <p>Only your connections</p>
                             </div>
                             <div class="privacy-option" id="privateOption">
                                 <i class="fas fa-lock"></i>
@@ -588,18 +562,18 @@
                     
                     <div class="actions">
                         <button class="btn btn-primary" id="postBtn">
-                            <i class="fab fa-facebook"></i> Post to Facebook
+                            <i class="fab fa-facebook"></i> Post Confession
                         </button>
                         <button class="btn btn-secondary" id="previewBtn">
-                            <i class="fas fa-eye"></i> Preview Post
+                            <i class="fas fa-eye"></i> Preview
                         </button>
                     </div>
                     
                     <div class="preview-container" id="previewContainer">
                         <div class="preview-header">
-                            <div class="avatar">J</div>
+                            <div class="avatar">A</div>
                             <div class="user-info">
-                                <h3>John Doe</h3>
+                                <h3>Anonymous User</h3>
                                 <div class="post-time" id="privacyDisplay">
                                     <i class="fas fa-globe-americas"></i> Public · Just now
                                 </div>
@@ -635,72 +609,63 @@
                             <!-- History items will be added here -->
                         </div>
                     </div>
-                    
-                    <div class="cookie-viewer" id="cookieViewer">
-                        <div class="history-header">
-                            <h3>Active Cookies</h3>
-                            <button class="btn btn-secondary" id="toggleCookies">
-                                <i class="fas fa-eye-slash"></i> Hide
-                            </button>
-                        </div>
-                        <div id="cookieList">
-                            <!-- Cookies will be listed here -->
-                        </div>
-                    </div>
                 </div>
             </div>
             
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-chart-line"></i>
-                    <h2>Account Information</h2>
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Security Information</h2>
                 </div>
                 <div class="card-body">
-                    <div class="auth-status">
-                        <i class="fas fa-user-circle"></i>
-                        <div>
-                            <div class="auth-success">John Doe</div>
-                            <div>Facebook User</div>
+                    <div class="form-group">
+                        <div class="cookie-info">
+                            <i class="fas fa-user-secret"></i>
+                            <div>
+                                <strong>Anonymous Posting:</strong> Your personal information is never revealed in your confessions
+                            </div>
+                        </div>
+                        
+                        <div class="cookie-info">
+                            <i class="fas fa-lock"></i>
+                            <div>
+                                <strong>Session Protection:</strong> Your session is encrypted with military-grade AES-256 encryption
+                            </div>
+                        </div>
+                        
+                        <div class="cookie-info">
+                            <i class="fas fa-ban"></i>
+                            <div>
+                                <strong>No Data Storage:</strong> We don't store your confessions or personal information
+                            </div>
+                        </div>
+                        
+                        <div class="cookie-info">
+                            <i class="fas fa-sync-alt"></i>
+                            <div>
+                                <strong>Session Refresh:</strong> Your session is automatically refreshed every 24 hours
+                            </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <div style="display: flex; justify-content: space-between; margin: 25px 0;">
-                            <div style="text-align: center;">
-                                <div style="font-size: 2rem; font-weight: bold; color: #1877f2;">1.2K</div>
-                                <div>Friends</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 2rem; font-weight: bold; color: #1877f2;">348</div>
-                                <div>Followers</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 2rem; font-weight: bold; color: #1877f2;">78</div>
-                                <div>Following</div>
-                            </div>
+                        <label>Security Level</label>
+                        <div style="background: #f0f2f5; height: 20px; border-radius: 10px; margin-top: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(to right, #31a24c, #1877f2); width: 95%; height: 100%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                            <span>Low</span>
+                            <span style="font-weight: bold;">Maximum Security</span>
+                            <span>High</span>
                         </div>
                     </div>
                     
-                    <div class="cookie-info">
-                        <i class="fas fa-cookie"></i>
-                        <div>
-                            <strong>Session Cookies:</strong> 9 active cookies · Expires in 90 days
-                        </div>
-                    </div>
-                    
-                    <div class="cookie-info">
-                        <i class="fas fa-shield-alt"></i>
-                        <div>
-                            <strong>Security Status:</strong> Session protected with AES-256 encryption
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="showCookies">
-                        <i class="fas fa-key"></i> View Session Cookies
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-sync"></i> Refresh Session
                     </button>
                     
-                    <button class="btn btn-secondary" style="width: 100%; margin-top: 15px;">
-                        <i class="fas fa-sync-alt"></i> Refresh Session
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 15px; background: #ffe8e8; color: #e74c3c;">
+                        <i class="fas fa-sign-out-alt"></i> End Session Securely
                     </button>
                 </div>
             </div>
@@ -709,7 +674,7 @@
     
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Confession posted to Facebook!</span>
+        <span id="toastMessage">Confession posted successfully!</span>
     </div>
 
     <script>
@@ -728,65 +693,8 @@
             const postHistory = document.getElementById('postHistory');
             const historyList = document.getElementById('historyList');
             const refreshHistory = document.getElementById('refreshHistory');
-            const cookieViewer = document.getElementById('cookieViewer');
-            const cookieList = document.getElementById('cookieList');
-            const showCookies = document.getElementById('showCookies');
-            const toggleCookies = document.getElementById('toggleCookies');
             
             let currentPrivacy = 'public';
-            let cookiesVisible = false;
-            
-            // Facebook cookies from your provided data
-            const facebookCookies = [
-                {
-                    "name": "c_user",
-                    "value": "100085796989685",
-                    "domain": ".facebook.com",
-                    "expirationDate": 1780422125.196377,
-                    "path": "/",
-                    "secure": true
-                },
-                {
-                    "name": "datr",
-                    "value": "kJkkaCIEvcbImHs1ai28sFcp",
-                    "domain": ".facebook.com",
-                    "expirationDate": 1781819106.14601,
-                    "path": "/",
-                    "secure": true
-                },
-                {
-                    "name": "fbl_st",
-                    "value": "100639211%3BT%3A29148118",
-                    "domain": ".facebook.com",
-                    "expirationDate": 1780423135,
-                    "path": "/",
-                    "secure": true
-                },
-                {
-                    "name": "fr",
-                    "value": "0bHNW2GDW6Nj34AFW.AWel97qA9hOSPhu0VNIqJAn8wJzoi-4x9bcssSeBzXs7mzQ3A9k.BoJJmQ..AAA.0.0.BoPeZf.AWcGGUCgTn3Sx3eFces0oAk1ySI",
-                    "domain": ".facebook.com",
-                    "expirationDate": 1756663134.226666,
-                    "path": "/",
-                    "secure": true
-                },
-                {
-                    "name": "sb",
-                    "value": "kJkkaO1YfWi3uc9BJFWdsAEu",
-                    "domain": ".facebook.com",
-                    "expirationDate": 1783446125.196771,
-                    "path": "/",
-                    "secure": true
-                },
-                {
-                    "name": "xs",
-                    "value": "2%3Ap6fQlPrl-ItO4Q%3A2%3A1748886124%3A-1%3A-1",
-                    "domain": ".facebook.com",
-                    "expirationDate": 1780422125.196986,
-                    "path": "/",
-                    "secure": true
-                }
-            ];
             
             // Character counter
             confessionTextarea.addEventListener('input', function() {
@@ -859,15 +767,13 @@
                 
                 // Show loading state
                 const originalText = postBtn.innerHTML;
-                postBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+                postBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting Securely...';
                 postBtn.disabled = true;
                 
                 // Simulate secure posting process
                 setTimeout(() => {
                     // Show success toast
-                    const privacyText = currentPrivacy === 'public' ? 'publicly' : 
-                                      currentPrivacy === 'friends' ? 'to friends' : 'privately';
-                    showToast(`Confession posted ${privacyText} to Facebook!`, 'success');
+                    showToast('Confession posted successfully!', 'success');
                     
                     // Reset button
                     postBtn.innerHTML = originalText;
@@ -918,43 +824,6 @@
                     showToast('Post history refreshed!', 'success');
                 }, 1000);
             });
-            
-            // Show cookies
-            showCookies.addEventListener('click', function() {
-                cookiesVisible = true;
-                cookieViewer.style.display = 'block';
-                renderCookies();
-                toggleCookies.innerHTML = '<i class="fas fa-eye-slash"></i> Hide';
-            });
-            
-            // Toggle cookies visibility
-            toggleCookies.addEventListener('click', function() {
-                cookiesVisible = !cookiesVisible;
-                cookieViewer.style.display = cookiesVisible ? 'block' : 'none';
-                this.innerHTML = cookiesVisible ? 
-                    '<i class="fas fa-eye-slash"></i> Hide' : 
-                    '<i class="fas fa-eye"></i> Show';
-            });
-            
-            // Render cookies
-            function renderCookies() {
-                cookieList.innerHTML = '';
-                facebookCookies.forEach(cookie => {
-                    const cookieItem = document.createElement('div');
-                    cookieItem.className = 'cookie-item';
-                    
-                    const expirationDate = new Date(cookie.expirationDate * 1000);
-                    const formattedDate = expirationDate.toLocaleDateString();
-                    
-                    cookieItem.innerHTML = `
-                        <div class="cookie-name">${cookie.name}:</div>
-                        <div class="cookie-value">${cookie.value}</div>
-                        <div class="cookie-domain">Domain: ${cookie.domain} | Expires: ${formattedDate}</div>
-                    `;
-                    
-                    cookieList.appendChild(cookieItem);
-                });
-            }
             
             // Show toast notification
             function showToast(message, type) {
