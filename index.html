@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grow A Garden Stock Tracker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -536,6 +538,238 @@
             display: block;
         }
         
+        /* New Features */
+        .alerts-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .alert-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .alert-title {
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .alert-desc {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .alert-time {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .action-view {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .action-dismiss {
+            background: #e0e0e0;
+            color: var(--text);
+        }
+        
+        .predictions-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .prediction-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .prediction-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .prediction-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .prediction-title {
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .prediction-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .prediction-info {
+            flex: 1;
+        }
+        
+        .prediction-stats {
+            text-align: right;
+        }
+        
+        .prediction-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .prediction-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 5px;
+        }
+        
+        .item-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .item-details-modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-icon {
+            font-size: 2.5rem;
+            width: 70px;
+            height: 70px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .modal-body {
+            margin: 20px 0;
+        }
+        
+        .modal-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-label-sm {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .stat-value-sm {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .favorite-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--secondary);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--darker);
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -561,6 +795,10 @@
             
             .card {
                 padding: 25px;
+            }
+            
+            .modal-stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -595,9 +833,9 @@
         
         <div class="tab-container">
             <div class="tab active" data-tab="dashboard">Dashboard</div>
-            <div class="tab" data-tab="analytics">Analytics</div>
             <div class="tab" data-tab="alerts">Alerts</div>
-            <div class="tab" data-tab="settings">Settings</div>
+            <div class="tab" data-tab="predictions">Predictions</div>
+            <div class="tab" data-tab="analytics">Analytics</div>
         </div>
         
         <div class="tab-content active" id="dashboard-tab">
@@ -630,6 +868,7 @@
                 <button class="filter-btn">Seeds</button>
                 <button class="filter-btn">Eggs</button>
                 <button class="filter-btn">Rare+ Only</button>
+                <button class="filter-btn">Favorites</button>
             </div>
             
             <div class="dashboard">
@@ -669,7 +908,7 @@
                         <h2 class="card-title">Gear & Seeds</h2>
                     </div>
                     <div class="status-list">
-                        <div class="status-item">
+                        <div class="status-item" data-item="golden-can">
                             <div class="status-icon">
                                 <i class="fas fa-shovel"></i>
                             </div>
@@ -681,7 +920,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="status-item">
+                        <div class="status-item" data-item="rainbow-sunflower">
                             <div class="status-icon">
                                 <i class="fas fa-seedling"></i>
                             </div>
@@ -693,7 +932,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="status-item">
+                        <div class="status-item" data-item="diamond-trowel">
                             <div class="status-icon">
                                 <i class="fas fa-trowel"></i>
                             </div>
@@ -725,7 +964,7 @@
                         <h2 class="card-title">Egg Stock</h2>
                     </div>
                     <div class="status-list">
-                        <div class="status-item">
+                        <div class="status-item" data-item="golden-chicken">
                             <div class="status-icon">
                                 <i class="fas fa-kiwi-bird"></i>
                             </div>
@@ -737,7 +976,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="status-item">
+                        <div class="status-item" data-item="rainbow-finch">
                             <div class="status-icon">
                                 <i class="fas fa-dove"></i>
                             </div>
@@ -749,7 +988,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="status-item">
+                        <div class="status-item" data-item="midnight-raven">
                             <div class="status-icon">
                                 <i class="fas fa-crow"></i>
                             </div>
@@ -770,6 +1009,37 @@
                                 <div class="timer">08:15:42</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alerts-section">
+                <div class="history-header">
+                    <h2 class="history-title">Active Alerts</h2>
+                    <button class="btn btn-accent">
+                        <i class="fas fa-bell"></i> Create New Alert
+                    </button>
+                </div>
+                <div class="alert-card">
+                    <div class="alert-header">
+                        <div class="alert-title">Golden Watering Can Available</div>
+                        <div class="alert-time">2 minutes ago</div>
+                    </div>
+                    <div class="alert-desc">Your watched item is now in stock!</div>
+                    <div class="alert-actions">
+                        <button class="action-btn action-view">View Item</button>
+                        <button class="action-btn action-dismiss">Dismiss</button>
+                    </div>
+                </div>
+                <div class="alert-card">
+                    <div class="alert-header">
+                        <div class="alert-title">Weather Changed to Sunny</div>
+                        <div class="alert-time">15 minutes ago</div>
+                    </div>
+                    <div class="alert-desc">Growth bonus increased to +35%</div>
+                    <div class="alert-actions">
+                        <button class="action-btn action-view">View Details</button>
+                        <button class="action-btn action-dismiss">Dismiss</button>
                     </div>
                 </div>
             </div>
@@ -806,6 +1076,124 @@
             </div>
         </div>
         
+        <div class="tab-content" id="alerts-tab">
+            <div class="alerts-section">
+                <h2 class="history-title" style="margin-bottom: 25px;">Manage Alerts</h2>
+                
+                <div class="alert-card">
+                    <div class="alert-header">
+                        <div class="alert-title">Golden Watering Can</div>
+                        <div class="alert-time">Active</div>
+                    </div>
+                    <div class="alert-desc">Notify me when this item becomes available</div>
+                    <div class="alert-actions">
+                        <button class="action-btn action-view">Edit</button>
+                        <button class="action-btn action-dismiss">Delete</button>
+                    </div>
+                </div>
+                
+                <div class="alert-card">
+                    <div class="alert-header">
+                        <div class="alert-title">Sunny Weather</div>
+                        <div class="alert-time">Active</div>
+                    </div>
+                    <div class="alert-desc">Notify me when growth bonus exceeds 25%</div>
+                    <div class="alert-actions">
+                        <button class="action-btn action-view">Edit</button>
+                        <button class="action-btn action-dismiss">Delete</button>
+                    </div>
+                </div>
+                
+                <div class="alert-card">
+                    <div class="alert-header">
+                        <div class="alert-title">Rainbow Finch Egg</div>
+                        <div class="alert-time">Inactive</div>
+                    </div>
+                    <div class="alert-desc">Notify me when this item becomes available</div>
+                    <div class="alert-actions">
+                        <button class="action-btn action-view">Activate</button>
+                        <button class="action-btn action-dismiss">Delete</button>
+                    </div>
+                </div>
+                
+                <button class="btn btn-accent" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> Create New Alert
+                </button>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="predictions-tab">
+            <div class="predictions-section">
+                <h2 class="history-title" style="margin-bottom: 25px;">Stock Predictions</h2>
+                
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <div class="prediction-icon">
+                            <i class="fas fa-shovel"></i>
+                        </div>
+                        <div class="prediction-title">Golden Watering Can</div>
+                    </div>
+                    <div class="prediction-content">
+                        <div class="prediction-info">
+                            <div>Next appearance prediction</div>
+                            <div class="timer">02:18:34</div>
+                        </div>
+                        <div class="prediction-stats">
+                            <div>87% probability</div>
+                            <div>Appears 4x daily</div>
+                        </div>
+                    </div>
+                    <div class="prediction-bar">
+                        <div class="prediction-fill" style="width: 87%"></div>
+                    </div>
+                </div>
+                
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <div class="prediction-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="prediction-title">Rainbow Sunflower Seeds</div>
+                    </div>
+                    <div class="prediction-content">
+                        <div class="prediction-info">
+                            <div>Next appearance prediction</div>
+                            <div class="timer">05:42:11</div>
+                        </div>
+                        <div class="prediction-stats">
+                            <div>72% probability</div>
+                            <div>Appears 2x daily</div>
+                        </div>
+                    </div>
+                    <div class="prediction-bar">
+                        <div class="prediction-fill" style="width: 72%"></div>
+                    </div>
+                </div>
+                
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <div class="prediction-icon">
+                            <i class="fas fa-egg"></i>
+                        </div>
+                        <div class="prediction-title">Golden Chicken Egg</div>
+                    </div>
+                    <div class="prediction-content">
+                        <div class="prediction-info">
+                            <div>Next appearance prediction</div>
+                            <div class="timer">08:15:22</div>
+                        </div>
+                        <div class="prediction-stats">
+                            <div>65% probability</div>
+                            <div>Appears 1x daily</div>
+                        </div>
+                    </div>
+                    <div class="prediction-bar">
+                        <div class="prediction-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="tab-content" id="analytics-tab">
             <div class="chart-container">
                 <div class="chart-header">
@@ -834,11 +1222,64 @@
                 </div>
                 <canvas id="weatherChart" height="300"></canvas>
             </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="chart-title">Rarity Distribution</h2>
+                </div>
+                <canvas id="rarityChart" height="300"></canvas>
+            </div>
         </div>
         
         <div class="notification" id="notification">
             <i class="fas fa-bell notification-icon"></i>
             <div class="notification-text">New stock update available! Golden Watering Can added.</div>
+        </div>
+    </div>
+    
+    <div class="item-details-modal" id="itemModal">
+        <div class="modal-content">
+            <div class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-header">
+                <div class="modal-icon" id="modalItemIcon">
+                    <i class="fas fa-shovel"></i>
+                </div>
+                <div>
+                    <h2 class="modal-title" id="modalItemTitle">Golden Watering Can</h2>
+                    <div class="rarity rarity-legendary">Legendary</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p>A premium watering can made of pure gold. Doubles watering efficiency and never rusts. Perfect for serious gardeners looking to maximize their crop yield.</p>
+                
+                <div class="modal-stats">
+                    <div class="stat-box">
+                        <div class="stat-label-sm">Average Appearances</div>
+                        <div class="stat-value-sm">3.2/day</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label-sm">Last Seen</div>
+                        <div class="stat-value-sm">2h ago</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label-sm">Average Duration</div>
+                        <div class="stat-value-sm">22 min</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label-sm">Next Prediction</div>
+                        <div class="stat-value-sm">4h 12m</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px; color: var(--dark);">Price History</h3>
+                <canvas id="priceChart" height="150"></canvas>
+                
+                <button class="favorite-btn" id="favoriteBtn">
+                    <i class="far fa-star"></i> Add to Favorites
+                </button>
+            </div>
         </div>
     </div>
     
@@ -856,10 +1297,68 @@
         const notification = document.getElementById('notification');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
+        const itemModal = document.getElementById('itemModal');
+        const closeModal = document.getElementById('closeModal');
+        const favoriteBtn = document.getElementById('favoriteBtn');
+        const statusItems = document.querySelectorAll('.status-item[data-item]');
+        
+        // Item data
+        const itemsData = {
+            'golden-can': {
+                title: 'Golden Watering Can',
+                icon: 'fa-shovel',
+                rarity: 'legendary',
+                desc: 'A premium watering can made of pure gold. Doubles watering efficiency and never rusts. Perfect for serious gardeners looking to maximize their crop yield.',
+                stats: {
+                    appearances: '3.2/day',
+                    lastSeen: '2h ago',
+                    avgDuration: '22 min',
+                    nextPrediction: '4h 12m'
+                }
+            },
+            'rainbow-sunflower': {
+                title: 'Rainbow Sunflower Seeds',
+                icon: 'fa-seedling',
+                rarity: 'epic',
+                desc: 'Special hybrid seeds that grow into sunflowers with petals in all colors of the rainbow. These rare flowers attract beneficial insects and increase pollination rates.',
+                stats: {
+                    appearances: '1.8/day',
+                    lastSeen: '3h ago',
+                    avgDuration: '18 min',
+                    nextPrediction: '5h 42m'
+                }
+            },
+            'diamond-trowel': {
+                title: 'Diamond Trowel',
+                icon: 'fa-trowel',
+                rarity: 'rare',
+                desc: 'A precision gardening tool with a diamond-coated edge. Makes planting effortless and increases planting speed by 50%.',
+                stats: {
+                    appearances: '4.5/day',
+                    lastSeen: '45m ago',
+                    avgDuration: '35 min',
+                    nextPrediction: '2h 30m'
+                }
+            },
+            'golden-chicken': {
+                title: 'Golden Chicken Egg',
+                icon: 'fa-egg',
+                rarity: 'legendary',
+                desc: 'An extremely rare egg that hatches into a chicken that lays golden eggs. These eggs can be sold for premium prices or used as special fertilizer.',
+                stats: {
+                    appearances: '0.8/day',
+                    lastSeen: '6h ago',
+                    avgDuration: '12 min',
+                    nextPrediction: '8h 15m'
+                }
+            }
+        };
         
         // Initialize Charts
         const stockCtx = document.getElementById('stockChart').getContext('2d');
         const weatherCtx = document.getElementById('weatherChart').getContext('2d');
+        const rarityCtx = document.getElementById('rarityChart').getContext('2d');
+        const priceCtx = document.getElementById('priceChart').getContext('2d');
         
         const stockChart = new Chart(stockCtx, {
             type: 'line',
@@ -957,6 +1456,64 @@
             }
         });
         
+        const rarityChart = new Chart(rarityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'],
+                datasets: [{
+                    data: [35, 25, 20, 15, 5],
+                    backgroundColor: [
+                        '#9E9E9E',
+                        '#4CAF50',
+                        '#2196F3',
+                        '#9C27B0',
+                        '#FF9800'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    }
+                }
+            }
+        });
+        
+        const priceChart = new Chart(priceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Price (in gold)',
+                    data: [120, 135, 125, 145, 155, 160],
+                    borderColor: '#FF9800',
+                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Price'
+                        }
+                    }
+                }
+            }
+        });
+        
         // Tab switching
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -979,6 +1536,75 @@
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
+        });
+        
+        // Item click events
+        statusItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const itemId = item.getAttribute('data-item');
+                showItemDetails(itemId);
+            });
+        });
+        
+        // Show item details
+        function showItemDetails(itemId) {
+            const item = itemsData[itemId];
+            if (!item) return;
+            
+            document.getElementById('modalItemTitle').textContent = item.title;
+            document.getElementById('modalItemIcon').innerHTML = `<i class="fas ${item.icon}"></i>`;
+            
+            // Update stats
+            document.querySelectorAll('.stat-value-sm').forEach((el, index) => {
+                const values = Object.values(item.stats);
+                if (values[index]) {
+                    el.textContent = values[index];
+                }
+            });
+            
+            // Update rarity
+            const rarityEl = document.querySelector('.modal-header .rarity');
+            rarityEl.className = 'rarity';
+            rarityEl.classList.add(`rarity-${item.rarity}`);
+            rarityEl.textContent = item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1);
+            
+            // Show modal
+            itemModal.classList.add('show');
+        }
+        
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            itemModal.classList.remove('show');
+        });
+        
+        // Favorite button
+        favoriteBtn.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                this.innerHTML = '<i class="fas fa-star"></i> Remove from Favorites';
+                
+                Toastify({
+                    text: "Added to favorites!",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#4CAF50",
+                }).showToast();
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                this.innerHTML = '<i class="far fa-star"></i> Add to Favorites';
+                
+                Toastify({
+                    text: "Removed from favorites!",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#f44336",
+                }).showToast();
+            }
         });
         
         // Update timers
